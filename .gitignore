@@ -3,3 +3,6 @@
 /TrueMoney/packages
 /TrueMoney/.vs
 /TrueMoney/TrueMoney.Web/obj
+TrueMoney/TrueMoney.Data/obj/
+TrueMoney/TrueMoney.Infrastructure/obj/
+TrueMoney/TrueMoney.Services/obj/
