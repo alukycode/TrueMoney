@@ -1,1 +1,2 @@
-some text
+initial commit
+dimon lalka
