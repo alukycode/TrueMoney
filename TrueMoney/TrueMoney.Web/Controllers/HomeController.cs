@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace TrueMoney.Web.Controllers
 {
+    //LOL
     public class HomeController : Controller
     {
         public ActionResult Index()
