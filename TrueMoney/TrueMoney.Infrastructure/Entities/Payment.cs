@@ -5,10 +5,8 @@
     /// <summary>
     /// Time and amount to pay
     /// </summary>
-    public class Payment
+    public class Payment : BaseEntity
     {
-        public int Id { get; set; }
-
         public DateTime TimeToPay { get; set; }
 
         public DateTime PayTime { get; set; }

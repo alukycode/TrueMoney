@@ -2,10 +2,8 @@
 {
     using System;
 
-    public class Offer
+    public class Offer : BaseEntity
     {
-        public int Id { get; set; }
-
         /// <summary>
         /// User
         /// </summary>

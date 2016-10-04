@@ -2,10 +2,8 @@
 {
     using System.Collections.Generic;
 
-    public class BankAccount
+    public class BankAccount : BaseEntity
     {
-        public int Id { get; set; }
-
         public string AccountNumber { get; set; }
 
         public User Owner { get; set; }

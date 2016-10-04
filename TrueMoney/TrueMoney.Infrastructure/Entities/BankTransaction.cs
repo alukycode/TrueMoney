@@ -5,10 +5,8 @@
     /// <summary>
     /// Bank transaction
     /// </summary>
-    public class BankTransaction
+    public class BankTransaction : BaseEntity
     {
-        public int Id { get; set; }
-
         public float Amount { get; set; }
 
         public BankAccount From { get; set; }

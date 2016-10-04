@@ -2,10 +2,8 @@
 {
     using System;
 
-    public class MoneyApplication
+    public class MoneyApplication : BaseEntity
     {
-        public int Id { get; set; }
-
         /// <summary>
         /// User
         /// </summary>

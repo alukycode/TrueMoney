@@ -6,10 +6,8 @@
     /// <summary>
     /// Finished application
     /// </summary>
-    public class Loan
+    public class Loan : BaseEntity
     {
-        public int Id { get; set; }
-
         /// <summary>
         /// User
         /// </summary>
