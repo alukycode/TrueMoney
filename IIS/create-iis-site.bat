@@ -2,7 +2,7 @@ REM Define variables
 set hostspath=%windir%\System32\drivers\etc\hosts
 set appcmdpath=%windir%\System32\inetsrv
 pushd "%CD%\..\"
-set sitedir="%CD%\TrueMoney.Web"
+set sitedir="%CD%\TrueMoney\TrueMoney.Web"
 set project=trueMoney
 
 REM Delete site and pool
