@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TrueMoney.Infrastructure.Repositories;
-using TrueMoney.Infrastructure.Services;
-
-namespace TrueMoney.Services
+﻿namespace TrueMoney.Services
 {
+    using TrueMoney.Infrastructure.Repositories;
+    using TrueMoney.Infrastructure.Services;
+
     public class UserProfileService: IUserProfileService
     {
-        private readonly IUserProfileRepository _userProfileRepository;
+        private readonly IUserRepository _userProfileRepository;
 
-        public UserProfileService(IUserProfileRepository userProfileRepository)
+        public UserProfileService(IUserRepository userProfileRepository)
         {
-            _userProfileRepository = userProfileRepository;
+            this._userProfileRepository = userProfileRepository;
         }
 
         public string GetShit()
         {
-            var repoText = _userProfileRepository.GetShit();
+            var repoText = this._userProfileRepository.GetAll();
 
             return "Service " + repoText;
         }
