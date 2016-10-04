@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TrueMoney.Services
+namespace TrueMoney.Infrastructure.Services
 {
-    public class Class1
+    public interface IUserProfileService
     {
+        string GetShit();
     }
 }

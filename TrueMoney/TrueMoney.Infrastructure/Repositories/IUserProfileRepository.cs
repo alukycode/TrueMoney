@@ -10,5 +10,7 @@ namespace TrueMoney.Infrastructure.Repositories
     public interface IUserProfileRepository
     {
         IEnumerable<UserProfile> GetAll();
+
+        string GetShit();
     }
 }
