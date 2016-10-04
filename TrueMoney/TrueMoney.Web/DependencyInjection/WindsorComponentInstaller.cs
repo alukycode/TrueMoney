@@ -15,7 +15,7 @@ namespace TrueMoney.Web.DependencyInjection
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
-                Classes.FromAssembly(typeof(UserProfileRepository).Assembly)
+                Classes.FromAssembly(typeof(UserRepository).Assembly)
                     .Where(type => type.Name.EndsWith("Repository"))
                     .WithService.DefaultInterfaces()
                     .LifestyleSingleton());

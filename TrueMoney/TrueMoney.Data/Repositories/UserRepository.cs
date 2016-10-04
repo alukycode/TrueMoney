@@ -8,7 +8,7 @@ using TrueMoney.Infrastructure.Repositories;
 
 namespace TrueMoney.Data.Repositories
 {
-    public class UserProfileRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
         public User GetById(int Id)
         {

@@ -14,7 +14,7 @@
 
         public string GetShit()
         {
-            var repoText = this._userProfileRepository.GetAll();
+            var repoText = this._userProfileRepository.GetShit();
 
             return "Service " + repoText;
         }
