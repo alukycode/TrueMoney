@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueMoney.Web", "TrueMoney.Web\TrueMoney.Web.csproj", "{118F5CE6-0E1A-4272-BB03-15578EFDD970}"
 EndProject
@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueMoney.Data", "TrueMoney.Data\TrueMoney.Data.csproj", "{DA385B71-A556-49E8-B871-F659D7640E8A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueMoney.Services", "TrueMoney.Services\TrueMoney.Services.csproj", "{FA74B88C-E50C-49AE-9794-870CDF8274C7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{ED810683-076B-4344-A360-F41FC9934ADC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank", "Bank\Bank.csproj", "{A64B1A72-DCEA-4709-BAE7-1C232225B127}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +37,15 @@ Global
 		{FA74B88C-E50C-49AE-9794-870CDF8274C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA74B88C-E50C-49AE-9794-870CDF8274C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA74B88C-E50C-49AE-9794-870CDF8274C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A64B1A72-DCEA-4709-BAE7-1C232225B127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A64B1A72-DCEA-4709-BAE7-1C232225B127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A64B1A72-DCEA-4709-BAE7-1C232225B127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A64B1A72-DCEA-4709-BAE7-1C232225B127}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A64B1A72-DCEA-4709-BAE7-1C232225B127} = {ED810683-076B-4344-A360-F41FC9934ADC}
 	EndGlobalSection
 EndGlobal
