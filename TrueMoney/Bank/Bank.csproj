@@ -40,8 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IBankApi.cs" />
+    <Compile Include="BankApi\BankApi.cs" />
+    <Compile Include="BankEntities\BankAction.cs" />
+    <Compile Include="BankEntities\BankData.cs" />
+    <Compile Include="BankEntities\BankResponse.cs" />
+    <Compile Include="BankEntities\BankTransaction.cs" />
+    <Compile Include="BankApi\IBankApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\BankDataHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\BankData.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
