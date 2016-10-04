@@ -10,7 +10,7 @@ namespace TrueMoney.Data.Repositories
 {
     public class UserProfileRepository : IUserProfileRepository
     {
-        public IEnumerable<UserProfile> GetAll()
+        public IEnumerable<User> GetAll()
         {
             throw new NotImplementedException();
         }

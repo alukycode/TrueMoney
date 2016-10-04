@@ -40,9 +40,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\UserProfile.cs" />
+    <Compile Include="Entities\MoneyApplication.cs" />
+    <Compile Include="Entities\BankAccount.cs" />
+    <Compile Include="Entities\Loan.cs" />
+    <Compile Include="Entities\Offer.cs" />
+    <Compile Include="Entities\Payment.cs" />
+    <Compile Include="Entities\BankTransaction.cs" />
+    <Compile Include="Entities\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\IUserProfileRepository.cs" />
+    <Compile Include="Repositories\IBankAccountRepository.cs" />
+    <Compile Include="Repositories\ILoanRepository.cs" />
+    <Compile Include="Repositories\IMoneyApplicationRepository.cs" />
+    <Compile Include="Repositories\IOfferRepository.cs" />
+    <Compile Include="Repositories\IPaymentRepository.cs" />
+    <Compile Include="Repositories\IRepository.cs" />
+    <Compile Include="Repositories\IBankTransactionRepository.cs" />
+    <Compile Include="Repositories\IUserRepository.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
