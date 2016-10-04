@@ -6,3 +6,6 @@
 TrueMoney/TrueMoney.Data/obj/
 TrueMoney/TrueMoney.Infrastructure/obj/
 TrueMoney/TrueMoney.Services/obj/
+/TrueMoney/TrueMoney.Infrastructure/bin/Debug
+/TrueMoney/TrueMoney.Data/bin/Debug
+/TrueMoney/TrueMoney.Services/bin/Debug
