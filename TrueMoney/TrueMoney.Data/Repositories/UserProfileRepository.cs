@@ -14,5 +14,10 @@ namespace TrueMoney.Data.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public string GetShit()
+        {
+            return "Repository";
+        }
     }
 }
