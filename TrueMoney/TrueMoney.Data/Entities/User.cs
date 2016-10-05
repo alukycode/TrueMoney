@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace TrueMoney.Data.Entities
 {
-    public class UserProfile
+    public class User
     {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 }
