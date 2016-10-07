@@ -5,7 +5,7 @@
     /// <summary>
     /// Time and amount to pay
     /// </summary>
-    public class Payment : BaseEntity
+    public class Payment : Entity
     {
         public DateTime TimeToPay { get; set; }
 

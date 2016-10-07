@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bank", "Bank\Bank.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForTesting", "ForTesting\ForTesting.csproj", "{9372E273-3434-4F05-B124-6E7CF795B062}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueMoney.Mapping", "TrueMoney.Mapping\TrueMoney.Mapping.csproj", "{7127AF3C-3562-4268-AC98-EB040ECA175F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{9372E273-3434-4F05-B124-6E7CF795B062}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9372E273-3434-4F05-B124-6E7CF795B062}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9372E273-3434-4F05-B124-6E7CF795B062}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7127AF3C-3562-4268-AC98-EB040ECA175F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7127AF3C-3562-4268-AC98-EB040ECA175F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7127AF3C-3562-4268-AC98-EB040ECA175F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7127AF3C-3562-4268-AC98-EB040ECA175F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

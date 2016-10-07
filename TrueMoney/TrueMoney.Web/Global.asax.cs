@@ -8,6 +8,7 @@ using System.Web.Routing;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using TrueMoney.Mapping;
 using TrueMoney.Web.DependencyInjection;
 
 namespace TrueMoney.Web
@@ -20,7 +21,7 @@ namespace TrueMoney.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
+            MapperInitializer.Initialize();
             InitializeWindsorContainer();
         }
 

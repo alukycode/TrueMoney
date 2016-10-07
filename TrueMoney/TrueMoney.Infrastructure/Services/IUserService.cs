@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TrueMoney.Infrastructure.Entities;
 
 namespace TrueMoney.Infrastructure.Services
 {
-    public interface IUserProfileService
+    public interface IUserService
     {
-        string GetShit();
+        Task<IEnumerable<User>> GetAll();
     }
 }

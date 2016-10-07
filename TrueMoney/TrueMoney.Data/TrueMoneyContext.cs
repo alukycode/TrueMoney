@@ -14,6 +14,6 @@ namespace TrueMoney.Data
         {
         }
 
-        public DbSet<User> UserProfiles { get; set; }
+        public DbSet<User> Users{ get; set; }
     }
 }

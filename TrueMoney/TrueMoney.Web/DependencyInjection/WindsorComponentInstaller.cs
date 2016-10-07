@@ -21,9 +21,9 @@ namespace TrueMoney.Web.DependencyInjection
                     .LifestyleSingleton());
 
             container.Register(
-                Classes.FromAssembly(typeof(UserProfileService).Assembly)
+                Classes.FromAssembly(typeof(UserService).Assembly)
                     .Where(type => type.Name.EndsWith("Service"))
-                    .WithService.DefaultInterfaces() // for class UserProfileSevice it will be interface IUserProfileSevice
+                    .WithService.DefaultInterfaces() // for class UserSevice it will be interface IUserSevice
                     .LifestyleSingleton());
         }
     }

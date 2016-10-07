@@ -1,17 +1,12 @@
-﻿namespace TrueMoney.Infrastructure.Repositories
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
+namespace TrueMoney.Infrastructure.Repositories
+{
     public interface IRepository<T>
     {
-        T GetById(int Id);
+        Task<T> GetById(int id);
 
-        IList<T> GetAll();
-
-        /// <summary>
-        /// Not closed entities
-        /// </summary>
-        /// <returns></returns>
-        IList<T> GetAllActive();
+        Task<IList<T>> GetAll();
     }
 }

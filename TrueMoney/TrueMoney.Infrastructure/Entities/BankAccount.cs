@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public class BankAccount : BaseEntity
+    public class BankAccount : Entity
     {
         public string AccountNumber { get; set; }
 

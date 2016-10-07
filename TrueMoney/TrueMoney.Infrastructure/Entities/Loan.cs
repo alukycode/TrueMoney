@@ -6,7 +6,7 @@
     /// <summary>
     /// Finished application
     /// </summary>
-    public class Loan : BaseEntity
+    public class Loan : Entity
     {
         /// <summary>
         /// User

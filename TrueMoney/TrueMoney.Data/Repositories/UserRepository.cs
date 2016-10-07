@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using TrueMoney.Infrastructure.Entities;
 using TrueMoney.Infrastructure.Repositories;
 
@@ -10,29 +11,32 @@ namespace TrueMoney.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public User GetById(int Id)
+        public async Task<User> GetById(int id)
         {
-            throw new NotImplementedException();
+            var user = await LoadById(id);
+            return Mapper.Map<User>(user);
+        }
+            
+        public async Task<IList<User>> GetAll()
+        {
+            var users = await LoadAll();
+            return Mapper.Map<IEnumerable<User>>(users).ToList();
         }
 
-        IList<User> IRepository<User>.GetAll()
+        private async Task<Entities.User> LoadById(int id)
         {
-            throw new NotImplementedException();
+            using (var context = new TrueMoneyContext())
+            {
+                return await context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            }
         }
 
-        public IList<User> GetAllActive()
+        private async Task<List<Entities.User>> LoadAll()
         {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<User> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetShit()
-        {
-            return "Repository";
+            using (var context = new TrueMoneyContext())
+            {
+                return await context.Users.ToListAsync();
+            }
         }
     }
 }
