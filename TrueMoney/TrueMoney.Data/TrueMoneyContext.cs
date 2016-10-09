@@ -13,6 +13,7 @@ namespace TrueMoney.Data
         public TrueMoneyContext() : base("DefaultConnection")
         {
             //Database.SetInitializer<TrueMoneyContext>(new DropCreateDatabaseIfModelChanges<TrueMoneyContext>());
+            Database.SetInitializer(new DbInitializer());
         }
 
         public DbSet<User> Users{ get; set; }
