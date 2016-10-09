@@ -20,5 +20,10 @@ namespace TrueMoney.Services
         {
             return await _userRepository.GetAll();
         }
+
+        public async Task<User> GetCurrentUser()
+        {
+            return new User { Id = 1 };
+        }
     }
 }

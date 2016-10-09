@@ -1,0 +1,17 @@
+﻿namespace TrueMoney.Infrastructure.Services
+{
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using TrueMoney.Infrastructure.Entities;
+
+    public interface IApplicationService
+    {
+        Task<IList<MoneyApplication>> GetAll();
+        Task<MoneyApplication> GetById(int id);
+        Task<IList<MoneyApplication>> GetByUserId(int userId);
+        Task<MoneyApplication> GetByOfferId(int offerId);
+
+        Task<bool> ApplyOffer(int offerId, int moneyApplicationId);
+    }
+}
