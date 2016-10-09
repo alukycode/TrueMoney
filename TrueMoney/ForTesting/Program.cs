@@ -17,8 +17,7 @@ namespace ForTesting
         {
             using (var context = new TrueMoneyContext())
             {
-                context.Users.Add(new User() { Name = "temp" });
-                context.SaveChanges();
+                var user = context.Users.First();
             }
         }
     }

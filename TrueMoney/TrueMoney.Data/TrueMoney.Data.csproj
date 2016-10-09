@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbInitializer.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Migrations\201610052013505_Init.cs" />
     <Compile Include="Migrations\201610052013505_Init.Designer.cs">
