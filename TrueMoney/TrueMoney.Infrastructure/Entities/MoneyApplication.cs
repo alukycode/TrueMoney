@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class MoneyApplication : BaseEntity
+    public class MoneyApplication : Entity
     {
         /// <summary>
         /// User

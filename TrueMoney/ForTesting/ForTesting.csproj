@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{839F9578-E49F-4262-BA8F-4F90B443F7B2}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{9372E273-3434-4F05-B124-6E7CF795B062}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TrueMoney.Infrastructure</RootNamespace>
-    <AssemblyName>TrueMoney.Infrastructure</AssemblyName>
+    <RootNamespace>ForTesting</RootNamespace>
+    <AssemblyName>ForTesting</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,7 +33,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,24 +56,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\BaseEntity.cs" />
-    <Compile Include="Entities\MoneyApplication.cs" />
-    <Compile Include="Entities\BankAccount.cs" />
-    <Compile Include="Entities\Loan.cs" />
-    <Compile Include="Entities\Offer.cs" />
-    <Compile Include="Entities\Payment.cs" />
-    <Compile Include="Entities\BankTransaction.cs" />
-    <Compile Include="Entities\User.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\IBankAccountRepository.cs" />
-    <Compile Include="Repositories\ILoanRepository.cs" />
-    <Compile Include="Repositories\IMoneyApplicationRepository.cs" />
-    <Compile Include="Repositories\IOfferRepository.cs" />
-    <Compile Include="Repositories\IPaymentRepository.cs" />
-    <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Repositories\IBankTransactionRepository.cs" />
-    <Compile Include="Repositories\IUserRepository.cs" />
-    <Compile Include="Services\IUserService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TrueMoney.Data\TrueMoney.Data.csproj">
+      <Project>{DA385B71-A556-49E8-B871-F659D7640E8A}</Project>
+      <Name>TrueMoney.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TrueMoney.Infrastructure\TrueMoney.Infrastructure.csproj">
+      <Project>{839F9578-E49F-4262-BA8F-4F90B443F7B2}</Project>
+      <Name>TrueMoney.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TrueMoney.Mapping\TrueMoney.Mapping.csproj">
+      <Project>{7127AF3C-3562-4268-AC98-EB040ECA175F}</Project>
+      <Name>TrueMoney.Mapping</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

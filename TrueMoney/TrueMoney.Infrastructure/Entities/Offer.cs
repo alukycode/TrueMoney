@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class Offer : BaseEntity
+    public class Offer : Entity
     {
         /// <summary>
         /// User

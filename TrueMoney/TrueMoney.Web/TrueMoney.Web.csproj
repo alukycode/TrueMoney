@@ -44,6 +44,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -198,6 +206,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -233,7 +242,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -280,9 +291,17 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TrueMoney.DependencyInjection\TrueMoney.DependencyInjection.csproj">
+      <Project>{8fee0685-7ed0-4c01-ad85-c1fcaaa30291}</Project>
+      <Name>TrueMoney.DependencyInjection</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrueMoney.Infrastructure\TrueMoney.Infrastructure.csproj">
       <Project>{839f9578-e49f-4262-ba8f-4f90b443f7b2}</Project>
       <Name>TrueMoney.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TrueMoney.Mapping\TrueMoney.Mapping.csproj">
+      <Project>{7127af3c-3562-4268-ac98-eb040eca175f}</Project>
+      <Name>TrueMoney.Mapping</Name>
     </ProjectReference>
     <ProjectReference Include="..\TrueMoney.Services\TrueMoney.Services.csproj">
       <Project>{fa74b88c-e50c-49ae-9794-870cdf8274c7}</Project>

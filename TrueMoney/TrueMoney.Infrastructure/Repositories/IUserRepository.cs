@@ -1,7 +1,7 @@
-﻿namespace TrueMoney.Infrastructure.Repositories
-{
-    using TrueMoney.Infrastructure.Entities;
+﻿using TrueMoney.Infrastructure.Entities;
 
+namespace TrueMoney.Infrastructure.Repositories
+{
     public interface IUserRepository : IRepository<User>
     {
     }
