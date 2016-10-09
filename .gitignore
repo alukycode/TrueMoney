@@ -11,6 +11,9 @@ TrueMoney/TrueMoney.Services/obj/
 /TrueMoney/TrueMoney.Services/bin
 /TrueMoney/Bank/obj/
 /TrueMoney/Bank/bin/
-TrueMoney/ForTesting/
 TrueMoney/TrueMoney.Mapping/bin/
 TrueMoney/TrueMoney.Mapping/obj/Debug/
+TrueMoney/ForTesting/App.config
+TrueMoney/ForTesting/Program.cs
+TrueMoney/ForTesting/obj/Debug/
+TrueMoney/ForTesting/bin/Debug/
