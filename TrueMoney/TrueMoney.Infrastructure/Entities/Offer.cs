@@ -16,5 +16,8 @@
         public DateTime CloseDate { get; set; }
 
         public MoneyApplication MoneyApplication { get; set; }
+        
+        public bool WaitForApprove { get; set; }
+        public float Rate { get; set; }
     }
 }

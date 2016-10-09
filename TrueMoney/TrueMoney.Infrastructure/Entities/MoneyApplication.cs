@@ -1,6 +1,7 @@
 ﻿namespace TrueMoney.Infrastructure.Entities
 {
     using System;
+    using System.Collections.Generic;
 
     public class MoneyApplication : Entity
     {
@@ -18,9 +19,13 @@
         /// </summary>
         public float Rate { get; set; }
 
-        public IEquatable<Offer> Offers { get; set; }
+        public IEnumerable<Offer> Offers { get; set; }
 
         public bool IsClosed { get; set; }
         public DateTime CloseDate { get; set; }
+
+        public string Description { get; set; }
+
+        public bool WaitForApprove { get; set; }
     }
 }

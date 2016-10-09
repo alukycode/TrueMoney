@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNet.Identity
+@model TrueMoney.Infrastructure.Entities.MoneyApplication
+
+@{
+    ViewBag.Title = "Информация о заявлении " + Model.Id;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>@Model.Id</h4>
+    <hr />
+    @if (!Model.WaitForApprove)
+    {
+
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.CreateDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreateDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Count)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Count)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Rate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Rate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            @if (this.ViewBag.CurrentUser.Id == Model.Borrower.Id)
+            {
+                //show info about offers only for application borrower
+                foreach (var offer in Model.Offers)
+                {
+                    @Html.DisplayFor(x=>offer)
+                    @Html.ActionLink("Подтвердить предложение", "ApplyOffer", new { offerId = offer.Id, appId = Model.Id })
+                }
+            }
+        </dl>
+    }
+    else
+    {
+        if (this.ViewBag.CurrentUser.Id == Model.Borrower.Id)
+        {
+            <text>wait for lender approve from user with id = 
+    @Model.Offers.FirstOrDefault(x=>x.WaitForApprove).Lender.Id</text>
+        }
+    }
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

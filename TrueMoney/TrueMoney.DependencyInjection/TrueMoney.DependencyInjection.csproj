@@ -86,6 +86,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ForTesting\ForTesting.csproj">
+      <Project>{9372e273-3434-4f05-b124-6e7cf795b062}</Project>
+      <Name>ForTesting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrueMoney.Data\TrueMoney.Data.csproj">
       <Project>{da385b71-a556-49e8-b871-f659d7640e8a}</Project>
       <Name>TrueMoney.Data</Name>
