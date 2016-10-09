@@ -20,8 +20,9 @@ namespace TrueMoney.Data
                 context.Users.Add(item);
             }
 
-            context.SaveChanges();
             base.Seed(context);
+
+            context.SaveChanges();
         }
     }
 }

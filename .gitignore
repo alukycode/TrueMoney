@@ -15,3 +15,5 @@ TrueMoney/TrueMoney.Mapping/bin/
 TrueMoney/TrueMoney.Mapping/obj/Debug/
 /TrueMoney/TrueMoney.DependencyInjection/obj
 /TrueMoney/TrueMoney.DependencyInjection/bin
+/TrueMoney/ForTesting/bin
+/TrueMoney/ForTesting/obj
