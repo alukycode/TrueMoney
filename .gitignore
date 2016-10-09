@@ -11,3 +11,9 @@ TrueMoney/TrueMoney.Services/obj/
 /TrueMoney/TrueMoney.Services/bin/Debug
 /TrueMoney/Bank/obj/Debug
 /TrueMoney/Bank/bin/Debug
+TrueMoney/ForTesting/bin/Debug/
+TrueMoney/TrueMoney.Mapping/obj/Debug/
+TrueMoney/TrueMoney.DependencyInjection/bin/
+TrueMoney/TrueMoney.Mapping/bin/
+TrueMoney/TrueMoney.DependencyInjection/obj/
+TrueMoney/ForTesting/obj/
