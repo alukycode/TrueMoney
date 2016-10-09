@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueMoney.Web", "TrueMoney.Web\TrueMoney.Web.csproj", "{118F5CE6-0E1A-4272-BB03-15578EFDD970}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ForTesting", "ForTesting\ForTesting.csproj", "{9372E273-3434-4F05-B124-6E7CF795B062}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueMoney.Mapping", "TrueMoney.Mapping\TrueMoney.Mapping.csproj", "{7127AF3C-3562-4268-AC98-EB040ECA175F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrueMoney.DependencyInjection", "TrueMoney.DependencyInjection\TrueMoney.DependencyInjection.csproj", "{8FEE0685-7ED0-4C01-AD85-C1FCAAA30291}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +55,10 @@ Global
 		{7127AF3C-3562-4268-AC98-EB040ECA175F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7127AF3C-3562-4268-AC98-EB040ECA175F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7127AF3C-3562-4268-AC98-EB040ECA175F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FEE0685-7ED0-4C01-AD85-C1FCAAA30291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FEE0685-7ED0-4C01-AD85-C1FCAAA30291}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FEE0685-7ED0-4C01-AD85-C1FCAAA30291}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FEE0685-7ED0-4C01-AD85-C1FCAAA30291}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

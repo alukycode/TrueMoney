@@ -8,8 +8,8 @@ using System.Web.Routing;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using TrueMoney.DependencyInjection;
 using TrueMoney.Mapping;
-using TrueMoney.Web.DependencyInjection;
 
 namespace TrueMoney.Web
 {
