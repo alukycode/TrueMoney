@@ -10,13 +10,8 @@ namespace TrueMoney.DependencyInjection
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            //container.Register(
-            //    Classes.FromAssembly(typeof(UserRepository).Assembly) todo - uncommect on prod
-            //        .Where(type => type.Name.EndsWith("Repository"))
-            //        .WithService.DefaultInterfaces()
-            //        .LifestyleSingleton());
             container.Register(
-                Classes.FromAssembly(typeof(ForTesting.Repositories.UserRepository).Assembly)
+                Classes.FromAssembly(typeof(UserRepository).Assembly)
                     .Where(type => type.Name.EndsWith("Repository"))
                     .WithService.DefaultInterfaces()
                     .LifestyleSingleton());
