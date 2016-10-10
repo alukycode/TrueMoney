@@ -15,6 +15,8 @@ namespace TrueMoney.Mapping
                 conf =>
                 {
                     conf.CreateMap<Data.Entities.User, Infrastructure.Entities.User>();
+                    conf.CreateMap<Data.Entities.Passport, Infrastructure.Entities.Passport>();
+                    conf.CreateMap<Infrastructure.Entities.Passport, Data.Entities.Passport>();
                 });
         }
     }

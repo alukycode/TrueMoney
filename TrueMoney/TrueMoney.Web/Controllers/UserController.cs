@@ -21,7 +21,7 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var currentUser = await this._userService.GetCurrentUser();
+            var currentUser = (await _userService.GetAll()).First();
             if (currentUser == null)
             {
                 return this.RedirectToAction("Index", "Home");
@@ -32,11 +32,7 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Details(int id)
         {
-            User user = null;
-            if (id > -1)
-            {
-                user = await this._userService.GetUserById(id);
-            }
+            User user = await _userService.GetUserById(id); ;
 
             if (user == null)
             {
