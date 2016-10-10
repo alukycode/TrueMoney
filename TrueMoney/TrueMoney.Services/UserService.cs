@@ -23,6 +23,11 @@ namespace TrueMoney.Services
             return await _userRepository.GetAll();
         }
 
+        public async Task Add(User entity)
+        {
+            await _userRepository.Add(entity);
+        }
+
         public async Task<User> GetCurrentUser()
         {
             int userId;
@@ -37,12 +42,14 @@ namespace TrueMoney.Services
         public async Task<User> GetUserById(int id)
         {
             //return await this._userRepository.GetById(id);\
-            return new User { Id = id, Name = "User" + id };
+            //return new User { Id = id, Name = "User" + id };
+            throw new NotImplementedException();
         }
 
         public async Task<User> GetUserByName(string name)
         {
-            return await this._userRepository.GetUserByName(name);
+            //return await this._userRepository.GetUserByName(name);
+            throw new NotImplementedException();
         }
     }
 }

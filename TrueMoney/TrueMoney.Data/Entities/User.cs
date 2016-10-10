@@ -1,15 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace TrueMoney.Data.Entities
 {
-    public class User
+    public class User : Entity
     {
-        public int Id { get; set; }
+        public User()
+        {
+            Passport = new Passport();
+        }
 
-        public string Name { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
+
+        public string MiddleName { get; set; }
+
+        public Passport Passport { get; set; }
+    }
+
+    public class Passport
+    {
+        public string Series { get; set; }
+
+        public string Number { get; set; }
+
+        public DateTime? DateOfIssuing { get; set; }
     }
 }

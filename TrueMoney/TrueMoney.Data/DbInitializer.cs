@@ -10,9 +10,21 @@ namespace TrueMoney.Data
         {
             List<User> users = new List<User>
             {
-                new User { Name = "Саша" },
-                new User { Name = "Антон" },
-                new User { Name = "Дима" }
+                new User
+                {
+                    FirstName = "Саша",
+                    LastName = "Черногребель",
+                },
+                new User
+                {
+                    FirstName = "Антон",
+                    LastName = "Лукьянов"
+                },
+                new User
+                {
+                    FirstName = "Дима",
+                    LastName = "Артюх"
+                }
             };
 
             foreach (var item in users)
