@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TrueMoney.Web.Models
 {
+    using System;
+
+    using Newtonsoft.Json;
+
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
@@ -79,6 +83,32 @@ namespace TrueMoney.Web.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
+        public string FamilyName { get; set; }
+
+        [Required]
+        [RegularExpression("[0-9]{4}")]
+        public string PassportSeria { get; set; }
+
+        [Required]
+        [RegularExpression("[0-9]{6}")]
+        public string PassportNumber { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime PassportGiveTime { get; set; }
+
+        [Required]
+        public string PassportGiveOrganisation { get; set; }
+
+        [Required]
+        [RegularExpression("[0-9]{3}.[0-9]{2}.[0-9]{3}.[0-9]{1}.[0-9]{4}.[0-9]{7}")] // https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D1%87%D1%91%D1%82%D0%BD%D1%8B%D0%B9_%D1%81%D1%87%D1%91%D1%82
+        public string BankAccountNumber { get; set; }
     }
 
     public class ResetPasswordViewModel
