@@ -17,6 +17,8 @@
         public string MiddleName { get; set; }
 
         public Passport Passport { get; set; }
+
+        public string AspUserId { get; set; }
     }
 
     public class Passport

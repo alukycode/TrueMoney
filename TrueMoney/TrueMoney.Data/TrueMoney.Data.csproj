@@ -68,6 +68,10 @@
     <Compile Include="Migrations\201610102045484_passportRenamed.Designer.cs">
       <DependentUpon>201610102045484_passportRenamed.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610102130332_AddedAspUserId.cs" />
+    <Compile Include="Migrations\201610102130332_AddedAspUserId.Designer.cs">
+      <DependentUpon>201610102130332_AddedAspUserId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
@@ -92,6 +96,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610102045484_passportRenamed.resx">
       <DependentUpon>201610102045484_passportRenamed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610102130332_AddedAspUserId.resx">
+      <DependentUpon>201610102130332_AddedAspUserId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

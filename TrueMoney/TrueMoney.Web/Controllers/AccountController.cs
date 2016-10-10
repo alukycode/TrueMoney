@@ -179,6 +179,7 @@ namespace TrueMoney.Web.Controllers
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         MiddleName = model.MiddleName,
+                        AspUserId = User.Identity.GetUserId(),
                     };
                     user.Passport.Number = model.Passport.Number;
                     user.Passport.Series = model.Passport.Series;
