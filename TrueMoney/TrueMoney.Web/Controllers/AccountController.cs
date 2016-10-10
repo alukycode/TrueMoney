@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using TrueMoney.Infrastructure.Entities;
+using TrueMoney.Infrastructure.Services;
 using TrueMoney.Web.Models;
 using TrueMoney.Infrastructure.Services;
 
@@ -25,7 +27,10 @@ namespace TrueMoney.Web.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IUserService userService)
+        public AccountController(
+            ApplicationUserManager userManager,
+            ApplicationSignInManager signInManager,
+            IUserService userService)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -155,24 +160,24 @@ namespace TrueMoney.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
+                var applicationUser = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var result = await UserManager.CreateAsync(applicationUser, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    await
+                    await SignInManager.SignInAsync(applicationUser, isPersistent:false, rememberBrowser:false);
+                    var user =
+                        await
                         this._userService.Create(
                             0,
-                            user.Email,
+                            model.Email,
                             model.FirstName,
                             model.LastName,
-                            model.FamilyName,
-                            model.PassportSeria,
-                            model.PassportNumber,
-                            model.PassportGiveOrganisation,
-                            model.PassportGiveTime,
+                            model.MiddleName,
+                            model.Passport.Series,
+                            model.Passport.Number,
+                            model.Passport.GiveOrganisation,
+                            model.Passport.DateOfIssuing,
                             model.BankAccountNumber);
-                    
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

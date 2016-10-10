@@ -54,10 +54,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbInitializer.cs" />
+    <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Migrations\201610052013505_Init.cs" />
     <Compile Include="Migrations\201610052013505_Init.Designer.cs">
       <DependentUpon>201610052013505_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610101959555_ChangedUser.cs" />
+    <Compile Include="Migrations\201610101959555_ChangedUser.Designer.cs">
+      <DependentUpon>201610101959555_ChangedUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610102045484_passportRenamed.cs" />
+    <Compile Include="Migrations\201610102045484_passportRenamed.Designer.cs">
+      <DependentUpon>201610102045484_passportRenamed.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,6 +86,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201610052013505_Init.resx">
       <DependentUpon>201610052013505_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610101959555_ChangedUser.resx">
+      <DependentUpon>201610101959555_ChangedUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610102045484_passportRenamed.resx">
+      <DependentUpon>201610102045484_passportRenamed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -22,8 +22,20 @@ namespace TrueMoney.Data.Repositories
             var users = await LoadAll();
             return Mapper.Map<IEnumerable<User>>(users).ToList();
         }
+        
+        public async Task Add(User entity)
+        {
+            var user = Mapper.Map<Entities.User>(entity);
+            await Add(user);
+            entity.Id = user.Id;
+        }
+        
+        public async Task Update(User entity)
+        {
+            throw new NotImplementedException();
+        }
 
-        public Task<User> GetUserByName(string name)
+        public async Task Delete(int id)
         {
             throw new NotImplementedException();
         }
@@ -41,6 +53,15 @@ namespace TrueMoney.Data.Repositories
             using (var context = new TrueMoneyContext())
             {
                 return await context.Users.ToListAsync();
+            }
+        }
+
+        private async Task Add(Entities.User user)
+        {
+            using (var context = new TrueMoneyContext())
+            {
+                context.Users.Add(user);
+                await context.SaveChangesAsync();
             }
         }
     }

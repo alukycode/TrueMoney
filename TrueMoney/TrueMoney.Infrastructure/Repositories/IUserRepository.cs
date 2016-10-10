@@ -6,11 +6,10 @@ namespace TrueMoney.Infrastructure.Repositories
 
     public interface IUserRepository : IRepository<User>
     {
-        /// <summary>
-        /// Search in first name, last name and family name fields for coinsitence
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        Task<User> GetUserByName(string name);
+        Task Add(User entity);
+
+        Task Update(User entity);
+
+        Task Delete(int id);
     }
 }

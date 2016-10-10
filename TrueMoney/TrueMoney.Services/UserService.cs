@@ -23,6 +23,11 @@ namespace TrueMoney.Services
             return await _userRepository.GetAll();
         }
 
+        public async Task Add(User entity)
+        {
+            await _userRepository.Add(entity);
+        }
+
         public async Task<User> GetCurrentUser()
         {
             int userId;
@@ -37,36 +42,40 @@ namespace TrueMoney.Services
         public async Task<User> GetUserById(int id)
         {
             //return await this._userRepository.GetById(id);\
-            return new User { Id = id, Name = "User" + id };
+            //return new User { Id = id, Name = "User" + id };
+            throw new NotImplementedException();
         }
 
         public async Task<User> GetUserByName(string name)
         {
-            return await this._userRepository.GetUserByName(name);
+            //return await this._userRepository.GetUserByName(name);
+            throw new NotImplementedException();
         }
 
-        public async Task<User> Create(int id, string email, string firstName, string lastName, string familyName, string passportSeria,
-            string passportNumber, string passportGiveOrganisation, DateTime passportGiveTime, string bankAccountNumber)
+        public async Task<User> Create(
+            int id,
+            string email,
+            string firstName,
+            string lastName,
+            string middleName,
+            string passportSerie,
+            string passportNumber,
+            string passportGiveOrganisation,
+            DateTime passportDateOfIssuing,
+            string bankAccountNumber)
         {
-            return new User
-                       {
-                           Id = id,
-                           BankAccount =
-                               new BankAccount
-                                   {
-                                       AccountNumber = bankAccountNumber,
-                                       Id = 0,
-                                       Owner = null //this user
-                                   },
-                           FirstName = firstName,
-                           LastName = lastName,
-                           FamilyName = firstName,
-                           Name = firstName + " " + lastName, //generate
-                           PassportGiveOrganisation = passportGiveOrganisation,
-                           PassportGiveTime = passportGiveTime,
-                           PassportNumber = passportNumber,
-                           PassportSeria = passportSeria,
-                       };
+            var user = new User
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                MiddleName = middleName,
+            };
+            user.Passport.Number = passportNumber;
+            user.Passport.Series = passportSerie;
+            user.Passport.DateOfIssuing = passportDateOfIssuing;
+            user.Passport.GiveOrganisation = passportGiveOrganisation;
+
+            return user;
         }
     }
 }
