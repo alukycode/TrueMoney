@@ -29,6 +29,11 @@
         /// <summary>
         /// List of payments
         /// </summary>
-        public IList<Payment> Payments { get; set; } 
+        public IList<Payment> Payments { get; set; }
+
+        public bool IsTakePart(User user)
+        {
+            return user != null && (Equals(this.Lender, user) || Equals(this.Borrower, user));
+        }
     }
 }

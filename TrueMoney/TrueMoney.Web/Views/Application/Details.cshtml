@@ -64,17 +64,22 @@
     }
     else
     {
-        var mainOffer = Model.Offers.FirstOrDefault(x => x.Lender.Id == this.ViewBag.CurrentUser.Id);
+        var mainOffer = Model.Offers.FirstOrDefault(x => x.Lender.Id == this.ViewBag.CurrentUser.Id && x.WaitForApprove);
         if (this.ViewBag.CurrentUser.Id == Model.Borrower.Id)
         {
             <text>wait for lender approve from user with id =
                 @Model.Offers.FirstOrDefault(x => x.WaitForApprove).Lender.Id</text>
         }
-        else if(mainOffer != null)
+        else if (mainOffer != null)
         {
             @Html.ActionLink("Дать взаймы", "FinishApp", new { offerId = mainOffer.Id, appId = Model.Id })
         }
+        else
+        {
+            <text>sorry, borrower try to finish with user.id =
+                @Model.Offers.FirstOrDefault(x => x.WaitForApprove).Lender.Id</text>
     }
+}
 </div>
 <p>
     @Html.ActionLink("Back to List", "Index")

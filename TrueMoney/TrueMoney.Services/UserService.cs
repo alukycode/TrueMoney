@@ -7,6 +7,8 @@ using TrueMoney.Infrastructure.Services;
 
 namespace TrueMoney.Services
 {
+    using System.Web;
+
     public class UserService: IUserService
     {
         private readonly IUserRepository _userRepository;
@@ -23,6 +25,12 @@ namespace TrueMoney.Services
 
         public async Task<User> GetCurrentUser()
         {
+            int userId;
+            if(Int32.TryParse(HttpContext.Current.Request.QueryString["user"], out userId))
+            {
+                return new User { Id = userId };
+            }
+
             return new User { Id = 1 };
         }
     }

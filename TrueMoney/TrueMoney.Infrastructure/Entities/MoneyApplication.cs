@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class MoneyApplication : Entity
     {
@@ -35,5 +36,10 @@
         public string Description { get; set; }
 
         public bool WaitForApprove { get; set; }
+
+        public bool IsTakePart(User user)
+        {
+            return user != null && (Offers.Any(x => x.Lender.Equals(user)) || Equals(this.Borrower, user));
+        }
     }
 }

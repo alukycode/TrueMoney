@@ -58,6 +58,7 @@
     <Compile Include="Repositories\IBankTransactionRepository.cs" />
     <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="Services\IApplicationService.cs" />
+    <Compile Include="Services\ILoanService.cs" />
     <Compile Include="Services\IUserService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

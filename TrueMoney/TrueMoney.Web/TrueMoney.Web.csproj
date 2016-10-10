@@ -283,10 +283,11 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Application\Index.cshtml" />
     <Content Include="Views\Application\Details.cshtml" />
+    <Content Include="Views\Loan\Details.cshtml" />
+    <Content Include="Views\Loan\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Loan\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

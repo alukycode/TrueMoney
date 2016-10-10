@@ -1,0 +1,42 @@
+﻿@model TrueMoney.Infrastructure.Entities.Loan
+
+@{
+    ViewBag.Title = "Заем " + Model.Id;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>Loan</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsClosed)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsClosed)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CloseDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CloseDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

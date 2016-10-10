@@ -11,10 +11,12 @@
     public class ApplicationService : IApplicationService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ILoanService _loanService;
 
-        public ApplicationService(IUserRepository userRepository)
+        public ApplicationService(IUserRepository userRepository, ILoanService loanService)
         {
             _userRepository = userRepository;
+            this._loanService = loanService;
             data = new List<MoneyApplication> // todo
                        {
                            new MoneyApplication
@@ -71,7 +73,7 @@
 
         async Task<IList<MoneyApplication>> IApplicationService.GetAll()
         {
-            return data;
+            return data.Where(x => !x.IsClosed).ToList();
         }
 
         async Task<MoneyApplication> IApplicationService.GetById(int id)
@@ -133,18 +135,15 @@
                 var finishOffer = finishApp.Offers.FirstOrDefault(x => x.Id == offerId);
                 if (finishOffer != null)
                 {
-                    var newLoan = new Loan
-                    {
-                        Borrower = finishApp.Borrower,
-                        CloseDate = DateTime.Now,
-                        Id = 0,
-                        Lender = finishOffer.Lender,
-                        MoneyApplication = finishApp
-                    };
+                    var newLoan = await this._loanService.Create(finishApp, finishOffer);
+
+                    //finish app
                     finishApp.IsClosed = true;
                     finishApp.CloseDate = DateTime.Now;
                     finishApp.FinishOfferId = finishOffer.Id;
                     finishApp.FinishLoadId = newLoan.Id;
+
+                    //finish offer
                     finishOffer.IsClosed = true;
                     finishOffer.CloseDate = DateTime.Now;
 
