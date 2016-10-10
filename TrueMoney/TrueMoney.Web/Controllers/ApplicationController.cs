@@ -4,15 +4,16 @@
     using System.Web.Mvc;
 
     using TrueMoney.Infrastructure.Services;
+    using TrueMoney.Web.Models.ViewModel;
 
     [Authorize]
     public class ApplicationController : Controller
     {
         private readonly IApplicationService applicationService;
+
         private readonly IUserService userService;
 
-        public ApplicationController(IApplicationService applicationService,
-            IUserService userService)
+        public ApplicationController(IApplicationService applicationService, IUserService userService)
         {
             this.applicationService = applicationService;
             this.userService = userService;
@@ -51,6 +52,20 @@
             var newLoanId = await this.applicationService.FinishApp(offerId, appId);
 
             return this.RedirectToAction("Details", "Loan", new { id = newLoanId });
+        }
+
+        public async Task<ActionResult> Create()
+        {
+            return this.View(new CreateMoneyApplicationForm());
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Create(CreateMoneyApplicationForm model)
+        {
+            var appId =
+                await this.applicationService.CreateApp(model.Count, model.Rate, model.DayCount, model.Description);
+
+            return this.RedirectToAction("Details", new { id = appId });
         }
     }
 }

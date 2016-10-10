@@ -10,12 +10,12 @@
 
     public class ApplicationService : IApplicationService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly ILoanService _loanService;
 
-        public ApplicationService(IUserRepository userRepository, ILoanService loanService)
+        public ApplicationService(IUserService userService, ILoanService loanService)
         {
-            _userRepository = userRepository;
+            _userService = userService;
             this._loanService = loanService;
             data = new List<MoneyApplication> // todo
                        {
@@ -27,7 +27,8 @@
                                    CreateDate = new DateTime(2016, 10, 09),
                                    Count = 100,
                                    Rate = 25f,
-                                   Description = "for business"
+                                   Description = "for business",
+                                   DayCount = 10
                                },
                            new MoneyApplication
                                {
@@ -54,7 +55,8 @@
                                                             CreateTime = new DateTime(2016,10,09),
                                                             Rate = 21f
                                                         }
-                                                }
+                                                },
+                                   DayCount = 10
                                },
                            new MoneyApplication
                                {
@@ -64,12 +66,15 @@
                                    CreateDate = new DateTime(2016, 10, 09),
                                    Count = 2000,
                                    Rate = 5f,
-                                   Description = "to rent a bitches"
+                                   Description = "to rent a bitches",
+                                   DayCount = 10
                                }
                        };
         }
 
         static List<MoneyApplication> data;
+
+        private static int number = 3;
 
         async Task<IList<MoneyApplication>> IApplicationService.GetAll()
         {
@@ -152,6 +157,23 @@
             }
 
             return -1;
+        }
+
+        public async Task<int> CreateApp(float count, float rate, int dayCount, string description)
+        {
+            data.Add(
+                new MoneyApplication
+                    {
+                        Id = number++,
+                        Borrower = await this._userService.GetCurrentUser(),
+                        CreateDate = DateTime.Now,
+                        Count = count,
+                        Description = description,
+                        Rate = rate,
+                        DayCount = dayCount
+                    });
+
+            return data[number - 1].Id;
         }
     }
 }

@@ -215,6 +215,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ViewModel\CreateMoneyApplicationForm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -285,6 +286,7 @@
     <Content Include="Views\Application\Details.cshtml" />
     <Content Include="Views\Loan\Details.cshtml" />
     <Content Include="Views\Loan\Index.cshtml" />
+    <Content Include="Views\Application\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

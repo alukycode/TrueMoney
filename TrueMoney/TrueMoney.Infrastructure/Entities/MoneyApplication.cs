@@ -20,6 +20,8 @@
         /// </summary>
         public float Rate { get; set; }
 
+        public int DayCount { get; set; }
+
         public IEnumerable<Offer> Offers { get; set; }
 
 #region finishData

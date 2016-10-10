@@ -22,5 +22,11 @@
         /// <param name="moneyApplicationId"></param>
         /// <returns>New Loan Id</returns>
         Task<int> FinishApp(int offerId, int moneyApplicationId);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>New money application id</returns>
+        Task<int> CreateApp(float count, float rate, int dayCount, string description);
     }
 }
