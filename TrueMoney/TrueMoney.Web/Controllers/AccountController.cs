@@ -23,28 +23,9 @@ namespace TrueMoney.Web.Controllers
         private ApplicationUserManager _userManager;
         private IUserService _userService;
 
-        public AccountController(IUserService userService)
-        {
-            if (userService == null)
-            {
-                throw new ArgumentNullException(nameof(userService));
-            }
-
-            _userService = userService;
-        }
-
         public AccountController(
-            ApplicationUserManager userManager,
-            ApplicationSignInManager signInManager,
             IUserService userService)
         {
-            if (userService == null)
-            {
-                throw new ArgumentNullException(nameof(userService));
-            }
-
-            UserManager = userManager;
-            SignInManager = signInManager;
             this._userService = userService;
         }
 
