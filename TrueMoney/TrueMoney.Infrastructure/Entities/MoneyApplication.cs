@@ -21,7 +21,15 @@
 
         public IEnumerable<Offer> Offers { get; set; }
 
+#region finishData
         public bool IsClosed { get; set; }
+
+        public int FinishLoadId { get; set; }
+
+        public int FinishOfferId { get; set; }
+
+#endregion
+
         public DateTime CloseDate { get; set; }
 
         public string Description { get; set; }

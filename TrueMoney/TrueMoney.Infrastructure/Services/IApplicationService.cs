@@ -13,5 +13,14 @@
         Task<MoneyApplication> GetByOfferId(int offerId);
 
         Task<bool> ApplyOffer(int offerId, int moneyApplicationId);
+        Task<bool> RevertOffer(int offerId, int moneyApplicationId);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="offerId"></param>
+        /// <param name="moneyApplicationId"></param>
+        /// <returns>New Loan Id</returns>
+        Task<int> FinishApp(int offerId, int moneyApplicationId);
     }
 }

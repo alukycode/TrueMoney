@@ -106,5 +106,53 @@
 
             return false;
         }
+
+        public async Task<bool> RevertOffer(int offerId, int moneyApplicationId)
+        {
+            var app = data.FirstOrDefault(x => x.Id == moneyApplicationId);
+            if (app != null)
+            {
+                var offer = app.Offers.FirstOrDefault(x => x.Id == offerId);
+                if (offer != null)
+                {
+                    app.WaitForApprove = false;
+                    app.Offers = app.Offers.Where(x => x.Id != offerId);//del offer
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public async Task<int> FinishApp(int offerId, int moneyApplicationId)
+        {
+            var finishApp = data.FirstOrDefault(x => x.Id == moneyApplicationId);
+            if (finishApp != null)
+            {
+                var finishOffer = finishApp.Offers.FirstOrDefault(x => x.Id == offerId);
+                if (finishOffer != null)
+                {
+                    var newLoan = new Loan
+                    {
+                        Borrower = finishApp.Borrower,
+                        CloseDate = DateTime.Now,
+                        Id = 0,
+                        Lender = finishOffer.Lender,
+                        MoneyApplication = finishApp
+                    };
+                    finishApp.IsClosed = true;
+                    finishApp.CloseDate = DateTime.Now;
+                    finishApp.FinishOfferId = finishOffer.Id;
+                    finishApp.FinishLoadId = newLoan.Id;
+                    finishOffer.IsClosed = true;
+                    finishOffer.CloseDate = DateTime.Now;
+
+                    return newLoan.Id;
+                }
+            }
+
+            return -1;
+        }
     }
 }

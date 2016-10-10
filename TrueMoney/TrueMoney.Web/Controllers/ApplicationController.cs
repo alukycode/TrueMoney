@@ -34,10 +34,23 @@
 
         public async Task<ActionResult> ApplyOffer(int offerId, int appId)
         {
-            this.ViewBag.CurrentUser = await this.userService.GetCurrentUser();
             await this.applicationService.ApplyOffer(offerId, appId);
 
             return this.RedirectToAction("Details", new { id = appId });
+        }
+
+        public async Task<ActionResult> RevertOffer(int offerId, int appId)
+        {
+            await this.applicationService.ApplyOffer(offerId, appId);
+
+            return this.RedirectToAction("Details", new { id = appId });
+        }
+
+        public async Task<ActionResult> FinishApp(int offerId, int appId)
+        {
+            var newLoanId = await this.applicationService.FinishApp(offerId, appId);
+
+            return this.RedirectToAction("Details", "Loan", new { id = newLoanId });
         }
     }
 }
