@@ -9,23 +9,27 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using TrueMoney.Web.Models;
+using TrueMoney.Infrastructure.Services;
 
 namespace TrueMoney.Web.Controllers
 {
+
     [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private IUserService _userService;
 
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IUserService userService)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            this._userService = userService;
         }
 
         public ApplicationSignInManager SignInManager
@@ -156,6 +160,18 @@ namespace TrueMoney.Web.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    await
+                        this._userService.Create(
+                            0,
+                            user.Email,
+                            model.FirstName,
+                            model.LastName,
+                            model.FamilyName,
+                            model.PassportSeria,
+                            model.PassportNumber,
+                            model.PassportGiveOrganisation,
+                            model.PassportGiveTime,
+                            model.BankAccountNumber);
                     
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link

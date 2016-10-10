@@ -14,5 +14,17 @@ namespace TrueMoney.Infrastructure.Services
         Task<User> GetCurrentUser();
         Task<User> GetUserById(int id);
         Task<User> GetUserByName(string name);
+
+        Task<User> Create(
+            int id,
+            string email,
+            string firstName,
+            string lastName,
+            string familyName,
+            string passportSeria,
+            string passportNumber,
+            string passportGiveOrganisation,
+            DateTime passportGiveTime,
+            string bankAccountNumber);
     }
 }

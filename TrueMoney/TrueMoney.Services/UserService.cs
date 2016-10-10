@@ -44,5 +44,29 @@ namespace TrueMoney.Services
         {
             return await this._userRepository.GetUserByName(name);
         }
+
+        public async Task<User> Create(int id, string email, string firstName, string lastName, string familyName, string passportSeria,
+            string passportNumber, string passportGiveOrganisation, DateTime passportGiveTime, string bankAccountNumber)
+        {
+            return new User
+                       {
+                           Id = id,
+                           BankAccount =
+                               new BankAccount
+                                   {
+                                       AccountNumber = bankAccountNumber,
+                                       Id = 0,
+                                       Owner = null //this user
+                                   },
+                           FirstName = firstName,
+                           LastName = lastName,
+                           FamilyName = firstName,
+                           Name = firstName + " " + lastName, //generate
+                           PassportGiveOrganisation = passportGiveOrganisation,
+                           PassportGiveTime = passportGiveTime,
+                           PassportNumber = passportNumber,
+                           PassportSeria = passportSeria,
+                       };
+        }
     }
 }
