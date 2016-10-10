@@ -33,5 +33,16 @@ namespace TrueMoney.Services
 
             return new User { Id = 1 };
         }
+
+        public async Task<User> GetUserById(int id)
+        {
+            //return await this._userRepository.GetById(id);\
+            return new User { Id = id, Name = "User" + id };
+        }
+
+        public async Task<User> GetUserByName(string name)
+        {
+            return await this._userRepository.GetUserByName(name);
+        }
     }
 }

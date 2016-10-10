@@ -8,6 +8,8 @@ using TrueMoney.Infrastructure.Services;
 
 namespace TrueMoney.Web.Controllers
 {
+    using TrueMoney.Infrastructure.Entities;
+
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -17,10 +19,32 @@ namespace TrueMoney.Web.Controllers
             _userService = userService;
         }
 
-        public async Task<string> Index()
+        public async Task<ActionResult> Index()
         {
-            var res = await _userService.GetAll();
-            return "Controller " + res.First().Name;
+            var currentUser = await this._userService.GetCurrentUser();
+            if (currentUser == null)
+            {
+                return this.RedirectToAction("Index", "Home");
+            }
+
+            return this.RedirectToAction("Details", new { id = currentUser.Id });
+        }
+
+        public async Task<ActionResult> Details(int id)
+        {
+            User user = null;
+            if (id > -1)
+            {
+                user = await this._userService.GetUserById(id);
+            }
+
+            if (user == null)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            this.ViewBag.CurrentUser = user;
+            return this.View(user);
         }
     }
 }

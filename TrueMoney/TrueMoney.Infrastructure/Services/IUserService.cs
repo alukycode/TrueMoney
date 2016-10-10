@@ -12,5 +12,7 @@ namespace TrueMoney.Infrastructure.Services
         Task<IEnumerable<User>> GetAll();
 
         Task<User> GetCurrentUser();
+        Task<User> GetUserById(int id);
+        Task<User> GetUserByName(string name);
     }
 }

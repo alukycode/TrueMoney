@@ -23,6 +23,11 @@ namespace TrueMoney.Data.Repositories
             return Mapper.Map<IEnumerable<User>>(users).ToList();
         }
 
+        public Task<User> GetUserByName(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         private async Task<Entities.User> LoadById(int id)
         {
             using (var context = new TrueMoneyContext())

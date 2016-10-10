@@ -1,0 +1,29 @@
+﻿@model TrueMoney.Infrastructure.Entities.User
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Name</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @if (ViewBag.CurrentUser.Id == Model.Id)
+    {
+        @Html.ActionLink("Создать заявку на займ", "Create", "Application")
+    }
+    @Html.ActionLink("В личный кабинет", "Index")
+</p>
