@@ -1,31 +1,29 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Главная";
 }
 
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <h1>True Money - надёжно и пиздато!</h1>
+    <p class="lead">Революция в мире FinTech!</p>
+    <p class="lead">Теперь не нужно идти в банк за кредитом чтобы взять денег на пару недель, возьми их в долг не выходя из дома!</p>
+    <p class="lead">Есть свободные деньги? Одолжи кому-нибудь и заработай!</p>
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    <div class="col-md-6">
+        <h2>Дать в долг</h2>
+        <p>Скопилось много денег, которые некуда деть?</p>
+        <p>Инфляция съедает рубли, которые лежат под матрасом?</p>
+        <p>Хочешь немного заработать ничего не делая?</p>
+        <p>Почувствуй себя мини-банком и дай их кому-нибудь в долг под проценты!</p>
+        <p><a class="btn btn-success" href="@Url.Action("Lend", "Home")">Просмотреть заявки на займ &raquo;</a></p>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    <div class="col-md-6">
+        <h2>Взять в долг</h2>
+        <p>Не хватает денег, чтобы купить микроволновку?</p>
+        <p>До стипендии ещё неделя, а сетку в общаге нужно оплатить уже сегодня?</p>
+        <p>Друзья такие же нищеброды без денег?</p>
+        <p>Найди друзей с баблецом у нас на сайте!</p>
+        <p><a class="btn btn-primary" href="@Url.Action("Borrow", "Home")">Подать заявку &raquo;</a></p>
     </div>
 </div>
