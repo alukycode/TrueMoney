@@ -33,10 +33,10 @@ namespace TrueMoney.Services
             int userId;
             if(Int32.TryParse(HttpContext.Current.Request.QueryString["user"], out userId))
             {
-                return new User { Id = userId };
+                return new User { Id = userId, IsActive = true };
             }
 
-            return new User { Id = 1 };
+            return new User { Id = 1, IsActive = true };
         }
 
         public async Task<User> GetUserById(int id)

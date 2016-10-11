@@ -67,5 +67,36 @@
 
             return this.RedirectToAction("Details", new { id = appId });
         }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateOffer(CreateOfferForm model)
+        {
+            if (ModelState.IsValid)
+            {
+                var app = await this.applicationService.GetById(model.AppId);
+                var currentUser = await this.userService.GetCurrentUser();
+                this.ViewBag.CurrentUser = currentUser;
+                if (model.Rate > app.Rate)
+                {
+                    ModelState.AddModelError("Rate", "Вы превысили маскимальнодопустимую процентную ставку.");
+                    return this.View("Details", app);
+                }
+
+                if (!currentUser.IsActive)
+                {
+                    ModelState.AddModelError("User error", "Вы ещё не прошли подтверждение регистрации.");
+                    return this.View("Details", app);
+                }
+
+                var res = await this.applicationService.CreateOffer(model.AppId, model.Rate);
+                if (!res)
+                {
+                    ModelState.AddModelError("Server error", "Что-то пошло не так.");
+                    return this.View("Details", app);
+                }
+            }
+
+            return this.RedirectToAction("Details", new { id = model.AppId });
+        }
     }
 }
