@@ -176,6 +176,7 @@ namespace TrueMoney.Web.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(applicationUser, isPersistent: false, rememberBrowser: false);
+                    var currentUserId = UserManager.FindByEmail(model.Email).Id;
                     var user =
                         await
                         this._userService.Create(
@@ -188,7 +189,8 @@ namespace TrueMoney.Web.Controllers
                             model.Passport.Number,
                             model.Passport.GiveOrganisation,
                             model.Passport.DateOfIssuing,
-                            model.BankAccountNumber);
+                            model.BankAccountNumber,
+                            currentUserId);
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

@@ -27,6 +27,7 @@ namespace TrueMoney.Infrastructure.Services
             string passportNumber,
             string passportGiveOrganisation,
             DateTime passportDateOfIssuing,
-            string bankAccountNumber);
+            string bankAccountNumber,
+            string aspUserId);
     }
 }
