@@ -23,10 +23,29 @@ namespace TrueMoney.Web.Controllers
         private ApplicationUserManager _userManager;
         private IUserService _userService;
 
-        public AccountController(
-            IUserService userService)
+        public AccountController(IUserService userService)
         {
+            if (userService == null)
+            {
+                throw new ArgumentNullException(nameof(userService));
+            }
+
             this._userService = userService;
+        }
+
+        public AccountController(
+            IUserService userService,
+            ApplicationUserManager userManager,
+            ApplicationSignInManager signInManager)
+        {
+            if (userService == null)
+            {
+                throw new ArgumentNullException(nameof(userService));
+            }
+
+            this._userService = userService;
+            UserManager = userManager;
+            SignInManager = signInManager;
         }
 
         public ApplicationSignInManager SignInManager
@@ -35,9 +54,9 @@ namespace TrueMoney.Web.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -121,7 +140,7 @@ namespace TrueMoney.Web.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -156,7 +175,8 @@ namespace TrueMoney.Web.Controllers
                 var result = await UserManager.CreateAsync(applicationUser, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(applicationUser, isPersistent:false, rememberBrowser:false);
+                    await SignInManager.SignInAsync(applicationUser, isPersistent: false, rememberBrowser: false);
+                    var currentUserId = UserManager.FindByEmail(model.Email).Id;
                     var user =
                         await
                         this._userService.Create(
@@ -169,7 +189,8 @@ namespace TrueMoney.Web.Controllers
                             model.Passport.Number,
                             model.Passport.GiveOrganisation,
                             model.Passport.DateOfIssuing,
-                            model.BankAccountNumber);
+                            model.BankAccountNumber,
+                            currentUserId);
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);

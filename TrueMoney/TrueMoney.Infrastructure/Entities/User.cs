@@ -25,6 +25,8 @@
             var otherUser = o as User;
             return otherUser != null && this.Id == otherUser.Id;
         }
+
+        public string AspUserId { get; set; }
     }
 
     public class Passport

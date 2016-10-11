@@ -60,18 +60,22 @@ namespace TrueMoney.Services
             string passportNumber,
             string passportGiveOrganisation,
             DateTime passportDateOfIssuing,
-            string bankAccountNumber)
+            string bankAccountNumber,
+            string aspUserId)
         {
             var user = new User
             {
                 FirstName = firstName,
                 LastName = lastName,
                 MiddleName = middleName,
+                AspUserId = aspUserId,
             };
             user.Passport.Number = passportNumber;
             user.Passport.Series = passportSerie;
             user.Passport.DateOfIssuing = passportDateOfIssuing;
             user.Passport.GiveOrganisation = passportGiveOrganisation;
+
+            await _userRepository.Add(user);
 
             return user;
         }
