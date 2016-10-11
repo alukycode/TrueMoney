@@ -116,6 +116,9 @@ namespace TrueMoney.Web.Models
         [Required]
         [DataType(DataType.Date)]
         public DateTime DateOfIssuing { get; set; }
+
+        [Required]
+        public string GiveOrganisation { get; set; }
     }
 
     public class ResetPasswordViewModel

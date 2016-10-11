@@ -17,6 +17,14 @@
         public string MiddleName { get; set; }
 
         public Passport Passport { get; set; }
+        
+        public bool IsActive { get; set; }
+
+        public override bool Equals(object o)
+        {
+            var otherUser = o as User;
+            return otherUser != null && this.Id == otherUser.Id;
+        }
 
         public string AspUserId { get; set; }
     }
@@ -28,5 +36,7 @@
         public string Number { get; set; }
 
         public DateTime DateOfIssuing { get; set; }
+
+        public string GiveOrganisation { get; set; }
     }
 }

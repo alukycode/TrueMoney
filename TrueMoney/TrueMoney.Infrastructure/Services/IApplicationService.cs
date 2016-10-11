@@ -14,6 +14,7 @@
 
         Task<bool> ApplyOffer(int offerId, int moneyApplicationId);
         Task<bool> RevertOffer(int offerId, int moneyApplicationId);
+        Task<bool> CreateOffer(int appId, float rate);
 
         /// <summary>
         /// 
@@ -28,5 +29,6 @@
         /// </summary>
         /// <returns>New money application id</returns>
         Task<int> CreateApp(float count, float rate, int dayCount, string description);
+
     }
 }

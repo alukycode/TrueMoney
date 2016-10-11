@@ -123,10 +123,32 @@
                 if (offer != null)
                 {
                     app.WaitForApprove = false;
-                    app.Offers = app.Offers.Where(x => x.Id != offerId);//del offer
+                    app.Offers = app.Offers.Where(x => x.Id != offerId).ToList();//del offer
 
                     return true;
                 }
+            }
+
+            return false;
+        }
+
+        public async Task<bool> CreateOffer(int appId, float rate)
+        {
+            var app = data.FirstOrDefault(x => x.Id == appId);
+            var user = await this._userService.GetCurrentUser();
+            if (user.IsActive && app != null && !app.IsClosed && !app.Offers.Any(x=>!x.IsClosed && x.Lender.Id == user.Id) && user != null)
+            {
+                app.Offers.Add(
+                    new Offer
+                        {
+                            Id = number++,
+                            CreateTime = DateTime.Now,
+                            Lender = user,
+                            MoneyApplication = app,
+                            Rate = rate
+                        });
+
+                return true;
             }
 
             return false;
@@ -161,8 +183,11 @@
 
         public async Task<int> CreateApp(float count, float rate, int dayCount, string description)
         {
-            data.Add(
-                new MoneyApplication
+            var user = await this._userService.GetCurrentUser();
+            if (user.IsActive)
+            {
+                data.Add(
+                    new MoneyApplication
                     {
                         Id = number++,
                         Borrower = await this._userService.GetCurrentUser(),
@@ -173,7 +198,10 @@
                         DayCount = dayCount
                     });
 
-            return data[number - 1].Id;
+                return data[number - 1].Id;
+            }
+
+            return -1;
         }
     }
 }

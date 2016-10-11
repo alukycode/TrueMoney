@@ -33,10 +33,10 @@ namespace TrueMoney.Services
             int userId;
             if(Int32.TryParse(HttpContext.Current.Request.QueryString["user"], out userId))
             {
-                return new User { Id = userId };
+                return new User { Id = userId, IsActive = true };
             }
 
-            return new User { Id = 1 };
+            return new User { Id = 1, IsActive = true };
         }
 
         public async Task<User> GetUserById(int id)
@@ -48,6 +48,32 @@ namespace TrueMoney.Services
         {
             //return await this._userRepository.GetUserByName(name);
             throw new NotImplementedException();
+        }
+
+        public async Task<User> Create(
+            int id,
+            string email,
+            string firstName,
+            string lastName,
+            string middleName,
+            string passportSerie,
+            string passportNumber,
+            string passportGiveOrganisation,
+            DateTime passportDateOfIssuing,
+            string bankAccountNumber)
+        {
+            var user = new User
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                MiddleName = middleName,
+            };
+            user.Passport.Number = passportNumber;
+            user.Passport.Series = passportSerie;
+            user.Passport.DateOfIssuing = passportDateOfIssuing;
+            user.Passport.GiveOrganisation = passportGiveOrganisation;
+
+            return user;
         }
     }
 }

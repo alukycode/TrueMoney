@@ -22,7 +22,7 @@
 
         public int DayCount { get; set; }
 
-        public IEnumerable<Offer> Offers { get; set; }
+        public IList<Offer> Offers { get; set; } = new List<Offer>();
 
 #region finishData
         public bool IsClosed { get; set; }
