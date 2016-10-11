@@ -30,5 +30,6 @@
         /// <returns>New money application id</returns>
         Task<int> CreateApp(float count, float rate, int dayCount, string description);
 
+        Task<bool> DeleteApp(int appId);
     }
 }

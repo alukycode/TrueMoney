@@ -19,6 +19,7 @@
             this.userService = userService;
         }
 
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> Index()
         {
             this.ViewBag.CurrentUser = await this.userService.GetCurrentUser();
@@ -97,6 +98,18 @@
             }
 
             return this.RedirectToAction("Details", new { id = model.AppId });
+        }
+
+        public async Task<ActionResult> Delete(int appId)
+        {
+            var res = await this.applicationService.DeleteApp(appId);
+
+            if (res)
+            {
+                return this.RedirectToAction("Index");
+            }
+
+            return this.RedirectToAction("Details", new { id = appId });
         }
     }
 }

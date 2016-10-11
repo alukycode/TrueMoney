@@ -11,7 +11,7 @@
 
 <div>
     <h4>@Model.Id</h4>
-    <hr />
+    <hr/>
     @if (!Model.WaitForApprove)
     {
 
@@ -92,9 +92,13 @@
         {
             <text>sorry, borrower try to finish with user.id =
                 @Model.Offers.FirstOrDefault(x => x.WaitForApprove).Lender.Id</text>
+        }
     }
-}
 </div>
+@if (this.ViewBag.CurrentUser.Id == Model.Borrower.Id)
+{
+    @Html.Action("Удалить заявку", "Delete", new { appId = Model.Id })
+}
 <p>
     @Html.ActionLink("Back to List", "Index")
 </p>

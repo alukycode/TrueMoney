@@ -134,9 +134,11 @@
 
         public async Task<bool> CreateOffer(int appId, float rate)
         {
+            var activeAppsByPerson = new List<MoneyApplication>();//todo - Sania - get all active apps by user;
             var app = data.FirstOrDefault(x => x.Id == appId);
             var user = await this._userService.GetCurrentUser();
-            if (user.IsActive && app != null && !app.IsClosed && !app.Offers.Any(x=>!x.IsClosed && x.Lender.Id == user.Id) && user != null)
+            if (!activeAppsByPerson.Any() && user != null && user.IsActive && app != null && !app.IsClosed && 
+                !app.Offers.Any(x=>!x.IsClosed && x.Lender.Id == user.Id))
             {
                 app.Offers.Add(
                     new Offer
@@ -202,6 +204,27 @@
             }
 
             return -1;
+        }
+
+        public async Task<bool> DeleteApp(int appId)
+        {
+            var currentUser = await this._userService.GetCurrentUser();
+            var app = data.FirstOrDefault(x => x.Id == appId);
+            if (app != null && !app.IsClosed && Equals(app.Borrower, currentUser))
+            {
+                app.IsClosed = true;
+                app.CloseDate = DateTime.Now;
+                foreach (var offer in app.Offers)
+                {
+                    offer.IsClosed = true;
+                    offer.CloseDate = DateTime.Now;
+                    //send notification for lender
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
