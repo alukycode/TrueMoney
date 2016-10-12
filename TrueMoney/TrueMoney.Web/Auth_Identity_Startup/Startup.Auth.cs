@@ -3,11 +3,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.Google;
 using Owin;
-using TrueMoney.Web.Models;
 
-namespace TrueMoney.Web
+namespace TrueMoney.Web.Auth_Identity_Startup
 {
     public partial class Startup
     {

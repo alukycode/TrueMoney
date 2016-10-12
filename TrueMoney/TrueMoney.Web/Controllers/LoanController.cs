@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace TrueMoney.Web.Controllers
 {
     using System.Threading.Tasks;
 
-    using TrueMoney.Infrastructure.Services;
+    using Infrastructure.Services;
 
     [Authorize]
     public class LoanController : Controller
@@ -18,8 +14,8 @@ namespace TrueMoney.Web.Controllers
 
         public LoanController(ILoanService loanService, IUserService userService)
         {
-            this._loanService = loanService;
-            this._userService = userService;
+            _loanService = loanService;
+            _userService = userService;
         }
         public async Task<ActionResult> Index()
         {
@@ -28,15 +24,15 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Details(int id)
         {
-            var currentUser = await this._userService.GetCurrentUser();
-            this.ViewBag.CurrentUser = currentUser;
-            var model = await this._loanService.GetById(id);
+            var currentUser = await _userService.GetCurrentUser();
+            ViewBag.CurrentUser = currentUser;
+            var model = await _loanService.GetById(id);
             if (model.IsTakePart(currentUser))
             {
-                return this.View(model);
+                return View(model);
             }
 
-            return this.RedirectToAction("Index");
+            return RedirectToAction("Index");
         }
     }
 }

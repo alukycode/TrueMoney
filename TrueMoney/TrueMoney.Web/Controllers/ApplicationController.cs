@@ -1,72 +1,73 @@
-﻿namespace TrueMoney.Web.Controllers
+﻿using TrueMoney.Web.Models;
+
+namespace TrueMoney.Web.Controllers
 {
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    using TrueMoney.Infrastructure.Services;
-    using TrueMoney.Web.Models.ViewModel;
+    using Infrastructure.Services;
 
     [Authorize]
     public class ApplicationController : Controller
     {
-        private readonly IApplicationService applicationService;
+        private readonly IApplicationService _applicationService;
 
-        private readonly IUserService userService;
+        private readonly IUserService _userService;
 
         public ApplicationController(IApplicationService applicationService, IUserService userService)
         {
-            this.applicationService = applicationService;
-            this.userService = userService;
+            _applicationService = applicationService;
+            _userService = userService;
         }
         
         public async Task<ActionResult> Index()
         {
-            this.ViewBag.CurrentUser = await this.userService.GetCurrentUser();
-            var list = await this.applicationService.GetAll();
+            this.ViewBag.CurrentUser = await this._userService.GetCurrentUser();
+            var list = await this._applicationService.GetAll();
             return this.View(list.Where(x => !x.IsClosed));
         }
 
         public async Task<ActionResult> Details(int id)
         {
-            this.ViewBag.CurrentUser = await this.userService.GetCurrentUser();
-            var model = await this.applicationService.GetById(id);
-            return this.View(model);
+            ViewBag.CurrentUser = await _userService.GetCurrentUser();
+            var model = await _applicationService.GetById(id);
+            return View(model);
         }
 
         public async Task<ActionResult> ApplyOffer(int offerId, int appId)
         {
-            await this.applicationService.ApplyOffer(offerId, appId);
+            await _applicationService.ApplyOffer(offerId, appId);
 
-            return this.RedirectToAction("Details", new { id = appId });
+            return RedirectToAction("Details", new { id = appId });
         }
 
         public async Task<ActionResult> RevertOffer(int offerId, int appId)
         {
-            await this.applicationService.RevertOffer(offerId, appId);
+            await this._applicationService.RevertOffer(offerId, appId);
 
-            return this.RedirectToAction("Details", new { id = appId });
+            return RedirectToAction("Details", new { id = appId });
         }
 
         public async Task<ActionResult> FinishApp(int offerId, int appId)
         {
-            var newLoanId = await this.applicationService.FinishApp(offerId, appId);
+            var newLoanId = await _applicationService.FinishApp(offerId, appId);
 
-            return this.RedirectToAction("Details", "Loan", new { id = newLoanId });
+            return RedirectToAction("Details", "Loan", new { id = newLoanId });
         }
 
         public async Task<ActionResult> Create()
         {
-            return this.View(new CreateMoneyApplicationForm());
+            return View(new CreateMoneyApplicationForm());
         }
 
         [HttpPost]
         public async Task<ActionResult> Create(CreateMoneyApplicationForm model)
         {
             var appId =
-                await this.applicationService.CreateApp(model.Count, model.Rate, model.DayCount, model.Description);
+                await _applicationService.CreateApp(model.Count, model.Rate, model.DayCount, model.Description);
 
-            return this.RedirectToAction("Details", new { id = appId });
+            return RedirectToAction("Details", new { id = appId });
         }
 
         [HttpPost]
@@ -74,42 +75,42 @@
         {
             if (ModelState.IsValid)
             {
-                var app = await this.applicationService.GetById(model.AppId);
-                var currentUser = await this.userService.GetCurrentUser();
-                this.ViewBag.CurrentUser = currentUser;
+                var app = await _applicationService.GetById(model.AppId);
+                var currentUser = await _userService.GetCurrentUser();
+                ViewBag.CurrentUser = currentUser;
                 if (model.Rate > app.Rate)
                 {
                     ModelState.AddModelError("Rate", "Вы превысили маскимальнодопустимую процентную ставку.");
-                    return this.View("Details", app);
+                    return View("Details", app);
                 }
 
                 if (!currentUser.IsActive)
                 {
                     ModelState.AddModelError("User error", "Вы ещё не прошли подтверждение регистрации.");
-                    return this.View("Details", app);
+                    return View("Details", app);
                 }
 
-                var res = await this.applicationService.CreateOffer(model.AppId, model.Rate);
+                var res = await _applicationService.CreateOffer(model.AppId, model.Rate);
                 if (!res)
                 {
                     ModelState.AddModelError("Server error", "Что-то пошло не так.");
-                    return this.View("Details", app);
+                    return View("Details", app);
                 }
             }
 
-            return this.RedirectToAction("Details", new { id = model.AppId });
+            return RedirectToAction("Details", new { id = model.AppId });
         }
 
         public async Task<ActionResult> Delete(int appId)
         {
-            var res = await this.applicationService.DeleteApp(appId);
+            var res = await _applicationService.DeleteApp(appId);
 
             if (res)
             {
-                return this.RedirectToAction("Index");
+                return RedirectToAction("Index");
             }
 
-            return this.RedirectToAction("Details", new { id = appId });
+            return RedirectToAction("Details", new { id = appId });
         }
     }
 }

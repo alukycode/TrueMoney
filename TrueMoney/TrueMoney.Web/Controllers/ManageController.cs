@@ -6,7 +6,9 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using TrueMoney.Web.Auth_Identity_Startup;
 using TrueMoney.Web.Models;
+using TrueMoney.Web.Models.Manage;
 
 namespace TrueMoney.Web.Controllers
 {
