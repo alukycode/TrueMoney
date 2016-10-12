@@ -1,4 +1,4 @@
-﻿namespace TrueMoney.Web.Models.ViewModel
+﻿namespace TrueMoney.Web.Models
 {
     public class CreateMoneyApplicationForm
     {

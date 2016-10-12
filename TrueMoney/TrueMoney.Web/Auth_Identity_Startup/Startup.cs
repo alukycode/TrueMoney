@@ -1,8 +1,9 @@
 ﻿using Microsoft.Owin;
 using Owin;
+using TrueMoney.Web.Auth_Identity_Startup;
 
-[assembly: OwinStartupAttribute(typeof(TrueMoney.Web.Startup))]
-namespace TrueMoney.Web
+[assembly: OwinStartup(typeof(Startup))]
+namespace TrueMoney.Web.Auth_Identity_Startup
 {
     public partial class Startup
     {

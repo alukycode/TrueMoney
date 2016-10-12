@@ -1,7 +1,7 @@
-﻿namespace TrueMoney.Web.Models.ViewModel
-{
-    using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
+namespace TrueMoney.Web.Models
+{
     public class CreateOfferForm
     {
         public int AppId { get; set; }

@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using TrueMoney.Infrastructure.Entities;
 using TrueMoney.Infrastructure.Services;
-using TrueMoney.Web.Models;
-using TrueMoney.Infrastructure.Services;
+using TrueMoney.Web.Auth_Identity_Startup;
+using TrueMoney.Web.Models.Account;
 
 namespace TrueMoney.Web.Controllers
 {
@@ -30,7 +27,7 @@ namespace TrueMoney.Web.Controllers
                 throw new ArgumentNullException(nameof(userService));
             }
 
-            this._userService = userService;
+            _userService = userService;
         }
 
         public AccountController(
@@ -43,7 +40,7 @@ namespace TrueMoney.Web.Controllers
                 throw new ArgumentNullException(nameof(userService));
             }
 
-            this._userService = userService;
+            _userService = userService;
             UserManager = userManager;
             SignInManager = signInManager;
         }
@@ -179,7 +176,7 @@ namespace TrueMoney.Web.Controllers
                     var currentUserId = UserManager.FindByEmail(model.Email).Id;
                     var user =
                         await
-                        this._userService.Create(
+                        _userService.Create(
                             0,
                             model.Email,
                             model.FirstName,
