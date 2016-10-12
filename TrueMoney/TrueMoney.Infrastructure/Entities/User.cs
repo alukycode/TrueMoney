@@ -27,6 +27,8 @@
         }
 
         public string AspUserId { get; set; }
+
+        public string BankAccount { get; set; }
     }
 
     public class Passport
