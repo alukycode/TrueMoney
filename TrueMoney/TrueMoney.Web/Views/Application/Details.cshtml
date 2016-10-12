@@ -87,6 +87,8 @@
         else if (mainOffer != null)
         {
             @Html.ActionLink("Дать взаймы", "FinishApp", new { offerId = mainOffer.Id, appId = Model.Id })
+            @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = mainOffer.Id, appId = Model.Id })
+
         }
         else
         {
@@ -97,7 +99,7 @@
 </div>
 @if (this.ViewBag.CurrentUser.Id == Model.Borrower.Id)
 {
-    @Html.Action("Удалить заявку", "Delete", new { appId = Model.Id })
+    @Html.ActionLink("Удалить заявку", "Delete", new { appId = Model.Id })
 }
 <p>
     @Html.ActionLink("Back to List", "Index")

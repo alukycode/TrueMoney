@@ -117,16 +117,16 @@
         public async Task<bool> RevertOffer(int offerId, int moneyApplicationId)
         {
             var app = data.FirstOrDefault(x => x.Id == moneyApplicationId);
-            if (app != null)
+            var offer = app?.Offers.FirstOrDefault(x => x.Id == offerId);
+            if (offer != null)
             {
-                var offer = app.Offers.FirstOrDefault(x => x.Id == offerId);
-                if (offer != null)
+                if (offer.WaitForApprove)
                 {
                     app.WaitForApprove = false;
-                    app.Offers = app.Offers.Where(x => x.Id != offerId).ToList();//del offer
-
-                    return true;
                 }
+                app.Offers = app.Offers.Where(x => x.Id != offerId).ToList();//del offer
+
+                return true;
             }
 
             return false;
@@ -214,7 +214,7 @@
             {
                 app.IsClosed = true;
                 app.CloseDate = DateTime.Now;
-                foreach (var offer in app.Offers)
+                foreach (var offer in app.Offers.Where(x => !x.IsClosed))
                 {
                     offer.IsClosed = true;
                     offer.CloseDate = DateTime.Now;
