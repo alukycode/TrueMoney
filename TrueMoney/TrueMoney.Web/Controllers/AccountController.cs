@@ -448,6 +448,7 @@ namespace TrueMoney.Web.Controllers
         public async Task<ActionResult> YouActivity()
         {
             var currentUser = await _userService.GetCurrentUser();
+            ViewBag.CurrentUser = currentUser;
             var viewModel = new YouActivityViewModel
                                 {
                                     MoneyApplications =

@@ -29,6 +29,7 @@
         public string AspUserId { get; set; }
 
         public string BankAccount { get; set; }
+        public bool IsHaveOpenAppOrLoan { get; set; }
     }
 
     public class Passport

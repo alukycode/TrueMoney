@@ -25,7 +25,21 @@
         @RenderMoneyApplications(item)
     }
 
-    @Html.ActionLink("Создать заявку", "Create", "Application", routeValues: null, htmlAttributes: null)<br />
+    @if (ViewBag.CurrentUser.IsActive)
+    {
+        if (!ViewBag.CurrentUser.IsHaveOpenApp)
+        {
+            @Html.ActionLink("Создать заявку", "Create", "Application", routeValues: null, htmlAttributes: null)<br/>
+        }
+        else
+        {
+            <p>Завершите текущий займ и сможете сделать ещё заявку</p>
+        }
+    }
+    else
+    {
+        <p>Ожидайте подтверждение регистрации и тогда сможете создать заявку</p>
+    }
 
     ---------------------------<br />
     <h5>Ваши активные предложения:</h5>

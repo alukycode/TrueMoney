@@ -197,7 +197,7 @@
         public async Task<int> CreateApp(float count, float rate, int dayCount, string description)
         {
             var user = await this._userService.GetCurrentUser();
-            if (user.IsActive)
+            if (user.IsActive && !user.IsHaveOpenAppOrLoan)
             {
                 data.Add(
                     new MoneyApplication
@@ -210,6 +210,7 @@
                         Rate = rate,
                         DayCount = dayCount
                     });
+                user.IsHaveOpenAppOrLoan = true;
 
                 return data[number - 1].Id;
             }
@@ -221,7 +222,7 @@
         {
             var currentUser = await this._userService.GetCurrentUser();
             var app = data.FirstOrDefault(x => x.Id == appId);
-            if (app != null && !app.IsClosed && Equals(app.Borrower, currentUser))
+            if (app != null && !app.IsClosed && app.IsTakePart(currentUser))
             {
                 app.IsClosed = true;
                 app.CloseDate = DateTime.Now;
@@ -231,6 +232,8 @@
                     offer.CloseDate = DateTime.Now;
                     //send notification for lender
                 }
+
+                currentUser.IsHaveOpenAppOrLoan = false;
 
                 return true;
             }
