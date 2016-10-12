@@ -96,6 +96,17 @@
             return data.FirstOrDefault(x => x.Offers.Any(y => y.Id == offerId));
         }
 
+        public async Task<IList<Offer>> GetAllOffersByUser(int userId)
+        {
+            var res = new List<Offer>();
+            foreach (var moneyApplication in data)
+            {
+                res.AddRange(moneyApplication.Offers.Where(x => x.Lender.Id == userId));
+            }
+
+            return res;
+        }
+
         public async Task<bool> ApplyOffer(int offerId, int moneyApplicationId)
         {
             var app = data.FirstOrDefault(x => x.Id == moneyApplicationId);

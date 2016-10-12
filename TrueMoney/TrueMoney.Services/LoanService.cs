@@ -24,7 +24,9 @@
                         CloseDate = DateTime.Now,
                         Id = number++,
                         Lender = offer.Lender,
-                        MoneyApplication = moneyApplication
+                        MoneyApplication = moneyApplication,
+                        Rate = offer.Rate,
+                        Count = moneyApplication.Count
                     });
 
             return data[0];

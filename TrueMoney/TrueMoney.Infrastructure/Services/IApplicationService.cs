@@ -12,6 +12,8 @@
         Task<IList<MoneyApplication>> GetByUserId(int userId);
         Task<MoneyApplication> GetByOfferId(int offerId);
 
+        Task<IList<Offer>> GetAllOffersByUser(int userId);
+
         Task<bool> ApplyOffer(int offerId, int moneyApplicationId);
         Task<bool> RevertOffer(int offerId, int moneyApplicationId);
         Task<bool> CreateOffer(int appId, float rate);

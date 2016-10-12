@@ -34,6 +34,7 @@
         public IList<Payment> Payments { get; set; }
 
         public float Count { get; set; }
+        public float Rate { get; set; }
 
         public bool IsTakePart(User user)
         {

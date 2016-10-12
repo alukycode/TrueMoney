@@ -12,6 +12,7 @@ using TrueMoney.Web.Models.Account;
 
 namespace TrueMoney.Web.Controllers
 {
+    using TrueMoney.Web.Models;
 
     [Authorize]
     public class AccountController : Controller
@@ -19,28 +20,37 @@ namespace TrueMoney.Web.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
         private IUserService _userService;
+        private readonly IApplicationService _applicationService;
 
-        public AccountController(IUserService userService)
+        private readonly ILoanService _loanService;
+
+        public AccountController(IUserService userService, IApplicationService applicationService, ILoanService loanService)
         {
-            if (userService == null)
+            if (userService == null || applicationService == null || loanService == null)
             {
                 throw new ArgumentNullException(nameof(userService));
             }
 
             _userService = userService;
+            _applicationService = applicationService;
+            _loanService = loanService;
         }
 
         public AccountController(
             IUserService userService,
             ApplicationUserManager userManager,
-            ApplicationSignInManager signInManager)
+            ApplicationSignInManager signInManager,
+            IApplicationService applicationService,
+            ILoanService loanService)
         {
-            if (userService == null)
+            if (userService == null || applicationService == null || loanService == null)
             {
                 throw new ArgumentNullException(nameof(userService));
             }
 
             _userService = userService;
+            _applicationService = applicationService;
+            _loanService = loanService;
             UserManager = userManager;
             SignInManager = signInManager;
         }
@@ -433,6 +443,22 @@ namespace TrueMoney.Web.Controllers
         {
             return View();
         }
+
+        [Authorize]
+        public async Task<ActionResult> YouActivity()
+        {
+            var currentUser = await _userService.GetCurrentUser();
+            var viewModel = new YouActivityViewModel
+                                {
+                                    MoneyApplications =
+                                        await _applicationService.GetByUserId(currentUser.Id),
+                                    Loans = await _loanService.GetByUser(currentUser.Id),
+                                    Offers =
+                                        await
+                                        _applicationService.GetAllOffersByUser(currentUser.Id)
+                                };
+            return View(viewModel);
+        } 
 
         protected override void Dispose(bool disposing)
         {

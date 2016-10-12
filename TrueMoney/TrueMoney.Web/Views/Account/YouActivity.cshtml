@@ -1,0 +1,68 @@
+﻿@using TrueMoney.Infrastructure.Entities
+@model TrueMoney.Web.Models.YouActivityViewModel
+
+<div>
+    <h4>Личный кабинет</h4>
+    <h5>Ваш активный займ:</h5>
+    @foreach (var item in Model.Loans.Where(x => !x.IsClosed))
+    {
+        @RenderLoan(item)
+    }
+    <h5>Ваши завершённые займы:</h5>
+    @foreach (var item in Model.Loans.Where(x => !x.IsClosed))
+    {
+        @RenderLoan(item)
+    }
+    ---------------------------<br/>
+    <h5>Ваша активная заявка:</h5>
+    @foreach (var item in Model.MoneyApplications.Where(x => !x.IsClosed))
+    {
+        @RenderMoneyApplications(item)
+    }
+    <h5>Ваши закрытые заявки:</h5>
+    @foreach (var item in Model.MoneyApplications.Where(x => x.IsClosed))
+    {
+        @RenderMoneyApplications(item)
+    }
+
+    @Html.ActionLink("Создать заявку", "Create", "Application", routeValues: null, htmlAttributes: null)<br />
+
+    ---------------------------<br />
+    <h5>Ваши активные предложения:</h5>
+    @foreach (var item in Model.MoneyApplications.Where(x => !x.IsClosed))
+    {
+        @RenderMoneyApplications(item)
+    }
+    <h5>Ваши закрытые предложения:</h5>
+    @foreach (var item in Model.MoneyApplications.Where(x => x.IsClosed))
+    {
+        @RenderMoneyApplications(item)
+    }
+
+    ---------------------------<br />
+    @Html.ActionLink("Список всех заявок", "Index", "Application", routeValues: null, htmlAttributes: null)<br />
+</div>
+
+@helper RenderLoan(Loan loan)
+{
+    <p>
+        <strong>@loan.Id</strong> - @loan.Count - @loan.Rate
+        @Html.ActionLink("Детали", "Details", "Loan", routeValues: new { id = loan.Id }, htmlAttributes: null)<br />
+    </p>
+}
+
+@helper RenderOffer(Offer offer)
+{
+    <p>
+        <strong>@offer.Id</strong> - @offer.Rate
+        @Html.ActionLink("Просмотреть заявку", "Details", "Loan", routeValues: new { id = offer.MoneyApplication.Id }, htmlAttributes: null)<br />
+    </p>
+}
+
+@helper RenderMoneyApplications(MoneyApplication moneyApplication)
+{
+    <p>
+        <strong>@moneyApplication.Id</strong> - @moneyApplication.Count - @moneyApplication.Rate
+        @Html.ActionLink("Просмотреть заявку", "Details", "Application", routeValues: new { id = moneyApplication.Id }, htmlAttributes: null)<br />
+    </p>
+}
