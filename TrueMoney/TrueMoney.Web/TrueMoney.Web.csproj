@@ -328,7 +328,7 @@
     <Content Include="Views\Partials\CreateOfferForm.cshtml" />
     <Content Include="Views\Loan\VisaPayment.cshtml" />
     <Content Include="Views\Loan\Success.cshtml" />
-    <Content Include="Views\Account\YouActivity.cshtml" />
+    <Content Include="Views\Loan\YouActivity.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

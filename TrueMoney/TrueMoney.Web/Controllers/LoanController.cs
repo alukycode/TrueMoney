@@ -14,10 +14,13 @@ namespace TrueMoney.Web.Controllers
         private readonly ILoanService _loanService;
         private readonly IUserService _userService;
 
-        public LoanController(ILoanService loanService, IUserService userService)
+        private readonly IApplicationService _applicationService;
+
+        public LoanController(ILoanService loanService, IUserService userService, IApplicationService applicationService)
         {
             _loanService = loanService;
             _userService = userService;
+            _applicationService = applicationService;
         }
         public async Task<ActionResult> Index()
         {
@@ -75,6 +78,23 @@ namespace TrueMoney.Web.Controllers
         public string Test()
         {
             return "authorized";
+        }
+
+        [Authorize]
+        public async Task<ActionResult> YouActivity()
+        {
+            var currentUser = await _userService.GetCurrentUser();
+            ViewBag.CurrentUser = currentUser;
+            var viewModel = new YouActivityViewModel
+                                {
+                                    MoneyApplications =
+                                        await _applicationService.GetByUserId(currentUser.Id),
+                                    Loans = await _loanService.GetByUser(currentUser.Id),
+                                    Offers =
+                                        await
+                                        _applicationService.GetAllOffersByUser(currentUser.Id)
+                                };
+            return View(viewModel);
         }
     }
 }
