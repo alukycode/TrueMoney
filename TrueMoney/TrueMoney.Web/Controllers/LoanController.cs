@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 
 namespace TrueMoney.Web.Controllers
 {
@@ -9,7 +10,7 @@ namespace TrueMoney.Web.Controllers
     using TrueMoney.Web.Models;
 
     [Authorize]
-    public class LoanController : Controller
+    public class LoanController : BaseController
     {
         private readonly ILoanService _loanService;
         private readonly IUserService _userService;
@@ -29,36 +30,22 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Details(int id)
         {
-            var currentUser = await _userService.GetCurrentUser();
-            ViewBag.CurrentUser = currentUser;
-            var model = await _loanService.GetById(id);
-            if (model.IsTakePart(currentUser))
-            {
-                return View(model);
-            }
+            var model = await _loanService.GetById(id, CurrentUser.Id);
 
-            return RedirectToAction("Index");
-        }
-
-        public string Test()
-        {
-            return "authorized";
+            return View(model);
         }
 
         [Authorize]
         public async Task<ActionResult> YouActivity()
         {
-            var currentUser = await _userService.GetCurrentUser();
-            ViewBag.CurrentUser = currentUser;
-            var viewModel = new YouActivityViewModel
+            var viewModel =  new YouActivityViewModel
                                 {
-                                    MoneyApplications =
-                                        await _applicationService.GetByUserId(currentUser.Id),
-                                    Loans = await _loanService.GetByUser(currentUser.Id),
-                                    Offers =
-                                        await
-                                        _applicationService.GetAllOffersByUser(currentUser.Id)
+                                    MoneyApplications = await _applicationService.GetByUserId(CurrentUser.Id),
+                                    Loans = await _loanService.GetByUser(CurrentUser.Id),
+                                    Offers = await _applicationService.GetAllOffersByUser(CurrentUser.Id)
                                 };
+
+
             return View(viewModel);
         }
     }

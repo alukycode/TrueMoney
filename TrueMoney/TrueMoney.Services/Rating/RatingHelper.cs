@@ -2,7 +2,7 @@
 {
     using TrueMoney.Infrastructure.Entities;
 
-    public static class RatingHelper
+    public static class RatingHelper // review: почему нужен хелпер, если можно сделать метод в сервисе?
     {
         public static void ChangeRating(User user, RatingAction action)
         {

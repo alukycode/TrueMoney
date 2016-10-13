@@ -28,20 +28,14 @@ namespace TrueMoney.Services
             await _userRepository.Add(entity);
         }
 
-        public async Task<User> GetCurrentUser()
-        {
-            int userId;
-            if(Int32.TryParse(HttpContext.Current.Request.QueryString["user"], out userId))
-            {
-                return new User { Id = userId, IsActive = true };
-            }
-
-            return new User { Id = 1, IsActive = true };
-        }
-
         public async Task<User> GetUserById(int id)
         {
             return await _userRepository.GetById(id);
+        }
+
+        public async Task<User> GetUserByAspNetId(string id)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<User> GetUserByName(string name)
@@ -50,6 +44,7 @@ namespace TrueMoney.Services
             throw new NotImplementedException();
         }
 
+        // review: пример, где приходит слишком много полей, а могла бы приходить InputModel
         public async Task<User> Create(
             int id,
             string email,

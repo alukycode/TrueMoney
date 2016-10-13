@@ -21,9 +21,8 @@
             _userService = userService;
         }
 
-        public async Task<Loan> Create(MoneyApplication moneyApplication, Offer offer)
+        public async Task<Loan> Create(User currentUser, MoneyApplication moneyApplication, Offer offer)
         {
-            var currentUser = await _userService.GetCurrentUser();
             if (currentUser != null && currentUser.IsActive && !currentUser.IsHaveOpenAppOrLoan && 
                 moneyApplication.IsTakePart(currentUser) && Equals(offer.Lender, currentUser))
             {
@@ -46,8 +45,9 @@
             return null;
         }
 
-        public async Task<Loan> GetById(int id)
+        public async Task<Loan> GetById(int id, int userId)
         {
+            // todo: add user validation here and throw exception if he isn't valid
             return data.FirstOrDefault(x => x.Id == id);
         }
 

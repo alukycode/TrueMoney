@@ -7,7 +7,7 @@ namespace TrueMoney.Web.Controllers
 {
     using Infrastructure.Entities;
 
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         private readonly IUserService _userService;
 
@@ -24,7 +24,7 @@ namespace TrueMoney.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("Details", new { id = currentUser.Id });
+            return RedirectToAction("Details", new { id = CurrentUser.Id });
         }
 
         public async Task<ActionResult> Details(int id)

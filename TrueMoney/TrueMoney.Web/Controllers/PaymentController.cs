@@ -12,7 +12,7 @@ namespace TrueMoney.Web.Controllers
     using TrueMoney.Infrastructure.Services;
     using TrueMoney.Web.Models;
 
-    public class PaymentController : Controller
+    public class PaymentController : BaseController
     {
         private readonly IPaymentService _paymentService;
         private readonly IUserService _userService;
@@ -50,6 +50,7 @@ namespace TrueMoney.Web.Controllers
                 && formModel.PaymentCount > 0)
             {
                 var payRes = await _paymentService.LendMoney(
+                    CurrentUser,
                     formModel.LoanId,
                     formModel.PayForId,
                     formModel.PaymentCount,

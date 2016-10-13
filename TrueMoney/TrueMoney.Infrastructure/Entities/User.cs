@@ -7,7 +7,7 @@
     {
         public User()
         {
-            Passport = new Passport();
+            Passport = new Passport(); // review: не вижу смысла
         }
 
         public string FirstName { get; set; }
@@ -20,6 +20,7 @@
         
         public bool IsActive { get; set; }
 
+        // review: зачем нам Equals?
         public override bool Equals(object o)
         {
             var otherUser = o as User;
@@ -34,6 +35,7 @@
         public int Rating { get; set; } = 0;
     }
 
+    // review: для каждого класса свой файл
     public class Passport
     {
         public string Series { get; set; }

@@ -17,6 +17,8 @@
         {
             _userService = userService;
             this._loanService = loanService;
+
+            // review: по-хорошему, эти данные должны быть в репозитории, в методе-заглушке и возвращаться из него
             data = new List<MoneyApplication> // todo
                        {
                            new MoneyApplication
@@ -143,13 +145,12 @@
             return false;
         }
 
-        public async Task<bool> CreateOffer(int appId, float rate)
+        public async Task<bool> CreateOffer(User user, int appId, float rate)
         {
             var activeAppsByPerson = new List<MoneyApplication>();//todo - Sania - get all active apps by user;
             var app = data.FirstOrDefault(x => x.Id == appId);
-            var user = await this._userService.GetCurrentUser();
             if (!activeAppsByPerson.Any() && user != null && user.IsActive && app != null && !app.IsClosed && 
-                !app.Offers.Any(x=>!x.IsClosed && x.Lender.Id == user.Id))
+                !app.Offers.Any(x=>!x.IsClosed && x.Lender.Id == user.Id)) // review: должна быть весомая причина чтобы проверять юзера на null, ведь такого быть не должно
             {
                 app.Offers.Add(
                     new Offer
@@ -164,10 +165,10 @@
                 return true;
             }
 
-            return false;
+            return false; // review: не нужно этих true/false, не получилось сделать по каким-то причинам - кидай эксепшен
         }
 
-        public async Task<int> FinishApp(int offerId, int moneyApplicationId)
+        public async Task<int> FinishApp(User user, int offerId, int moneyApplicationId)
         {
             var finishApp = data.FirstOrDefault(x => x.Id == moneyApplicationId);
             if (finishApp != null)
@@ -175,7 +176,7 @@
                 var finishOffer = finishApp.Offers.FirstOrDefault(x => x.Id == offerId);
                 if (finishOffer != null)
                 {
-                    var newLoan = await this._loanService.Create(finishApp, finishOffer);
+                    var newLoan = await this._loanService.Create(user, finishApp, finishOffer);
                     if (newLoan != null)
                     {
                         //finish app
@@ -193,19 +194,18 @@
                 }
             }
 
-            return -1;
+            return -1; // review: что это блять за магические цифры
         }
 
-        public async Task<int> CreateApp(float count, int paymentCount, float rate, int dayCount, string description)
+        public async Task<int> CreateApp(User user, float count, int paymentCount, float rate, int dayCount, string description)
         {
-            var user = await this._userService.GetCurrentUser();
             if (user.IsActive && !user.IsHaveOpenAppOrLoan)
             {
                 data.Add(
                     new MoneyApplication
                     {
                         Id = number++,
-                        Borrower = await this._userService.GetCurrentUser(),
+                        Borrower = user,
                         CreateDate = DateTime.Now,
                         Count = count,
                         Description = description,
@@ -221,9 +221,8 @@
             return -1;
         }
 
-        public async Task<bool> DeleteApp(int appId)
+        public async Task<bool> DeleteApp(User currentUser, int appId)
         {
-            var currentUser = await this._userService.GetCurrentUser();
             var app = data.FirstOrDefault(x => x.Id == appId);
             if (app != null && !app.IsClosed && app.IsTakePart(currentUser))
             {
@@ -236,7 +235,7 @@
                     //send notification for lender
                 }
 
-                currentUser.IsHaveOpenAppOrLoan = false;
+                currentUser.IsHaveOpenAppOrLoan = false; // todo: не вижу, что это где-то сохраняется
 
                 return true;
             }

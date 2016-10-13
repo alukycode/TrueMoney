@@ -9,7 +9,7 @@ namespace TrueMoney.Web.Controllers
     using Infrastructure.Services;
 
     [Authorize]
-    public class ApplicationController : Controller
+    public class ApplicationController : BaseController
     {
         private readonly IApplicationService _applicationService;
 
@@ -23,7 +23,6 @@ namespace TrueMoney.Web.Controllers
         
         public async Task<ActionResult> Index()
         {
-            this.ViewBag.CurrentUser = await this._userService.GetCurrentUser();
             var list = await this._applicationService.GetAll();
             return this.View(list.Where(x => !x.IsClosed));
         }
@@ -32,7 +31,6 @@ namespace TrueMoney.Web.Controllers
         {
             if (id.HasValue)
             {
-                ViewBag.CurrentUser = await _userService.GetCurrentUser();
                 var model = await _applicationService.GetById(id.Value);
                 return View(model);
             }
@@ -68,7 +66,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (offerId.HasValue && appId.HasValue)
             {
-                var newLoanId = await _applicationService.FinishApp(offerId.Value, appId.Value);
+                var newLoanId = await _applicationService.FinishApp(CurrentUser, offerId.Value, appId.Value);
                 if (newLoanId > -1)
                 {
                     return RedirectToAction("Details", "Loan", new { id = newLoanId });
@@ -94,7 +92,7 @@ namespace TrueMoney.Web.Controllers
             {
 
                 var appId =
-                    await _applicationService.CreateApp(model.Count, model.PaymentCount, model.Rate, model.DayCount, model.Description);
+                    await _applicationService.CreateApp(CurrentUser, model.Count, model.PaymentCount, model.Rate, model.DayCount, model.Description);
                 if (appId > -1)
                 {
                     return RedirectToAction("Details", new { id = appId });
@@ -110,21 +108,19 @@ namespace TrueMoney.Web.Controllers
             if (ModelState.IsValid)
             {
                 var app = await _applicationService.GetById(model.AppId);
-                var currentUser = await _userService.GetCurrentUser();
-                ViewBag.CurrentUser = currentUser;
                 if (model.Rate > app.Rate)
                 {
                     ModelState.AddModelError("Rate", "Вы превысили маскимальнодопустимую процентную ставку.");
                     return View("Details", app);
                 }
 
-                if (!currentUser.IsActive)
+                if (!CurrentUser.IsActive)
                 {
                     ModelState.AddModelError("User error", "Вы ещё не прошли подтверждение регистрации.");
                     return View("Details", app);
                 }
 
-                var res = await _applicationService.CreateOffer(model.AppId, model.Rate);
+                var res = await _applicationService.CreateOffer(CurrentUser, model.AppId, model.Rate);
                 if (!res)
                 {
                     ModelState.AddModelError("Server error", "Что-то пошло не так.");
@@ -139,7 +135,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (appId.HasValue)
             {
-                var res = await _applicationService.DeleteApp(appId.Value);
+                var res = await _applicationService.DeleteApp(CurrentUser, appId.Value);
 
                 if (res)
                 {

@@ -13,8 +13,10 @@ namespace TrueMoney.Infrastructure.Services
 
         Task Add(User entity);
 
-        Task<User> GetCurrentUser();
         Task<User> GetUserById(int id);
+
+        Task<User> GetUserByAspNetId(string id);
+
         Task<User> GetUserByName(string name);
 
         Task<User> Create(

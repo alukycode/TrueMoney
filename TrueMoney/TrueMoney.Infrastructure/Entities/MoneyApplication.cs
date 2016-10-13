@@ -6,9 +6,6 @@
 
     public class MoneyApplication : Entity
     {
-        /// <summary>
-        /// User
-        /// </summary>
         public User Borrower { get; set; }
 
         public DateTime CreateDate { get; set; }
@@ -17,23 +14,17 @@
 
         public int PaymentCount { get; set; } = 1;
 
-        /// <summary>
-        /// Percent
-        /// </summary>
         public float Rate { get; set; }
 
         public int DayCount { get; set; }
 
         public IList<Offer> Offers { get; set; } = new List<Offer>();
 
-#region finishData
         public bool IsClosed { get; set; }
 
         public int FinishLoadId { get; set; }
 
         public int FinishOfferId { get; set; }
-
-#endregion
 
         public DateTime CloseDate { get; set; }
 

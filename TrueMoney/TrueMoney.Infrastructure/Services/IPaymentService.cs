@@ -6,7 +6,7 @@
 
     public interface IPaymentService
     {
-        Task<PaymentResult> LendMoney(int loanId, int payForId, float count, VisaDetails visaDetails);
+        Task<PaymentResult> LendMoney(User user, int loanId, int payForId, float count, VisaDetails visaDetails);
         //Task<PaymentResult> PayLoanPart(int appId, int payerId, float count);
     }
 }

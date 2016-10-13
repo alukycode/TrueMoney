@@ -16,22 +16,12 @@
 
         Task<bool> ApplyOffer(int offerId, int moneyApplicationId);
         Task<bool> RevertOffer(int offerId, int moneyApplicationId);
-        Task<bool> CreateOffer(int appId, float rate);
+        Task<bool> CreateOffer(User user, int appId, float rate);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="offerId"></param>
-        /// <param name="moneyApplicationId"></param>
-        /// <returns>New Loan Id</returns>
-        Task<int> FinishApp(int offerId, int moneyApplicationId);
+        Task<int> FinishApp(User user, int offerId, int moneyApplicationId);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns>New money application id</returns>
-        Task<int> CreateApp(float count, int paymentCount, float rate, int dayCount, string description);
+        Task<int> CreateApp(User user, float count, int paymentCount, float rate, int dayCount, string description);
 
-        Task<bool> DeleteApp(int appId);
+        Task<bool> DeleteApp(User user, int appId);
     }
 }

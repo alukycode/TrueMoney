@@ -207,6 +207,7 @@
     <Compile Include="Auth_Identity_Startup\SmsService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoanController.cs" />
     <Compile Include="Controllers\ManageController.cs" />

@@ -21,13 +21,12 @@
             _userService = userService;
             _loanService = loanService;
         }
-        public async Task<PaymentResult> LendMoney(int loanId, int payForId, float count, VisaDetails visaDetails)
+        public async Task<PaymentResult> LendMoney(User user, int loanId, int payForId, float count, VisaDetails visaDetails)
         {
-            var user = await _userService.GetCurrentUser();
             var payForUser = await _userService.GetUserById(payForId);
-            var loan = await _loanService.GetById(loanId);
+            var loan = await _loanService.GetById(loanId, user.Id);
 
-            if (user != null && payForUser != null && loan != null && Equals(loan.Borrower, payForUser) && Equals(loan.Lender, user))
+            if (payForUser != null && loan != null && Equals(loan.Borrower, payForUser) && Equals(loan.Lender, user))
             {
                 var result =
                     _bankApi.Do(
