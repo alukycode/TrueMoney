@@ -64,10 +64,20 @@ namespace TrueMoney.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(CreateMoneyApplicationForm model)
         {
-            var appId =
-                await _applicationService.CreateApp(model.Count, model.Rate, model.DayCount, model.Description);
+            if (model.PaymentCount < 1 && model.PaymentCount > model.DayCount)
+            {
+                ModelState.AddModelError("PaymentCount", "Неверное количество платежей.");
+            }
+            if (ModelState.IsValid)
+            {
 
-            return RedirectToAction("Details", new { id = appId });
+                var appId =
+                    await _applicationService.CreateApp(model.Count, model.PaymentCount, model.Rate, model.DayCount, model.Description);
+
+                return RedirectToAction("Details", new { id = appId });
+            }
+
+            return View(model);
         }
 
         [HttpPost]

@@ -27,7 +27,7 @@
 
     @if (ViewBag.CurrentUser.IsActive)
     {
-        if (!ViewBag.CurrentUser.IsHaveOpenApp)
+        if (!ViewBag.CurrentUser.IsHaveOpenAppOrLoan)
         {
             @Html.ActionLink("Создать заявку", "Create", "Application", routeValues: null, htmlAttributes: null)<br/>
         }

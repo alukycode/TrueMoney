@@ -74,6 +74,7 @@ namespace TrueMoney.Services
             user.Passport.Series = passportSerie;
             user.Passport.DateOfIssuing = passportDateOfIssuing;
             user.Passport.GiveOrganisation = passportGiveOrganisation;
+            user.BankAccount = new BankAccount { AccountNumber = bankAccountNumber, Id = 0, Owner = user };
 
             await _userRepository.Add(user);
 

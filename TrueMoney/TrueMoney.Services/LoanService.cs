@@ -55,5 +55,14 @@
         {
             return data.Where(x => x.Borrower.Id == userId || x.Lender.Id == userId).ToList();
         }
+
+        public async Task<bool> CtartLoan(Loan loan)
+        {
+            loan.IsWaitForMoney = false;
+            loan.IsStarted = true;
+            loan.Payments = new List<Payment>();//todo generate
+
+            return true;
+        } 
     }
 }

@@ -47,7 +47,9 @@
     <Compile Include="Entities\Offer.cs" />
     <Compile Include="Entities\Payment.cs" />
     <Compile Include="Entities\BankTransaction.cs" />
+    <Compile Include="Entities\PaymentResult.cs" />
     <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\VisaDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IBankAccountRepository.cs" />
     <Compile Include="Repositories\ILoanRepository.cs" />
@@ -59,6 +61,7 @@
     <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="Services\IApplicationService.cs" />
     <Compile Include="Services\ILoanService.cs" />
+    <Compile Include="Services\IPaymentService.cs" />
     <Compile Include="Services\IUserService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

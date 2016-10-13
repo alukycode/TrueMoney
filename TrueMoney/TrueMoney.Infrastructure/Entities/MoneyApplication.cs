@@ -15,6 +15,8 @@
 
         public float Count { get; set; }
 
+        public int PaymentCount { get; set; } = 1;
+
         /// <summary>
         /// Percent
         /// </summary>

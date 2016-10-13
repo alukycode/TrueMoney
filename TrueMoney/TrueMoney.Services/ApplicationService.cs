@@ -194,7 +194,7 @@
             return -1;
         }
 
-        public async Task<int> CreateApp(float count, float rate, int dayCount, string description)
+        public async Task<int> CreateApp(float count, int paymentCount, float rate, int dayCount, string description)
         {
             var user = await this._userService.GetCurrentUser();
             if (user.IsActive && !user.IsHaveOpenAppOrLoan)
@@ -208,7 +208,8 @@
                         Count = count,
                         Description = description,
                         Rate = rate,
-                        DayCount = dayCount
+                        DayCount = dayCount,
+                        PaymentCount = paymentCount
                     });
                 user.IsHaveOpenAppOrLoan = true;
 

@@ -43,12 +43,17 @@
   <ItemGroup>
     <Compile Include="ApplicationService.cs" />
     <Compile Include="LoanService.cs" />
+    <Compile Include="PaymentService.cs" />
     <Compile Include="Rating\RatingAction.cs" />
     <Compile Include="Rating\RatingHelper.cs" />
     <Compile Include="UserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Bank\Bank.csproj">
+      <Project>{A64B1A72-DCEA-4709-BAE7-1C232225B127}</Project>
+      <Name>Bank</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrueMoney.Data\TrueMoney.Data.csproj">
       <Project>{da385b71-a556-49e8-b871-f659d7640e8a}</Project>
       <Name>TrueMoney.Data</Name>

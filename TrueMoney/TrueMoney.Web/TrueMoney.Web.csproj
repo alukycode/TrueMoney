@@ -210,6 +210,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoanController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -326,13 +327,12 @@
     <Content Include="Views\Home\Lend.cshtml" />
     <Content Include="Views\Home\Borrow.cshtml" />
     <Content Include="Views\Partials\CreateOfferForm.cshtml" />
-    <Content Include="Views\Loan\VisaPayment.cshtml" />
-    <Content Include="Views\Loan\Success.cshtml" />
+    <Content Include="Views\Payment\Visa.cshtml" />
+    <Content Include="Views\Payment\Success.cshtml" />
     <Content Include="Views\Loan\YouActivity.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Payment\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

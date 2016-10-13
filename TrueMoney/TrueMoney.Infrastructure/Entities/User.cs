@@ -28,7 +28,7 @@
 
         public string AspUserId { get; set; }
 
-        public string BankAccount { get; set; }
+        public BankAccount BankAccount { get; set; }
         public bool IsHaveOpenAppOrLoan { get; set; }
 
         public int Rating { get; set; } = 0;

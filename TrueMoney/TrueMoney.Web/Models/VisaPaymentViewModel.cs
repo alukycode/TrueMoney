@@ -9,7 +9,8 @@
 
         public float PaymentCount { get; set; }
 
-        public string DesctinationAccountNumber { get; set; }
+        public int PayForId { get; set; }
+        public int LoanId { get; set; }
 
         [Required]
         [Display(Name = "Card number")]
