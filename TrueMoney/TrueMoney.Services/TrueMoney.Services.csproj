@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="ApplicationService.cs" />
     <Compile Include="LoanService.cs" />
+    <Compile Include="Rating\RatingAction.cs" />
+    <Compile Include="Rating\RatingHelper.cs" />
     <Compile Include="UserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

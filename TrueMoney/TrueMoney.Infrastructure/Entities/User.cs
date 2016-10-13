@@ -30,6 +30,8 @@
 
         public string BankAccount { get; set; }
         public bool IsHaveOpenAppOrLoan { get; set; }
+
+        public int Rating { get; set; } = 0;
     }
 
     public class Passport
