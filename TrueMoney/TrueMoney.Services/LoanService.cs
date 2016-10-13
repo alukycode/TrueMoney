@@ -14,20 +14,36 @@
 
         private static int number = 0;
 
+        private readonly IUserService _userService;
+
+        public LoanService(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         public async Task<Loan> Create(MoneyApplication moneyApplication, Offer offer)
         {
-            // add pay calcutions
-            data.Add(
-                new Loan
+            var currentUser = await _userService.GetCurrentUser();
+            if (currentUser != null && currentUser.IsActive && !currentUser.IsHaveOpenAppOrLoan && 
+                moneyApplication.IsTakePart(currentUser) && Equals(offer.Lender, currentUser))
+            {
+                // add pay calcutions
+                data.Add(
+                    new Loan
                     {
                         Borrower = moneyApplication.Borrower,
                         CloseDate = DateTime.Now,
                         Id = number++,
                         Lender = offer.Lender,
-                        MoneyApplication = moneyApplication
+                        MoneyApplication = moneyApplication,
+                        Rate = offer.Rate,
+                        Count = moneyApplication.Count
                     });
 
-            return data[0];
+                return data[0];
+            }
+
+            return null;
         }
 
         public async Task<Loan> GetById(int id)

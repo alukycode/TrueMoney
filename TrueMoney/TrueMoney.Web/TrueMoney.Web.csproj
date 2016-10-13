@@ -236,6 +236,8 @@
     <Compile Include="Models\Manage\VerifyPhoneNumberViewModel.cs" />
     <Compile Include="Models\CreateMoneyApplicationForm.cs" />
     <Compile Include="Models\CreateOfferForm.cs" />
+    <Compile Include="Models\VisaPaymentViewModel.cs" />
+    <Compile Include="Models\YouActivityViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Auth_Identity_Startup\Startup.cs" />
   </ItemGroup>
@@ -324,9 +326,13 @@
     <Content Include="Views\Home\Lend.cshtml" />
     <Content Include="Views\Home\Borrow.cshtml" />
     <Content Include="Views\Partials\CreateOfferForm.cshtml" />
+    <Content Include="Views\Loan\VisaPayment.cshtml" />
+    <Content Include="Views\Loan\Success.cshtml" />
+    <Content Include="Views\Account\YouActivity.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Payment\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

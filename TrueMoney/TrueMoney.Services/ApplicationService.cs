@@ -96,6 +96,17 @@
             return data.FirstOrDefault(x => x.Offers.Any(y => y.Id == offerId));
         }
 
+        public async Task<IList<Offer>> GetAllOffersByUser(int userId)
+        {
+            var res = new List<Offer>();
+            foreach (var moneyApplication in data)
+            {
+                res.AddRange(moneyApplication.Offers.Where(x => x.Lender.Id == userId));
+            }
+
+            return res;
+        }
+
         public async Task<bool> ApplyOffer(int offerId, int moneyApplicationId)
         {
             var app = data.FirstOrDefault(x => x.Id == moneyApplicationId);
@@ -117,16 +128,16 @@
         public async Task<bool> RevertOffer(int offerId, int moneyApplicationId)
         {
             var app = data.FirstOrDefault(x => x.Id == moneyApplicationId);
-            if (app != null)
+            var offer = app?.Offers.FirstOrDefault(x => x.Id == offerId);
+            if (offer != null)
             {
-                var offer = app.Offers.FirstOrDefault(x => x.Id == offerId);
-                if (offer != null)
+                if (offer.WaitForApprove)
                 {
                     app.WaitForApprove = false;
-                    app.Offers = app.Offers.Where(x => x.Id != offerId).ToList();//del offer
-
-                    return true;
                 }
+                app.Offers = app.Offers.Where(x => x.Id != offerId).ToList();//del offer
+
+                return true;
             }
 
             return false;
@@ -186,7 +197,7 @@
         public async Task<int> CreateApp(float count, float rate, int dayCount, string description)
         {
             var user = await this._userService.GetCurrentUser();
-            if (user.IsActive)
+            if (user.IsActive && !user.IsHaveOpenAppOrLoan)
             {
                 data.Add(
                     new MoneyApplication
@@ -199,6 +210,7 @@
                         Rate = rate,
                         DayCount = dayCount
                     });
+                user.IsHaveOpenAppOrLoan = true;
 
                 return data[number - 1].Id;
             }
@@ -210,16 +222,18 @@
         {
             var currentUser = await this._userService.GetCurrentUser();
             var app = data.FirstOrDefault(x => x.Id == appId);
-            if (app != null && !app.IsClosed && Equals(app.Borrower, currentUser))
+            if (app != null && !app.IsClosed && app.IsTakePart(currentUser))
             {
                 app.IsClosed = true;
                 app.CloseDate = DateTime.Now;
-                foreach (var offer in app.Offers)
+                foreach (var offer in app.Offers.Where(x => !x.IsClosed))
                 {
                     offer.IsClosed = true;
                     offer.CloseDate = DateTime.Now;
                     //send notification for lender
                 }
+
+                currentUser.IsHaveOpenAppOrLoan = false;
 
                 return true;
             }

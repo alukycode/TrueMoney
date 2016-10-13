@@ -1,4 +1,5 @@
-﻿@model TrueMoney.Infrastructure.Entities.Loan
+﻿@using AutoMapper.Execution
+@model TrueMoney.Infrastructure.Entities.Loan
 
 @{
     ViewBag.Title = "Заем " + Model.Id;
@@ -37,6 +38,13 @@
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Back to List", "Index")
-</p>
+@if (ViewBag.CurrentUser.Id == Model.Lender.Id && Model.IsWaitForMoney)
+{
+    <h4>перевиди бабло челу</h4>
+    <p>Visa - @Html.ActionLink("Перечислить займ", "VisaPayment", new RouteValueDictionary(new
+         {
+             paymentName = $"Перевод денег на счёт {Model.Borrower.FirstName}. Займ № {Model.Id}.",
+             paymentCount = Model.Count,
+             desctinationAccountNumber = Model.Borrower.BankAccount
+         }))</p>
+}

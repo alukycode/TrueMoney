@@ -20,6 +20,8 @@
 
         public DateTime CreateTime { get; set; }
 
+        public bool IsStarted { get; set; }
+        public bool IsWaitForMoney { get; set; } = true;
         public bool IsClosed { get; set; }
 
         public DateTime CloseDate { get; set; }
@@ -30,6 +32,9 @@
         /// List of payments
         /// </summary>
         public IList<Payment> Payments { get; set; }
+
+        public float Count { get; set; }
+        public float Rate { get; set; }
 
         public bool IsTakePart(User user)
         {

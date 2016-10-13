@@ -2,6 +2,7 @@
 
 namespace TrueMoney.Web.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -19,13 +20,12 @@ namespace TrueMoney.Web.Controllers
             _applicationService = applicationService;
             _userService = userService;
         }
-
-        [Authorize(Roles = "admin")]
+        
         public async Task<ActionResult> Index()
         {
-            ViewBag.CurrentUser = await _userService.GetCurrentUser();
-            var list = await _applicationService.GetAll();
-            return View(list);
+            this.ViewBag.CurrentUser = await this._userService.GetCurrentUser();
+            var list = await this._applicationService.GetAll();
+            return this.View(list.Where(x => !x.IsClosed));
         }
 
         public async Task<ActionResult> Details(int id)
@@ -44,7 +44,7 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> RevertOffer(int offerId, int appId)
         {
-            await _applicationService.ApplyOffer(offerId, appId);
+            await this._applicationService.RevertOffer(offerId, appId);
 
             return RedirectToAction("Details", new { id = appId });
         }
