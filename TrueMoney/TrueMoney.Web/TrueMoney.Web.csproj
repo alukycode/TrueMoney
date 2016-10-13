@@ -205,7 +205,6 @@
     <Compile Include="Auth_Identity_Startup\EmailService.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Auth_Identity_Startup\SmsService.cs" />
-    <Compile Include="Auth_Identity_Startup\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

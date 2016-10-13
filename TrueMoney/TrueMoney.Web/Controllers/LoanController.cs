@@ -34,5 +34,10 @@ namespace TrueMoney.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public string Test()
+        {
+            return "authorized";
+        }
     }
 }
