@@ -10,5 +10,7 @@
         Task<Loan> Create(MoneyApplication moneyApplication, Offer offer);
         Task<Loan> GetById(int id);
         Task<IList<Loan>> GetByUser(int userId);
+
+        Task<bool> StartLoan(Loan loan);
     }
 }

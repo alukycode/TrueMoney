@@ -176,18 +176,20 @@
                 if (finishOffer != null)
                 {
                     var newLoan = await this._loanService.Create(finishApp, finishOffer);
+                    if (newLoan != null)
+                    {
+                        //finish app
+                        finishApp.IsClosed = true;
+                        finishApp.CloseDate = DateTime.Now;
+                        finishApp.FinishOfferId = finishOffer.Id;
+                        finishApp.FinishLoadId = newLoan.Id;
 
-                    //finish app
-                    finishApp.IsClosed = true;
-                    finishApp.CloseDate = DateTime.Now;
-                    finishApp.FinishOfferId = finishOffer.Id;
-                    finishApp.FinishLoadId = newLoan.Id;
+                        //finish offer
+                        finishOffer.IsClosed = true;
+                        finishOffer.CloseDate = DateTime.Now;
 
-                    //finish offer
-                    finishOffer.IsClosed = true;
-                    finishOffer.CloseDate = DateTime.Now;
-
-                    return newLoan.Id;
+                        return newLoan.Id;
+                    }
                 }
             }
 

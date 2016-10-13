@@ -41,10 +41,13 @@
 @if (ViewBag.CurrentUser.Id == Model.Lender.Id && Model.IsWaitForMoney)
 {
     <h4>перевиди бабло челу</h4>
-    <p>Visa - @Html.ActionLink("Перечислить займ", "VisaPayment", new RouteValueDictionary(new
-         {
-             paymentName = $"Перевод денег на счёт {Model.Borrower.FirstName}. Займ № {Model.Id}.",
-             paymentCount = Model.Count,
-             desctinationAccountNumber = Model.Borrower.BankAccount
-         }))</p>
+    <p>Visa - @Html.ActionLink("Перечислить займ", "Visa", "Payment", routeValues: new RouteValueDictionary(
+             new
+             {
+                 paymentName = $"Перевод денег на счёт {Model.Borrower.FirstName}. Займ № {Model.Id}.",
+                 paymentCount = Model.Count,
+                 payForId = Model.Borrower.Id,
+                 loadId = Model.Id
+             }), htmlAttributes: null)
+    </p>
 }

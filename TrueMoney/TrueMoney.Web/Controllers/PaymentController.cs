@@ -49,7 +49,7 @@ namespace TrueMoney.Web.Controllers
             if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)
                 && formModel.PaymentCount > 0)
             {
-                var payRes = _paymentService.LendMoney(
+                var payRes = await _paymentService.LendMoney(
                     formModel.LoanId,
                     formModel.PayForId,
                     formModel.PaymentCount,
@@ -60,8 +60,10 @@ namespace TrueMoney.Web.Controllers
                             Name = formModel.Name,
                             ValidBefore = formModel.ValidBefore
                         });
-
-                return View("Success", formModel);
+                if (payRes == PaymentResult.Success)
+                {
+                    return View("Success", formModel);
+                }
             }
 
             ModelState.AddModelError("Server", "Server Error");

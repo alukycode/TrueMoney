@@ -28,32 +28,54 @@ namespace TrueMoney.Web.Controllers
             return this.View(list.Where(x => !x.IsClosed));
         }
 
-        public async Task<ActionResult> Details(int id)
+        public async Task<ActionResult> Details(int? id)
         {
-            ViewBag.CurrentUser = await _userService.GetCurrentUser();
-            var model = await _applicationService.GetById(id);
-            return View(model);
+            if (id.HasValue)
+            {
+                ViewBag.CurrentUser = await _userService.GetCurrentUser();
+                var model = await _applicationService.GetById(id.Value);
+                return View(model);
+            }
+
+            return GoHome();
         }
 
-        public async Task<ActionResult> ApplyOffer(int offerId, int appId)
+        public async Task<ActionResult> ApplyOffer(int? offerId, int? appId)
         {
-            await _applicationService.ApplyOffer(offerId, appId);
+            if (offerId.HasValue && appId.HasValue)
+            {
+                await _applicationService.ApplyOffer(offerId.Value, appId.Value);
 
-            return RedirectToAction("Details", new { id = appId });
+                return RedirectToAction("Details", new { id = appId.Value });
+            }
+
+            return GoHome();
         }
 
-        public async Task<ActionResult> RevertOffer(int offerId, int appId)
+        public async Task<ActionResult> RevertOffer(int? offerId, int? appId)
         {
-            await this._applicationService.RevertOffer(offerId, appId);
+            if (offerId.HasValue && appId.HasValue)
+            {
+                await this._applicationService.RevertOffer(offerId.Value, appId.Value);
 
-            return RedirectToAction("Details", new { id = appId });
+                return RedirectToAction("Details", new { id = appId.Value });
+            }
+
+            return GoHome();
         }
 
-        public async Task<ActionResult> FinishApp(int offerId, int appId)
+        public async Task<ActionResult> FinishApp(int? offerId, int? appId)
         {
-            var newLoanId = await _applicationService.FinishApp(offerId, appId);
+            if (offerId.HasValue && appId.HasValue)
+            {
+                var newLoanId = await _applicationService.FinishApp(offerId.Value, appId.Value);
+                if (newLoanId > -1)
+                {
+                    return RedirectToAction("Details", "Loan", new { id = newLoanId });
+                }
+            }
 
-            return RedirectToAction("Details", "Loan", new { id = newLoanId });
+            return GoHome();
         }
 
         public async Task<ActionResult> Create()
@@ -73,8 +95,10 @@ namespace TrueMoney.Web.Controllers
 
                 var appId =
                     await _applicationService.CreateApp(model.Count, model.PaymentCount, model.Rate, model.DayCount, model.Description);
-
-                return RedirectToAction("Details", new { id = appId });
+                if (appId > -1)
+                {
+                    return RedirectToAction("Details", new { id = appId });
+                }
             }
 
             return View(model);
@@ -111,16 +135,24 @@ namespace TrueMoney.Web.Controllers
             return RedirectToAction("Details", new { id = model.AppId });
         }
 
-        public async Task<ActionResult> Delete(int appId)
+        public async Task<ActionResult> Delete(int? appId)
         {
-            var res = await _applicationService.DeleteApp(appId);
-
-            if (res)
+            if (appId.HasValue)
             {
-                return RedirectToAction("Index");
+                var res = await _applicationService.DeleteApp(appId.Value);
+
+                if (res)
+                {
+                    return RedirectToAction("Index");
+                }
             }
 
             return RedirectToAction("Details", new { id = appId });
+        }
+
+        private ActionResult GoHome()
+        {
+            return RedirectToAction("YouActivity", "Loan");
         }
     }
 }

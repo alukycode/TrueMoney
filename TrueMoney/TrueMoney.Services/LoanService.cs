@@ -56,7 +56,7 @@
             return data.Where(x => x.Borrower.Id == userId || x.Lender.Id == userId).ToList();
         }
 
-        public async Task<bool> CtartLoan(Loan loan)
+        public async Task<bool> StartLoan(Loan loan)
         {
             loan.IsWaitForMoney = false;
             loan.IsStarted = true;
