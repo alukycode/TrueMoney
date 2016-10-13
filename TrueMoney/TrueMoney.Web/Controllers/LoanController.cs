@@ -71,5 +71,10 @@ namespace TrueMoney.Web.Controllers
 
             return View(formModel);
         }
+
+        public string Test()
+        {
+            return "authorized";
+        }
     }
 }
