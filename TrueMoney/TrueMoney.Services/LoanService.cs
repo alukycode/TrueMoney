@@ -23,7 +23,7 @@
 
         public async Task<Loan> Create(User currentUser, Deal deal, Offer offer)
         {
-            if (currentUser != null && currentUser.IsActive && !currentUser.IsHaveOpenAppOrLoan && 
+            if (currentUser != null && currentUser.IsActive && !currentUser.IsHaveOpenDealOrLoan && 
                 deal.IsTakePart(currentUser) && Equals(offer.Lender, currentUser))
             {
                 // add pay calcutions

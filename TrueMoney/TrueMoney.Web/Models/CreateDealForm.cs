@@ -3,7 +3,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
 
-    public class CreateMoneyApplicationForm
+    public class CreateDealForm
     {
          public float Count { get; set; }
          public int PaymentCount { get; set; }

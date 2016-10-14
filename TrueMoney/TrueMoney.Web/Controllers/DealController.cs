@@ -38,35 +38,35 @@ namespace TrueMoney.Web.Controllers
             return GoHome();
         }
 
-        public async Task<ActionResult> ApplyOffer(int? offerId, int? appId)
+        public async Task<ActionResult> ApplyOffer(int? offerId, int? dealId)
         {
-            if (offerId.HasValue && appId.HasValue)
+            if (offerId.HasValue && dealId.HasValue)
             {
-                await _dealService.ApplyOffer(offerId.Value, appId.Value);
+                await _dealService.ApplyOffer(offerId.Value, dealId.Value);
 
-                return RedirectToAction("Details", new { id = appId.Value });
+                return RedirectToAction("Details", new { id = dealId.Value });
             }
 
             return GoHome();
         }
 
-        public async Task<ActionResult> RevertOffer(int? offerId, int? appId)
+        public async Task<ActionResult> RevertOffer(int? offerId, int? dealIp)
         {
-            if (offerId.HasValue && appId.HasValue)
+            if (offerId.HasValue && dealIp.HasValue)
             {
-                await this._dealService.RevertOffer(offerId.Value, appId.Value);
+                await this._dealService.RevertOffer(offerId.Value, dealIp.Value);
 
-                return RedirectToAction("Details", new { id = appId.Value });
+                return RedirectToAction("Details", new { id = dealIp.Value });
             }
 
             return GoHome();
         }
 
-        public async Task<ActionResult> FinishApp(int? offerId, int? appId)
+        public async Task<ActionResult> FinishDeal(int? offerId, int? dealId)
         {
-            if (offerId.HasValue && appId.HasValue)
+            if (offerId.HasValue && dealId.HasValue)
             {
-                var newLoanId = await _dealService.FinishApp(CurrentUser, offerId.Value, appId.Value);
+                var newLoanId = await _dealService.FinishDeal(CurrentUser, offerId.Value, dealId.Value);
                 if (newLoanId > -1)
                 {
                     return RedirectToAction("Details", "Loan", new { id = newLoanId });
@@ -78,11 +78,11 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Create()
         {
-            return View(new CreateMoneyApplicationForm());
+            return View(new CreateDealForm());
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(CreateMoneyApplicationForm model)
+        public async Task<ActionResult> Create(CreateDealForm model)
         {
             if (model.PaymentCount < 1 && model.PaymentCount > model.DayCount)
             {
@@ -91,11 +91,11 @@ namespace TrueMoney.Web.Controllers
             if (ModelState.IsValid)
             {
 
-                var appId =
-                    await _dealService.CreateApp(CurrentUser, model.Count, model.PaymentCount, model.Rate, model.DayCount, model.Description);
-                if (appId > -1)
+                var dealId =
+                    await _dealService.CreateDeal(CurrentUser, model.Count, model.PaymentCount, model.Rate, model.DayCount, model.Description);
+                if (dealId > -1)
                 {
-                    return RedirectToAction("Details", new { id = appId });
+                    return RedirectToAction("Details", new { id = dealId });
                 }
             }
 
@@ -107,35 +107,35 @@ namespace TrueMoney.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var app = await _dealService.GetById(model.AppId);
-                if (model.Rate > app.Rate)
+                var deal = await _dealService.GetById(model.DealId);
+                if (model.Rate > deal.Rate)
                 {
                     ModelState.AddModelError("Rate", "Вы превысили маскимальнодопустимую процентную ставку.");
-                    return View("Details", app);
+                    return View("Details", deal);
                 }
 
                 if (!CurrentUser.IsActive)
                 {
                     ModelState.AddModelError("User error", "Вы ещё не прошли подтверждение регистрации.");
-                    return View("Details", app);
+                    return View("Details", deal);
                 }
 
-                var res = await _dealService.CreateOffer(CurrentUser, model.AppId, model.Rate);
+                var res = await _dealService.CreateOffer(CurrentUser, model.DealId, model.Rate);
                 if (!res)
                 {
                     ModelState.AddModelError("Server error", "Что-то пошло не так.");
-                    return View("Details", app);
+                    return View("Details", deal);
                 }
             }
 
-            return RedirectToAction("Details", new { id = model.AppId });
+            return RedirectToAction("Details", new { id = model.DealId });
         }
 
-        public async Task<ActionResult> Delete(int? appId)
+        public async Task<ActionResult> Delete(int? dealId)
         {
-            if (appId.HasValue)
+            if (dealId.HasValue)
             {
-                var res = await _dealService.DeleteApp(CurrentUser, appId.Value);
+                var res = await _dealService.DeleteDeal(CurrentUser, dealId.Value);
 
                 if (res)
                 {
@@ -143,7 +143,7 @@ namespace TrueMoney.Web.Controllers
                 }
             }
 
-            return RedirectToAction("Details", new { id = appId });
+            return RedirectToAction("Details", new { id = dealId });
         }
 
         private ActionResult GoHome()

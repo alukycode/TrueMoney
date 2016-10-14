@@ -101,24 +101,24 @@
         public async Task<IList<Offer>> GetAllOffersByUser(int userId)
         {
             var res = new List<Offer>();
-            foreach (var moneyApplication in data)
+            foreach (var deal in data)
             {
-                res.AddRange(moneyApplication.Offers.Where(x => x.Lender.Id == userId));
+                res.AddRange(deal.Offers.Where(x => x.Lender.Id == userId));
             }
 
             return res;
         }
 
-        public async Task<bool> ApplyOffer(int offerId, int moneyApplicationId)
+        public async Task<bool> ApplyOffer(int offerId, int dealId)
         {
-            var app = data.FirstOrDefault(x => x.Id == moneyApplicationId);
-            if (app != null)
+            var deal = data.FirstOrDefault(x => x.Id == dealId);
+            if (deal != null)
             {
-                var offer = app.Offers.FirstOrDefault(x => x.Id == offerId);
+                var offer = deal.Offers.FirstOrDefault(x => x.Id == offerId);
                 if (offer != null)
                 {
                     offer.WaitForApprove = true;
-                    app.WaitForApprove = true;
+                    deal.WaitForApprove = true;
 
                     return true;
                 }
@@ -127,17 +127,17 @@
             return false;
         }
 
-        public async Task<bool> RevertOffer(int offerId, int moneyApplicationId)
+        public async Task<bool> RevertOffer(int offerId, int dealId)
         {
-            var app = data.FirstOrDefault(x => x.Id == moneyApplicationId);
-            var offer = app?.Offers.FirstOrDefault(x => x.Id == offerId);
+            var deal = data.FirstOrDefault(x => x.Id == dealId);
+            var offer = deal?.Offers.FirstOrDefault(x => x.Id == offerId);
             if (offer != null)
             {
                 if (offer.WaitForApprove)
                 {
-                    app.WaitForApprove = false;
+                    deal.WaitForApprove = false;
                 }
-                app.Offers = app.Offers.Where(x => x.Id != offerId).ToList();//del offer
+                deal.Offers = deal.Offers.Where(x => x.Id != offerId).ToList();//del offer
 
                 return true;
             }
@@ -145,20 +145,20 @@
             return false;
         }
 
-        public async Task<bool> CreateOffer(User user, int appId, float rate)
+        public async Task<bool> CreateOffer(User user, int dealId, float rate)
         {
             var activeAppsByPerson = new List<Deal>();//todo - Sania - get all active apps by user;
-            var app = data.FirstOrDefault(x => x.Id == appId);
-            if (!activeAppsByPerson.Any() && user != null && user.IsActive && app != null && !app.IsClosed && 
-                !app.Offers.Any(x=>!x.IsClosed && x.Lender.Id == user.Id)) // review: должна быть весомая причина чтобы проверять юзера на null, ведь такого быть не должно
+            var deal = data.FirstOrDefault(x => x.Id == dealId);
+            if (!activeAppsByPerson.Any() && user != null && user.IsActive && deal != null && !deal.IsClosed && 
+                !deal.Offers.Any(x=>!x.IsClosed && x.Lender.Id == user.Id)) // review: должна быть весомая причина чтобы проверять юзера на null, ведь такого быть не должно
             {
-                app.Offers.Add(
+                deal.Offers.Add(
                     new Offer
                         {
                             Id = number++,
                             CreateTime = DateTime.Now,
                             Lender = user,
-                            Deal = app,
+                            Deal = deal,
                             Rate = rate
                         });
 
@@ -168,22 +168,22 @@
             return false; // review: не нужно этих true/false, не получилось сделать по каким-то причинам - кидай эксепшен
         }
 
-        public async Task<int> FinishApp(User user, int offerId, int moneyApplicationId)
+        public async Task<int> FinishDeal(User user, int offerId, int dealId)
         {
-            var finishApp = data.FirstOrDefault(x => x.Id == moneyApplicationId);
-            if (finishApp != null)
+            var finishDeaol = data.FirstOrDefault(x => x.Id == dealId);
+            if (finishDeaol != null)
             {
-                var finishOffer = finishApp.Offers.FirstOrDefault(x => x.Id == offerId);
+                var finishOffer = finishDeaol.Offers.FirstOrDefault(x => x.Id == offerId);
                 if (finishOffer != null)
                 {
-                    var newLoan = await this._loanService.Create(user, finishApp, finishOffer);
+                    var newLoan = await this._loanService.Create(user, finishDeaol, finishOffer);
                     if (newLoan != null)
                     {
-                        //finish app
-                        finishApp.IsClosed = true;
-                        finishApp.CloseDate = DateTime.Now;
-                        finishApp.FinishOfferId = finishOffer.Id;
-                        finishApp.FinishLoadId = newLoan.Id;
+                        //finish deal
+                        finishDeaol.IsClosed = true;
+                        finishDeaol.CloseDate = DateTime.Now;
+                        finishDeaol.FinishOfferId = finishOffer.Id;
+                        finishDeaol.FinishLoadId = newLoan.Id;
 
                         //finish offer
                         finishOffer.IsClosed = true;
@@ -197,9 +197,9 @@
             return -1; // review: что это блять за магические цифры
         }
 
-        public async Task<int> CreateApp(User user, float count, int paymentCount, float rate, int dayCount, string description)
+        public async Task<int> CreateDeal(User user, float count, int paymentCount, float rate, int dayCount, string description)
         {
-            if (user.IsActive && !user.IsHaveOpenAppOrLoan)
+            if (user.IsActive && !user.IsHaveOpenDealOrLoan)
             {
                 data.Add(
                     new Deal
@@ -213,7 +213,7 @@
                         DayCount = dayCount,
                         PaymentCount = paymentCount
                     });
-                user.IsHaveOpenAppOrLoan = true;
+                user.IsHaveOpenDealOrLoan = true;
 
                 return data[number - 1].Id;
             }
@@ -221,21 +221,21 @@
             return -1;
         }
 
-        public async Task<bool> DeleteApp(User currentUser, int appId)
+        public async Task<bool> DeleteDeal(User currentUser, int dealIp)
         {
-            var app = data.FirstOrDefault(x => x.Id == appId);
-            if (app != null && !app.IsClosed && app.IsTakePart(currentUser))
+            var deal = data.FirstOrDefault(x => x.Id == dealIp);
+            if (deal != null && !deal.IsClosed && deal.IsTakePart(currentUser))
             {
-                app.IsClosed = true;
-                app.CloseDate = DateTime.Now;
-                foreach (var offer in app.Offers.Where(x => !x.IsClosed))
+                deal.IsClosed = true;
+                deal.CloseDate = DateTime.Now;
+                foreach (var offer in deal.Offers.Where(x => !x.IsClosed))
                 {
                     offer.IsClosed = true;
                     offer.CloseDate = DateTime.Now;
                     //send notification for lender
                 }
 
-                currentUser.IsHaveOpenAppOrLoan = false; // todo: не вижу, что это где-то сохраняется
+                currentUser.IsHaveOpenDealOrLoan = false; // todo: не вижу, что это где-то сохраняется
 
                 return true;
             }

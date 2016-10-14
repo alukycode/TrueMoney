@@ -236,7 +236,7 @@
     <Compile Include="Models\Manage\IndexViewModel.cs" />
     <Compile Include="Models\Manage\SetPasswordViewModel.cs" />
     <Compile Include="Models\Manage\VerifyPhoneNumberViewModel.cs" />
-    <Compile Include="Models\CreateMoneyApplicationForm.cs" />
+    <Compile Include="Models\CreateDealForm.cs" />
     <Compile Include="Models\CreateOfferForm.cs" />
     <Compile Include="Models\VisaPaymentViewModel.cs" />
     <Compile Include="Models\YouActivityViewModel.cs" />

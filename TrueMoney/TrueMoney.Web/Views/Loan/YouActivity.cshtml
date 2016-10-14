@@ -17,12 +17,12 @@
     <h5>Ваша активная заявка:</h5>
     @foreach (var item in Model.MoneyApplications.Where(x => !x.IsClosed))
     {
-        @RenderMoneyApplications(item)
+        @RenderDeal(item)
     }
     <h5>Ваши закрытые заявки:</h5>
     @foreach (var item in Model.MoneyApplications.Where(x => x.IsClosed))
     {
-        @RenderMoneyApplications(item)
+        @RenderDeal(item)
     }
 
     @if (ViewBag.CurrentUser.IsActive)
@@ -45,12 +45,12 @@
     <h5>Ваши активные предложения:</h5>
     @foreach (var item in Model.MoneyApplications.Where(x => !x.IsClosed))
     {
-        @RenderMoneyApplications(item)
+        @RenderDeal(item)
     }
     <h5>Ваши закрытые предложения:</h5>
     @foreach (var item in Model.MoneyApplications.Where(x => x.IsClosed))
     {
-        @RenderMoneyApplications(item)
+        @RenderDeal(item)
     }
 
     ---------------------------<br />
@@ -73,7 +73,7 @@
     </p>
 }
 
-@helper RenderMoneyApplications(Deal deal)
+@helper RenderDeal(Deal deal)
 {
     <p>
         <strong>@deal.Id</strong> - @deal.Count - @deal.Rate

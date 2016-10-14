@@ -8,7 +8,7 @@
         <h4>Сделать предложение</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(m => Model.AppId)
+        @Html.HiddenFor(m => Model.DealId)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Rate, htmlAttributes: new { @class = "control-label col-md-2" })
