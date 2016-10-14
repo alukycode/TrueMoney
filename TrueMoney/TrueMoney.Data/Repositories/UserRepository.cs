@@ -40,6 +40,17 @@ namespace TrueMoney.Data.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<User> GetByAspId(string aspId)
+        {
+            if (string.IsNullOrEmpty(aspId))
+            {
+                throw new ArgumentNullException(nameof(aspId));
+            }
+
+            var user = await LoadByAspId(aspId);
+            return Mapper.Map<User>(user);
+        }
+        
         private async Task<Entities.User> LoadById(int id)
         {
             using (var context = new TrueMoneyContext())
@@ -62,6 +73,14 @@ namespace TrueMoney.Data.Repositories
             {
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
+            }
+        }
+
+        private async Task<Entities.User> LoadByAspId(string aspId)
+        {
+            using (var context = new TrueMoneyContext())
+            {
+                return await context.Users.FirstOrDefaultAsync(x => x.AspUserId == aspId);
             }
         }
     }

@@ -11,5 +11,7 @@ namespace TrueMoney.Infrastructure.Repositories
         Task Update(User entity);
 
         Task Delete(int id);
+
+        Task<User> GetByAspId(string aspId);
     }
 }

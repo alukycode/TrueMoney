@@ -33,9 +33,14 @@ namespace TrueMoney.Services
             return await _userRepository.GetById(id);
         }
 
-        public async Task<User> GetUserByAspNetId(string id)
+        public async Task<User> GetByAspId(string id)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            return await _userRepository.GetByAspId(id);
         }
 
         public async Task<User> GetUserByName(string name)
@@ -44,7 +49,7 @@ namespace TrueMoney.Services
             throw new NotImplementedException();
         }
 
-        // review: пример, где приходит слишком много полей, а могла бы приходить InputModel
+        // review: пример, где приходит слишком много полей, а могла бы приходить InputModel. Этого метода вообще быть не должно, есть Add
         public async Task<User> Create(
             int id,
             string email,
