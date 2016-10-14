@@ -9,7 +9,7 @@
         @RenderLoan(item)
     }
     <h5>Ваши завершённые займы:</h5>
-    @foreach (var item in Model.Loans.Where(x => !x.IsClosed))
+    @foreach (var item in Model.Loans.Where(x => x.IsClosed))
     {
         @RenderLoan(item)
     }
@@ -43,14 +43,14 @@
 
     ---------------------------<br />
     <h5>Ваши активные предложения:</h5>
-    @foreach (var item in Model.Deals.Where(x => !x.IsClosed))
+    @foreach (var item in Model.Offers.Where(x => !x.IsClosed))
     {
-        @RenderDeal(item)
+        @RenderOffer(item)
     }
     <h5>Ваши закрытые предложения:</h5>
-    @foreach (var item in Model.Deals.Where(x => x.IsClosed))
+    @foreach (var item in Model.Offers.Where(x => x.IsClosed))
     {
-        @RenderDeal(item)
+        @RenderOffer(item)
     }
 
     ---------------------------<br />
