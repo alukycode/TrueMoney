@@ -9,13 +9,13 @@
     {
         Task<IList<Deal>> GetAll();
         Task<Deal> GetById(int id);
-        Task<IList<Deal>> GetByUserId(int userId);
+        Task<IList<Deal>> GetAllByUser(User user);
         Task<Deal> GetByOfferId(int offerId);
 
-        Task<IList<Offer>> GetAllOffersByUser(int userId);
+        Task<IList<Offer>> GetAllOffersByUser(User user);
 
-        Task<bool> ApplyOffer(int offerId, int dealId);
-        Task<bool> RevertOffer(int offerId, int dealId);
+        Task<bool> ApplyOffer(User user, int offerId, int dealId);
+        Task<bool> RevertOffer(User user, int offerId, int dealId);
         Task<bool> CreateOffer(User user, int dealId, float rate);
 
         Task<int> FinishDeal(User user, int offerId, int dealId);

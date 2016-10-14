@@ -45,15 +45,15 @@
             return null;
         }
 
-        public async Task<Loan> GetById(int id, int userId)
+        public async Task<Loan> GetById(int id)
         {
             // todo: add user validation here and throw exception if he isn't valid
             return data.FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task<IList<Loan>> GetByUser(int userId)
+        public async Task<IList<Loan>> GetAllByUser(User user)
         {
-            return data.Where(x => x.Borrower.Id == userId || x.Lender.Id == userId).ToList();
+            return data.Where(x => Equals(x.Borrower, user) || Equals(x.Lender, user)).ToList();
         }
 
         public async Task<bool> StartLoan(Loan loan)

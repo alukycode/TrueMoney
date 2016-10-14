@@ -11,7 +11,11 @@
 <div>
     <h4>@Model.Id</h4>
     <hr/>
-    @if (!Model.WaitForApprove)
+    @if (Model.IsClosed)
+    {
+        <text>closed</text>
+    }
+    else if (!Model.WaitForApprove)
     {
 
         <dl class="dl-horizontal">
@@ -54,39 +58,39 @@
             <dd>
                 @Html.DisplayFor(model => model.Description)
             </dd>
-            @if (this.ViewBag.CurrentUser.Id == Model.Borrower.Id)
+            @if (ViewBag.CurrentUserId == Model.Borrower.Id)
             {
-                //show info about offers only for application borrower
+                //show info about offers only for deal borrower
                 foreach (var offer in Model.Offers)
                 {
                     @Html.DisplayFor(x => offer)
-                    @Html.ActionLink("Подтвердить предложение", "ApplyOffer", new { offerId = offer.Id, appId = Model.Id })
+                    @Html.ActionLink("Подтвердить предложение", "ApplyOffer", new { offerId = offer.Id, dealId = Model.Id })
                 }
             }
-            else if (Model.Offers != null && Model.Offers.Any(x => x.Lender.Id == this.ViewBag.CurrentUser.Id))
+            else if (Model.Offers != null && Model.Offers.Any(x => x.Lender.Id == ViewBag.CurrentUserId))
             {
-                var yourOffer = Model.Offers.FirstOrDefault(x => x.Lender.Id == this.ViewBag.CurrentUser.Id);
+                var yourOffer = Model.Offers.FirstOrDefault(x => x.Lender.Id == ViewBag.CurrentUserId);
                 <p>Вы предложили свои деньги в размере @Model.Count на @Model.DayCount дней под @yourOffer.Rate %</p>
-                @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = yourOffer.Id, appId = Model.Id })
+                @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = yourOffer.Id, dealId = Model.Id })
             }
             else
             {
-                @Html.Partial("~/Views/Partials/CreateOfferForm.cshtml", new CreateOfferForm { AppId = Model.Id })
+                @Html.Partial("~/Views/Partials/CreateOfferForm.cshtml", new CreateOfferForm { DealId = Model.Id })
             }
         </dl>
     }
     else
     {
-        var mainOffer = Model.Offers.FirstOrDefault(x => x.Lender.Id == this.ViewBag.CurrentUser.Id && x.WaitForApprove);
-        if (this.ViewBag.CurrentUser.Id == Model.Borrower.Id)
+        var mainOffer = Model.Offers.FirstOrDefault(x => x.Lender.Id == ViewBag.CurrentUserId && x.WaitForApprove);
+        if (ViewBag.CurrentUserId == Model.Borrower.Id)
         {
             <text>wait for lender approve from user with id =
                 @Model.Offers.FirstOrDefault(x => x.WaitForApprove).Lender.Id</text>
         }
         else if (mainOffer != null)
         {
-            @Html.ActionLink("Дать взаймы", "FinishApp", new { offerId = mainOffer.Id, appId = Model.Id })
-            @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = mainOffer.Id, appId = Model.Id })
+            @Html.ActionLink("Дать взаймы", "FinishDeal", new { offerId = mainOffer.Id, dealId = Model.Id })
+            @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = mainOffer.Id, dealId = Model.Id })
 
         }
         else
@@ -96,9 +100,9 @@
         }
     }
 </div>
-@if (this.ViewBag.CurrentUser.Id == Model.Borrower.Id)
+@if (ViewBag.CurrentUserId == Model.Borrower.Id && !Model.IsClosed)
 {
-    @Html.ActionLink("Удалить заявку", "Delete", new { appId = Model.Id })
+    @Html.ActionLink("Удалить заявку", "Delete", new { dealId = Model.Id })
 }
 <p>
     @Html.ActionLink("Back to List", "Index")

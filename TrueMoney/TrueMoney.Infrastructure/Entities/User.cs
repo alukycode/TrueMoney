@@ -20,7 +20,7 @@
         
         public bool IsActive { get; set; }
 
-        // review: зачем нам Equals?
+        // review: зачем нам Equals? сравнивать юзеров
         public override bool Equals(object o)
         {
             var otherUser = o as User;

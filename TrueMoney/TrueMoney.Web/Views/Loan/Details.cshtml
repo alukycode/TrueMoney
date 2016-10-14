@@ -38,7 +38,7 @@
 
     </dl>
 </div>
-@if (ViewBag.CurrentUser.Id == Model.Lender.Id && Model.IsWaitForMoney)
+@if (ViewBag.CurrentUserId == Model.Lender.Id && Model.IsWaitForMoney)
 {
     <h4>перевиди бабло челу</h4>
     <p>Visa - @Html.ActionLink("Перечислить займ", "Visa", "Payment", routeValues: new RouteValueDictionary(

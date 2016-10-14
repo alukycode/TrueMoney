@@ -15,19 +15,19 @@
     }
     ---------------------------<br/>
     <h5>Ваша активная заявка:</h5>
-    @foreach (var item in Model.MoneyApplications.Where(x => !x.IsClosed))
+    @foreach (var item in Model.Deals.Where(x => !x.IsClosed))
     {
         @RenderDeal(item)
     }
     <h5>Ваши закрытые заявки:</h5>
-    @foreach (var item in Model.MoneyApplications.Where(x => x.IsClosed))
+    @foreach (var item in Model.Deals.Where(x => x.IsClosed))
     {
         @RenderDeal(item)
     }
 
-    @if (ViewBag.CurrentUser.IsActive)
+    @if (ViewBag.IsActive)
     {
-        if (!ViewBag.CurrentUser.IsHaveOpenAppOrLoan)
+        if (!ViewBag.IsHaveOpenDealOrLoan)
         {
             @Html.ActionLink("Создать заявку", "Create", "Deal", routeValues: null, htmlAttributes: null)<br/>
         }
@@ -43,12 +43,12 @@
 
     ---------------------------<br />
     <h5>Ваши активные предложения:</h5>
-    @foreach (var item in Model.MoneyApplications.Where(x => !x.IsClosed))
+    @foreach (var item in Model.Deals.Where(x => !x.IsClosed))
     {
         @RenderDeal(item)
     }
     <h5>Ваши закрытые предложения:</h5>
-    @foreach (var item in Model.MoneyApplications.Where(x => x.IsClosed))
+    @foreach (var item in Model.Deals.Where(x => x.IsClosed))
     {
         @RenderDeal(item)
     }

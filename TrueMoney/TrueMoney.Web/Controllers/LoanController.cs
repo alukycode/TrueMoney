@@ -28,21 +28,31 @@ namespace TrueMoney.Web.Controllers
             return new EmptyResult();
         }
 
-        public async Task<ActionResult> Details(int id)
+        public async Task<ActionResult> Details(int? id)
         {
-            var model = await _loanService.GetById(id, CurrentUser.Id);
+            ViewBag.CurrentUserId = CurrentUser.Id;
+            if (id.HasValue)
+            {
+                var model = await _loanService.GetById(id.Value);
+                if (model != null)
+                {
+                    return View(model);
+                }
+            }
 
-            return View(model);
+            return GoHome();
         }
 
         [Authorize]
         public async Task<ActionResult> YouActivity()
         {
+            ViewBag.IsActive = CurrentUser.IsActive;
+            ViewBag.IsHaveOpenDealOrLoan = CurrentUser.IsHaveOpenDealOrLoan;
             var viewModel =  new YouActivityViewModel
                                 {
-                                    MoneyApplications = await _dealService.GetByUserId(CurrentUser.Id),
-                                    Loans = await _loanService.GetByUser(CurrentUser.Id),
-                                    Offers = await _dealService.GetAllOffersByUser(CurrentUser.Id)
+                                    Deals = await _dealService.GetAllByUser(CurrentUser),
+                                    Loans = await _loanService.GetAllByUser(CurrentUser),
+                                    Offers = await _dealService.GetAllOffersByUser(CurrentUser)
                                 };
 
 
