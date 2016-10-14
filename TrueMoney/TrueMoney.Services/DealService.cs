@@ -8,20 +8,20 @@
     using TrueMoney.Infrastructure.Repositories;
     using TrueMoney.Infrastructure.Services;
 
-    public class ApplicationService : IApplicationService
+    public class DealService : IDealService
     {
         private readonly IUserService _userService;
         private readonly ILoanService _loanService;
 
-        public ApplicationService(IUserService userService, ILoanService loanService)
+        public DealService(IUserService userService, ILoanService loanService)
         {
             _userService = userService;
             this._loanService = loanService;
 
             // review: по-хорошему, эти данные должны быть в репозитории, в методе-заглушке и возвращаться из него
-            data = new List<MoneyApplication> // todo
+            data = new List<Deal> // todo
                        {
-                           new MoneyApplication
+                           new Deal
                                {
                                    Id = 0,
                                    IsClosed = false,
@@ -32,7 +32,7 @@
                                    Description = "for business",
                                    DayCount = 10
                                },
-                           new MoneyApplication
+                           new Deal
                                {
                                    Id = 1,
                                    IsClosed = false,
@@ -60,7 +60,7 @@
                                                 },
                                    DayCount = 10
                                },
-                           new MoneyApplication
+                           new Deal
                                {
                                    Id = 2,
                                    IsClosed = false,
@@ -74,26 +74,26 @@
                        };
         }
 
-        static List<MoneyApplication> data;
+        static List<Deal> data;
 
         private static int number = 3;
 
-        async Task<IList<MoneyApplication>> IApplicationService.GetAll()
+        async Task<IList<Deal>> IDealService.GetAll()
         {
             return data.Where(x => !x.IsClosed).ToList();
         }
 
-        async Task<MoneyApplication> IApplicationService.GetById(int id)
+        async Task<Deal> IDealService.GetById(int id)
         {
             return data.FirstOrDefault(x => x.Id == id);
         }
 
-        async Task<IList<MoneyApplication>> IApplicationService.GetByUserId(int userId)
+        async Task<IList<Deal>> IDealService.GetByUserId(int userId)
         {
             return data.Where(x => x.Borrower.Id == userId).ToList();
         }
 
-        async Task<MoneyApplication> IApplicationService.GetByOfferId(int offerId)
+        async Task<Deal> IDealService.GetByOfferId(int offerId)
         {
             return data.FirstOrDefault(x => x.Offers.Any(y => y.Id == offerId));
         }
@@ -147,7 +147,7 @@
 
         public async Task<bool> CreateOffer(User user, int appId, float rate)
         {
-            var activeAppsByPerson = new List<MoneyApplication>();//todo - Sania - get all active apps by user;
+            var activeAppsByPerson = new List<Deal>();//todo - Sania - get all active apps by user;
             var app = data.FirstOrDefault(x => x.Id == appId);
             if (!activeAppsByPerson.Any() && user != null && user.IsActive && app != null && !app.IsClosed && 
                 !app.Offers.Any(x=>!x.IsClosed && x.Lender.Id == user.Id)) // review: должна быть весомая причина чтобы проверять юзера на null, ведь такого быть не должно
@@ -158,7 +158,7 @@
                             Id = number++,
                             CreateTime = DateTime.Now,
                             Lender = user,
-                            MoneyApplication = app,
+                            Deal = app,
                             Rate = rate
                         });
 
@@ -202,7 +202,7 @@
             if (user.IsActive && !user.IsHaveOpenAppOrLoan)
             {
                 data.Add(
-                    new MoneyApplication
+                    new Deal
                     {
                         Id = number++,
                         Borrower = user,

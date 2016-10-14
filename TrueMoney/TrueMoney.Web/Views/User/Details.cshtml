@@ -25,7 +25,7 @@
     @* review: пример где CurrentUser НЕ нужен на вьюхе, вместо него должно быть свойство Model.IsCanCreateLoan*@
     @if (ViewBag.CurrentUser.Id == Model.Id)
     {
-        @Html.ActionLink("Создать заявку на займ", "Create", "Application")
+        @Html.ActionLink("Создать заявку на займ", "Create", "Deal")
     }
     @Html.ActionLink("В личный кабинет", "Index")
 </p>

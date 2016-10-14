@@ -7,7 +7,7 @@
 
     public interface ILoanService
     {
-        Task<Loan> Create(User user, MoneyApplication moneyApplication, Offer offer);
+        Task<Loan> Create(User user, Deal deal, Offer offer);
         Task<Loan> GetById(int id, int userId); // review: так что мы будем юзать, юзера или userId?
         Task<IList<Loan>> GetByUser(int userId);
 

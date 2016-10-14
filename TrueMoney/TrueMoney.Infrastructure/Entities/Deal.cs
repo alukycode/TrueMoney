@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class MoneyApplication : Entity
+    public class Deal : Entity
     {
         public User Borrower { get; set; }
 

@@ -26,7 +26,7 @@
 
         public DateTime CloseDate { get; set; }
 
-        public MoneyApplication MoneyApplication { get; set; }
+        public Deal Deal { get; set; }
 
         /// <summary>
         /// List of payments

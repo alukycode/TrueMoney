@@ -21,22 +21,22 @@
             _userService = userService;
         }
 
-        public async Task<Loan> Create(User currentUser, MoneyApplication moneyApplication, Offer offer)
+        public async Task<Loan> Create(User currentUser, Deal deal, Offer offer)
         {
             if (currentUser != null && currentUser.IsActive && !currentUser.IsHaveOpenAppOrLoan && 
-                moneyApplication.IsTakePart(currentUser) && Equals(offer.Lender, currentUser))
+                deal.IsTakePart(currentUser) && Equals(offer.Lender, currentUser))
             {
                 // add pay calcutions
                 data.Add(
                     new Loan
                     {
-                        Borrower = moneyApplication.Borrower,
+                        Borrower = deal.Borrower,
                         CloseDate = DateTime.Now,
                         Id = number++,
                         Lender = offer.Lender,
-                        MoneyApplication = moneyApplication,
+                        Deal = deal,
                         Rate = offer.Rate,
-                        Count = moneyApplication.Count
+                        Count = deal.Count
                     });
 
                 return data[0];

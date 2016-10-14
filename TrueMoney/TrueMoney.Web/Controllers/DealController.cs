@@ -9,21 +9,21 @@ namespace TrueMoney.Web.Controllers
     using Infrastructure.Services;
 
     [Authorize]
-    public class ApplicationController : BaseController
+    public class DealController : BaseController
     {
-        private readonly IApplicationService _applicationService;
+        private readonly IDealService _dealService;
 
         private readonly IUserService _userService;
 
-        public ApplicationController(IApplicationService applicationService, IUserService userService)
+        public DealController(IDealService dealService, IUserService userService)
         {
-            _applicationService = applicationService;
+            _dealService = dealService;
             _userService = userService;
         }
         
         public async Task<ActionResult> Index()
         {
-            var list = await this._applicationService.GetAll();
+            var list = await this._dealService.GetAll();
             return this.View(list.Where(x => !x.IsClosed));
         }
 
@@ -31,7 +31,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (id.HasValue)
             {
-                var model = await _applicationService.GetById(id.Value);
+                var model = await _dealService.GetById(id.Value);
                 return View(model);
             }
 
@@ -42,7 +42,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (offerId.HasValue && appId.HasValue)
             {
-                await _applicationService.ApplyOffer(offerId.Value, appId.Value);
+                await _dealService.ApplyOffer(offerId.Value, appId.Value);
 
                 return RedirectToAction("Details", new { id = appId.Value });
             }
@@ -54,7 +54,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (offerId.HasValue && appId.HasValue)
             {
-                await this._applicationService.RevertOffer(offerId.Value, appId.Value);
+                await this._dealService.RevertOffer(offerId.Value, appId.Value);
 
                 return RedirectToAction("Details", new { id = appId.Value });
             }
@@ -66,7 +66,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (offerId.HasValue && appId.HasValue)
             {
-                var newLoanId = await _applicationService.FinishApp(CurrentUser, offerId.Value, appId.Value);
+                var newLoanId = await _dealService.FinishApp(CurrentUser, offerId.Value, appId.Value);
                 if (newLoanId > -1)
                 {
                     return RedirectToAction("Details", "Loan", new { id = newLoanId });
@@ -92,7 +92,7 @@ namespace TrueMoney.Web.Controllers
             {
 
                 var appId =
-                    await _applicationService.CreateApp(CurrentUser, model.Count, model.PaymentCount, model.Rate, model.DayCount, model.Description);
+                    await _dealService.CreateApp(CurrentUser, model.Count, model.PaymentCount, model.Rate, model.DayCount, model.Description);
                 if (appId > -1)
                 {
                     return RedirectToAction("Details", new { id = appId });
@@ -107,7 +107,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var app = await _applicationService.GetById(model.AppId);
+                var app = await _dealService.GetById(model.AppId);
                 if (model.Rate > app.Rate)
                 {
                     ModelState.AddModelError("Rate", "Вы превысили маскимальнодопустимую процентную ставку.");
@@ -120,7 +120,7 @@ namespace TrueMoney.Web.Controllers
                     return View("Details", app);
                 }
 
-                var res = await _applicationService.CreateOffer(CurrentUser, model.AppId, model.Rate);
+                var res = await _dealService.CreateOffer(CurrentUser, model.AppId, model.Rate);
                 if (!res)
                 {
                     ModelState.AddModelError("Server error", "Что-то пошло не так.");
@@ -135,7 +135,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (appId.HasValue)
             {
-                var res = await _applicationService.DeleteApp(CurrentUser, appId.Value);
+                var res = await _dealService.DeleteApp(CurrentUser, appId.Value);
 
                 if (res)
                 {

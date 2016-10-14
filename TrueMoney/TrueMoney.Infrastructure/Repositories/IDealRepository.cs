@@ -2,7 +2,7 @@
 {
     using TrueMoney.Infrastructure.Entities;
 
-    public interface IMoneyApplicationRepository : IRepository<MoneyApplication>
+    public interface IDealRepository : IRepository<Deal>
     {
     }
 }

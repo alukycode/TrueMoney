@@ -29,7 +29,7 @@
     {
         if (!ViewBag.CurrentUser.IsHaveOpenAppOrLoan)
         {
-            @Html.ActionLink("Создать заявку", "Create", "Application", routeValues: null, htmlAttributes: null)<br/>
+            @Html.ActionLink("Создать заявку", "Create", "Deal", routeValues: null, htmlAttributes: null)<br/>
         }
         else
         {
@@ -54,7 +54,7 @@
     }
 
     ---------------------------<br />
-    @Html.ActionLink("Список всех заявок", "Index", "Application", routeValues: null, htmlAttributes: null)<br />
+    @Html.ActionLink("Список всех заявок", "Index", "Deal", routeValues: null, htmlAttributes: null)<br />
 </div>
 
 @helper RenderLoan(Loan loan)
@@ -69,14 +69,14 @@
 {
     <p>
         <strong>@offer.Id</strong> - @offer.Rate
-        @Html.ActionLink("Просмотреть заявку", "Details", "Loan", routeValues: new { id = offer.MoneyApplication.Id }, htmlAttributes: null)<br />
+        @Html.ActionLink("Просмотреть заявку", "Details", "Loan", routeValues: new { id = offer.Deal.Id }, htmlAttributes: null)<br />
     </p>
 }
 
-@helper RenderMoneyApplications(MoneyApplication moneyApplication)
+@helper RenderMoneyApplications(Deal deal)
 {
     <p>
-        <strong>@moneyApplication.Id</strong> - @moneyApplication.Count - @moneyApplication.Rate
-        @Html.ActionLink("Просмотреть заявку", "Details", "Application", routeValues: new { id = moneyApplication.Id }, htmlAttributes: null)<br />
+        <strong>@deal.Id</strong> - @deal.Count - @deal.Rate
+        @Html.ActionLink("Просмотреть заявку", "Details", "Deal", routeValues: new { id = deal.Id }, htmlAttributes: null)<br />
     </p>
 }

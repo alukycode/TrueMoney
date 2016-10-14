@@ -15,13 +15,13 @@ namespace TrueMoney.Web.Controllers
         private readonly ILoanService _loanService;
         private readonly IUserService _userService;
 
-        private readonly IApplicationService _applicationService;
+        private readonly IDealService _dealService;
 
-        public LoanController(ILoanService loanService, IUserService userService, IApplicationService applicationService)
+        public LoanController(ILoanService loanService, IUserService userService, IDealService dealService)
         {
             _loanService = loanService;
             _userService = userService;
-            _applicationService = applicationService;
+            _dealService = dealService;
         }
         public async Task<ActionResult> Index()
         {
@@ -40,9 +40,9 @@ namespace TrueMoney.Web.Controllers
         {
             var viewModel =  new YouActivityViewModel
                                 {
-                                    MoneyApplications = await _applicationService.GetByUserId(CurrentUser.Id),
+                                    MoneyApplications = await _dealService.GetByUserId(CurrentUser.Id),
                                     Loans = await _loanService.GetByUser(CurrentUser.Id),
-                                    Offers = await _applicationService.GetAllOffersByUser(CurrentUser.Id)
+                                    Offers = await _dealService.GetAllOffersByUser(CurrentUser.Id)
                                 };
 
 

@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationService.cs" />
+    <Compile Include="DealService.cs" />
     <Compile Include="LoanService.cs" />
     <Compile Include="PaymentService.cs" />
     <Compile Include="Rating\RatingAction.cs" />

@@ -5,12 +5,12 @@
 
     using TrueMoney.Infrastructure.Entities;
 
-    public interface IApplicationService
+    public interface IDealService
     {
-        Task<IList<MoneyApplication>> GetAll();
-        Task<MoneyApplication> GetById(int id);
-        Task<IList<MoneyApplication>> GetByUserId(int userId);
-        Task<MoneyApplication> GetByOfferId(int offerId);
+        Task<IList<Deal>> GetAll();
+        Task<Deal> GetById(int id);
+        Task<IList<Deal>> GetByUserId(int userId);
+        Task<Deal> GetByOfferId(int offerId);
 
         Task<IList<Offer>> GetAllOffersByUser(int userId);
 

@@ -6,7 +6,7 @@
 
     public class YouActivityViewModel
     {
-        public IList<MoneyApplication> MoneyApplications { get; set; } = new List<MoneyApplication>();
+        public IList<Deal> MoneyApplications { get; set; } = new List<Deal>();
         public IList<Offer> Offers { get; set; } = new List<Offer>();
         public IList<Loan> Loans { get; set; } = new List<Loan>();
     }

@@ -206,7 +206,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Auth_Identity_Startup\SmsService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\DealController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoanController.cs" />
@@ -318,11 +318,11 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Application\Index.cshtml" />
-    <Content Include="Views\Application\Details.cshtml" />
+    <Content Include="Views\Deal\Index.cshtml" />
+    <Content Include="Views\Deal\Details.cshtml" />
     <Content Include="Views\Loan\Details.cshtml" />
     <Content Include="Views\Loan\Index.cshtml" />
-    <Content Include="Views\Application\Create.cshtml" />
+    <Content Include="Views\Deal\Create.cshtml" />
     <Content Include="Views\User\Details.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Home\Lend.cshtml" />
