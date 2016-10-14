@@ -12,6 +12,7 @@ using Microsoft.Owin.Security;
 using TrueMoney.DependencyInjection;
 using TrueMoney.Mapping;
 using TrueMoney.Web.Auth_Identity_Startup;
+using TrueMoney.Web.Mapping;
 
 namespace TrueMoney.Web
 {
@@ -24,7 +25,7 @@ namespace TrueMoney.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            MapperInitializer.Initialize();
+            MapperInitializer.Initialize(new WebMappingProfile());
             InitializeWindsorContainer();
         }
 

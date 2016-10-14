@@ -4,20 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using TrueMoney.Data.Mapping;
 
 namespace TrueMoney.Mapping
 {
     public static class MapperInitializer
     {
-        public static void Initialize()
+        public static void Initialize(Profile profile)
         {
             Mapper.Initialize(
                 conf =>
                 {
-                    conf.CreateMap<Data.Entities.User, Infrastructure.Entities.User>();
-                    conf.CreateMap<Infrastructure.Entities.User, Data.Entities.User>();
-                    conf.CreateMap<Data.Entities.Passport, Infrastructure.Entities.Passport>();
-                    conf.CreateMap<Infrastructure.Entities.Passport, Data.Entities.Passport>();
+                    conf.AddProfile<DataMappingProfile>();
+                    conf.AddProfile(profile);
                 });
         }
     }

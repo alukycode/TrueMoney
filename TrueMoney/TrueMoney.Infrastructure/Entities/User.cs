@@ -7,7 +7,7 @@
     {
         public User()
         {
-            Passport = new Passport(); // review: не вижу смысла
+            Passport = new Passport(); // review: не вижу смысла. Я тебе потом объясню
         }
 
         public string FirstName { get; set; }
