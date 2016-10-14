@@ -15,11 +15,21 @@ namespace TrueMoney.Web.Controllers
         {
             get
             {
+                int userId;
+                if (Int32.TryParse(Request.QueryString["user"], out userId))
+                {
+                    return new User { Id = userId, IsActive = true, IsHaveOpenDealOrLoan = false };
+                }
                 var aspNetId = User.Identity.GetUserId();
                 // var user = _userService.GetUserByAspNetId(aspNetId);
                 // return user;
-                return new User { Id = 1 };
+                return new User { Id = 1, IsActive = true, IsHaveOpenDealOrLoan = false };
             }
+        }
+
+        protected ActionResult GoHome()
+        {
+            return RedirectToAction("YouActivity", "Loan");
         }
     }
 }

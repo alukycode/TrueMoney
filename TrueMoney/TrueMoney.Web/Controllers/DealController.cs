@@ -29,6 +29,7 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Details(int? id)
         {
+            ViewBag.CurrentUserId = CurrentUser.Id;
             if (id.HasValue)
             {
                 var model = await _dealService.GetById(id.Value);
@@ -42,7 +43,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (offerId.HasValue && dealId.HasValue)
             {
-                await _dealService.ApplyOffer(offerId.Value, dealId.Value);
+                await _dealService.ApplyOffer(CurrentUser, offerId.Value, dealId.Value);
 
                 return RedirectToAction("Details", new { id = dealId.Value });
             }
@@ -50,13 +51,13 @@ namespace TrueMoney.Web.Controllers
             return GoHome();
         }
 
-        public async Task<ActionResult> RevertOffer(int? offerId, int? dealIp)
+        public async Task<ActionResult> RevertOffer(int? offerId, int? dealId)
         {
-            if (offerId.HasValue && dealIp.HasValue)
+            if (offerId.HasValue && dealId.HasValue)
             {
-                await this._dealService.RevertOffer(offerId.Value, dealIp.Value);
+                await this._dealService.RevertOffer(CurrentUser, offerId.Value, dealId.Value);
 
-                return RedirectToAction("Details", new { id = dealIp.Value });
+                return RedirectToAction("Details", new { id = dealId.Value });
             }
 
             return GoHome();
@@ -144,11 +145,6 @@ namespace TrueMoney.Web.Controllers
             }
 
             return RedirectToAction("Details", new { id = dealId });
-        }
-
-        private ActionResult GoHome()
-        {
-            return RedirectToAction("YouActivity", "Loan");
         }
     }
 }

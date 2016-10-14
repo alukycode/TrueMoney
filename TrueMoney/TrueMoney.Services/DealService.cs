@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using TrueMoney.Infrastructure.Entities;
-    using TrueMoney.Infrastructure.Repositories;
     using TrueMoney.Infrastructure.Services;
 
     public class DealService : IDealService
@@ -78,59 +77,56 @@
 
         private static int number = 3;
 
-        async Task<IList<Deal>> IDealService.GetAll()
+        public async Task<IList<Deal>> GetAll()
         {
             return data.Where(x => !x.IsClosed).ToList();
         }
 
-        async Task<Deal> IDealService.GetById(int id)
+        public async Task<Deal> GetById(int id)
         {
             return data.FirstOrDefault(x => x.Id == id);
         }
 
-        async Task<IList<Deal>> IDealService.GetByUserId(int userId)
+        public async Task<IList<Deal>> GetAllByUser(User user)
         {
-            return data.Where(x => x.Borrower.Id == userId).ToList();
+            return data.Where(x => Equals(x.Borrower, user)).ToList();
         }
 
-        async Task<Deal> IDealService.GetByOfferId(int offerId)
+        public async Task<Deal> GetByOfferId(int offerId)
         {
             return data.FirstOrDefault(x => x.Offers.Any(y => y.Id == offerId));
         }
 
-        public async Task<IList<Offer>> GetAllOffersByUser(int userId)
+        public async Task<IList<Offer>> GetAllOffersByUser(User user)
         {
             var res = new List<Offer>();
             foreach (var deal in data)
             {
-                res.AddRange(deal.Offers.Where(x => x.Lender.Id == userId));
+                res.AddRange(deal.Offers.Where(x => x.Lender.Id == user.Id));
             }
 
             return res;
         }
 
-        public async Task<bool> ApplyOffer(int offerId, int dealId)
+        public async Task<bool> ApplyOffer(User user, int offerId, int dealId)
         {
-            var deal = data.FirstOrDefault(x => x.Id == dealId);
-            if (deal != null)
+            var deal = data.FirstOrDefault(x => x.Id == dealId && Equals(x.Borrower, user));
+            var offer = deal?.Offers.FirstOrDefault(x => x.Id == offerId);
+            if (offer != null)
             {
-                var offer = deal.Offers.FirstOrDefault(x => x.Id == offerId);
-                if (offer != null)
-                {
-                    offer.WaitForApprove = true;
-                    deal.WaitForApprove = true;
+                offer.WaitForApprove = true;
+                deal.WaitForApprove = true;
 
-                    return true;
-                }
+                return true;
             }
 
             return false;
         }
 
-        public async Task<bool> RevertOffer(int offerId, int dealId)
+        public async Task<bool> RevertOffer(User user, int offerId, int dealId)
         {
             var deal = data.FirstOrDefault(x => x.Id == dealId);
-            var offer = deal?.Offers.FirstOrDefault(x => x.Id == offerId);
+            var offer = deal?.Offers.FirstOrDefault(x => x.Id == offerId && Equals(x.Lender, user));
             if (offer != null)
             {
                 if (offer.WaitForApprove)
@@ -147,10 +143,9 @@
 
         public async Task<bool> CreateOffer(User user, int dealId, float rate)
         {
-            var activeAppsByPerson = new List<Deal>();//todo - Sania - get all active apps by user;
             var deal = data.FirstOrDefault(x => x.Id == dealId);
-            if (!activeAppsByPerson.Any() && user != null && user.IsActive && deal != null && !deal.IsClosed && 
-                !deal.Offers.Any(x=>!x.IsClosed && x.Lender.Id == user.Id)) // review: должна быть весомая причина чтобы проверять юзера на null, ведь такого быть не должно
+            if (!user.IsHaveOpenDealOrLoan && user.IsActive && deal != null && !deal.IsClosed && 
+                !deal.Offers.Any(x=>!x.IsClosed && Equals(x.Lender, user))) // review: должна быть весомая причина чтобы проверять юзера на null, ведь такого быть не должно
             {
                 deal.Offers.Add(
                     new Offer
@@ -170,27 +165,24 @@
 
         public async Task<int> FinishDeal(User user, int offerId, int dealId)
         {
-            var finishDeaol = data.FirstOrDefault(x => x.Id == dealId);
-            if (finishDeaol != null)
+            var finishDeal = data.FirstOrDefault(x => x.Id == dealId);
+            var finishOffer = finishDeal?.Offers.FirstOrDefault(x => x.Id == offerId && Equals(x.Lender, user));
+            if (finishOffer != null)
             {
-                var finishOffer = finishDeaol.Offers.FirstOrDefault(x => x.Id == offerId);
-                if (finishOffer != null)
+                var newLoan = await this._loanService.Create(user, finishDeal, finishOffer);
+                if (newLoan != null)
                 {
-                    var newLoan = await this._loanService.Create(user, finishDeaol, finishOffer);
-                    if (newLoan != null)
-                    {
-                        //finish deal
-                        finishDeaol.IsClosed = true;
-                        finishDeaol.CloseDate = DateTime.Now;
-                        finishDeaol.FinishOfferId = finishOffer.Id;
-                        finishDeaol.FinishLoadId = newLoan.Id;
+                    //finish deal
+                    finishDeal.IsClosed = true;
+                    finishDeal.CloseDate = DateTime.Now;
+                    finishDeal.FinishOfferId = finishOffer.Id;
+                    finishDeal.FinishLoadId = newLoan.Id;
 
-                        //finish offer
-                        finishOffer.IsClosed = true;
-                        finishOffer.CloseDate = DateTime.Now;
+                    //finish offer
+                    finishOffer.IsClosed = true;
+                    finishOffer.CloseDate = DateTime.Now;
 
-                        return newLoan.Id;
-                    }
+                    return newLoan.Id;
                 }
             }
 

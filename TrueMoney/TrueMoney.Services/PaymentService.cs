@@ -24,7 +24,7 @@
         public async Task<PaymentResult> LendMoney(User user, int loanId, int payForId, float count, VisaDetails visaDetails)
         {
             var payForUser = await _userService.GetUserById(payForId);
-            var loan = await _loanService.GetById(loanId, user.Id);
+            var loan = await _loanService.GetById(loanId);
 
             if (payForUser != null && loan != null && Equals(loan.Borrower, payForUser) && Equals(loan.Lender, user))
             {
