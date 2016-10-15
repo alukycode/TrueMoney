@@ -55,19 +55,30 @@ namespace TrueMoney.Web.Controllers
                     formModel.PayForId,
                     formModel.PaymentCount,
                     new VisaDetails
-                        {
-                            CardNumber = formModel.CardNumber,
-                            CvvCode = formModel.CvvCode,
-                            Name = formModel.Name,
-                            ValidBefore = formModel.ValidBefore
-                        });
-                if (payRes == PaymentResult.Success)
+                    {
+                        CardNumber = formModel.CardNumber,
+                        CvvCode = formModel.CvvCode,
+                        Name = formModel.Name,
+                        ValidBefore = formModel.ValidBefore
+                    });
+                switch (payRes)
                 {
-                    return View("Success", formModel);
+                    case PaymentResult.Success:
+                        return View("Success", formModel);
+                    case PaymentResult.EmptyData:
+                        ModelState.AddModelError("", "Заполните форму");
+                        break;
+                    case PaymentResult.Error:
+                        ModelState.AddModelError("", "Server Error");
+                        break;
+                    case PaymentResult.NotEnoughtMoney:
+                        ModelState.AddModelError("", "Недостаточно средств на счёте");
+                        break;
+                    case PaymentResult.PermissionError:
+                        ModelState.AddModelError("", "Ошибка доступа к счёту");
+                        break;
                 }
             }
-
-            ModelState.AddModelError("Server", "Server Error");
 
             return View(formModel);
         }

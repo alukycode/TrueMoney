@@ -9,7 +9,7 @@
     <div class="form-horizontal">
         
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationSummary(true, "Server error", new { @class = "text-danger" })
         @Html.HiddenFor(m=>m.PayForId)
         @Html.HiddenFor(m=>m.LoanId)
         @Html.HiddenFor(m=>m.PaymentCount)

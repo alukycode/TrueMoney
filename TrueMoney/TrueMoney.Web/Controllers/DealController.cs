@@ -117,14 +117,14 @@ namespace TrueMoney.Web.Controllers
 
                 if (!CurrentUser.IsActive)
                 {
-                    ModelState.AddModelError("User error", "Вы ещё не прошли подтверждение регистрации.");
+                    ModelState.AddModelError("", "Вы ещё не прошли подтверждение регистрации.");
                     return View("Details", deal);
                 }
 
                 var res = await _dealService.CreateOffer(CurrentUser, model.DealId, model.Rate);
                 if (!res)
                 {
-                    ModelState.AddModelError("Server error", "Что-то пошло не так.");
+                    ModelState.AddModelError("", "Что-то пошло не так.");
                     return View("Details", deal);
                 }
             }

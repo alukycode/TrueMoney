@@ -28,7 +28,7 @@
 
             if (payForUser != null && loan != null && Equals(loan.Borrower, payForUser) && Equals(loan.Lender, user))
             {
-                var result =
+                var result =await 
                     _bankApi.Do(
                         new Bank.BankEntities.BankTransaction
                         {
