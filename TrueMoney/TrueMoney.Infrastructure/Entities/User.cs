@@ -5,11 +5,6 @@
 
     public class User : Entity
     {
-        public User()
-        {
-            Passport = new Passport(); // review: не вижу смысла. Я тебе потом объясню
-        }
-
         public string FirstName { get; set; }
 
         public string LastName { get; set; }

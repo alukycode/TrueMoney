@@ -4,7 +4,7 @@ using TrueMoney.Data.Entities;
 
 namespace TrueMoney.Data
 {
-    public class DbInitializer : DropCreateDatabaseIfModelChanges<TrueMoneyContext>
+    public class TrueMoneyDbInitializer : DropCreateDatabaseIfModelChanges<TrueMoneyContext>
     {
         protected override void Seed(TrueMoneyContext context)
         {
@@ -14,16 +14,22 @@ namespace TrueMoney.Data
                 {
                     FirstName = "Саша",
                     LastName = "Черногребель",
+                    AspUserId = "test",
+                    BankAccountNumber = "test",
                 },
                 new User
                 {
                     FirstName = "Антон",
-                    LastName = "Лукьянов"
+                    LastName = "Лукьянов",
+                    AspUserId = "test",
+                    BankAccountNumber = "test",
                 },
                 new User
                 {
                     FirstName = "Дима",
-                    LastName = "Артюх"
+                    LastName = "Артюх",
+                    AspUserId = "test",
+                    BankAccountNumber = "test",
                 }
             };
 

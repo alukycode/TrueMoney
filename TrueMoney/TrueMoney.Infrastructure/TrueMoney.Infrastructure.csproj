@@ -43,6 +43,7 @@
     <Compile Include="Entities\BaseEntity.cs" />
     <Compile Include="Entities\Deal.cs" />
     <Compile Include="Entities\BankAccount.cs" />
+    <Compile Include="Entities\DealStatus.cs" />
     <Compile Include="Entities\Loan.cs" />
     <Compile Include="Entities\Offer.cs" />
     <Compile Include="Entities\Payment.cs" />

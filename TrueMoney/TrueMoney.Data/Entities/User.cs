@@ -8,11 +8,6 @@ namespace TrueMoney.Data.Entities
 {
     public class User : Entity
     {
-        public User()
-        {
-            Passport = new Passport();
-        }
-
         [Required]
         public string FirstName { get; set; }
 
@@ -21,17 +16,21 @@ namespace TrueMoney.Data.Entities
 
         public string MiddleName { get; set; }
 
+        [Required]
         public Passport Passport { get; set; }
 
+        [Required]
         public string AspUserId { get; set; }
-    }
 
-    public class Passport
-    {
-        public string Series { get; set; }
+        public bool IsActive { get; set; }
 
-        public string Number { get; set; }
+        [Required]
+        public string BankAccountNumber { get; set; }
 
-        public DateTime? DateOfIssuing { get; set; }
+        public int Rating { get; set; }
+
+        public List<Deal> Deals { get; set; }
+
+        public List<Offer> Offers{ get; set; }
     }
 }

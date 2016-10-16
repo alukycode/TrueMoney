@@ -53,8 +53,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbInitializer.cs" />
+    <Compile Include="Entities\BankTransaction.cs" />
+    <Compile Include="Entities\Deal.cs" />
+    <Compile Include="Entities\Offer.cs" />
+    <Compile Include="Entities\Payment.cs" />
+    <Compile Include="Entities\PaymentPlan.cs" />
+    <Compile Include="Migrations\201610161519214_ChangedUserAddedPassport.cs" />
+    <Compile Include="Migrations\201610161519214_ChangedUserAddedPassport.Designer.cs">
+      <DependentUpon>201610161519214_ChangedUserAddedPassport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610161542399_AddedDealAndOffer.cs" />
+    <Compile Include="Migrations\201610161542399_AddedDealAndOffer.Designer.cs">
+      <DependentUpon>201610161542399_AddedDealAndOffer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610161601184_Added_Payment_PaymentPlan_BankTransaction.cs" />
+    <Compile Include="Migrations\201610161601184_Added_Payment_PaymentPlan_BankTransaction.Designer.cs">
+      <DependentUpon>201610161601184_Added_Payment_PaymentPlan_BankTransaction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610161636199_ChangedDeal.cs" />
+    <Compile Include="Migrations\201610161636199_ChangedDeal.Designer.cs">
+      <DependentUpon>201610161636199_ChangedDeal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610161658032_AddedFields.cs" />
+    <Compile Include="Migrations\201610161658032_AddedFields.Designer.cs">
+      <DependentUpon>201610161658032_AddedFields.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TrueMoneyDbInitializer.cs" />
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\Passport.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Mapping\DataMappingProfile.cs" />
     <Compile Include="Migrations\201610052013505_Init.cs" />
@@ -100,6 +126,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610102130332_AddedAspUserId.resx">
       <DependentUpon>201610102130332_AddedAspUserId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610161519214_ChangedUserAddedPassport.resx">
+      <DependentUpon>201610161519214_ChangedUserAddedPassport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610161542399_AddedDealAndOffer.resx">
+      <DependentUpon>201610161542399_AddedDealAndOffer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610161601184_Added_Payment_PaymentPlan_BankTransaction.resx">
+      <DependentUpon>201610161601184_Added_Payment_PaymentPlan_BankTransaction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610161636199_ChangedDeal.resx">
+      <DependentUpon>201610161636199_ChangedDeal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610161658032_AddedFields.resx">
+      <DependentUpon>201610161658032_AddedFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
