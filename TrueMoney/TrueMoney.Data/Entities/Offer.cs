@@ -18,7 +18,7 @@ namespace TrueMoney.Data.Entities
         [Required]
         public Deal Deal { get; set; }
 
-        public int Percent { get; set; }
+        public int InterestRate { get; set; }
 
         public DateTime CreateTime { get; set; }
 

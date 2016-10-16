@@ -13,5 +13,9 @@ namespace TrueMoney.Data.Entities
 
         [Required]
         public PaymentPlan PaymentPlan { get; set; }
+
+        public DateTime DateOfPayment { get; set; }
+
+        public decimal Amount { get; set; }
     }
 }

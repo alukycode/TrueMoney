@@ -16,7 +16,8 @@ namespace TrueMoney.Data.Entities
 
         public string MiddleName { get; set; }
 
-        [Required]
+        public int? PassportId { get; set; }
+
         public Passport Passport { get; set; }
 
         [Required]

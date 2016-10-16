@@ -32,5 +32,7 @@ namespace TrueMoney.Data.Entities
         public decimal Amount { get; set; }
 
         public DealStatus DealStatus { get; set; }
+
+        public int InterestRate { get; set; }
     }
 }

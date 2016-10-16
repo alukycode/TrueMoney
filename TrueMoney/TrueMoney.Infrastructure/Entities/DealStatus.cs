@@ -9,6 +9,7 @@ namespace TrueMoney.Infrastructure.Entities
     public enum DealStatus
     {
         Open,
+
         InProgress,
         Closed
     }

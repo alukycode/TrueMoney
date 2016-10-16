@@ -19,5 +19,7 @@ namespace TrueMoney.Data.Entities
         public decimal Amount { get; set; }
 
         public decimal Liability { get; set; }
+
+        public bool IsPaid { get; set; }
     }
 }
