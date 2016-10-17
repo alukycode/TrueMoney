@@ -1,4 +1,5 @@
-﻿@using TrueMoney.Web.Models
+﻿@using TrueMoney.Infrastructure.Entities
+@using TrueMoney.Web.Models
 @model TrueMoney.Infrastructure.Entities.Deal
 
 @{
@@ -87,7 +88,7 @@
             <text>wait for lender approve from user with id =
                 @Model.Offers.FirstOrDefault(x => x.WaitForApprove).Lender.Id</text>
         }
-        else if (mainOffer != null)
+        else if (mainOffer != null && Model.WaitForApprove)
         {
             @Html.ActionLink("Дать взаймы", "FinishDeal", new { offerId = mainOffer.Id, dealId = Model.Id })
             @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = mainOffer.Id, dealId = Model.Id })
@@ -104,6 +105,18 @@
 {
     @Html.ActionLink("Удалить заявку", "Delete", new { dealId = Model.Id })
 }
-<p>
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+@if (Model.Lender != null && ViewBag.CurrentUserId == Model.Lender.Id && Model.Status == DealStatus.WaitForLoan)
+{
+    <h4>перевиди бабло челу</h4>
+    <p>
+        Visa - @Html.ActionLink("Перечислить займ", "Visa", "Payment", routeValues: new RouteValueDictionary(
+             new
+             {
+                 paymentName = $"Перевод денег на счёт {Model.Borrower.FirstName}. Займ № {Model.Id}.",
+                 paymentCount = Model.Count,
+                 payForId = Model.Borrower.Id,
+                 dealId = Model.Id
+             }), htmlAttributes: null)
+    </p>
+}

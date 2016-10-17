@@ -18,10 +18,12 @@
         Task<bool> RevertOffer(User user, int offerId, int dealId);
         Task<bool> CreateOffer(User user, int dealId, float rate);
 
-        Task<int> FinishDeal(User user, int offerId, int dealId);
+        Task<Deal> FinishDealStartLoan(User user, int offerId, int dealId);
 
         Task<int> CreateDeal(User user, float count, int paymentCount, float rate, int dayCount, string description);
 
-        Task<bool> DeleteDeal(User user, int dealIp);
+        Task<bool> DeleteDeal(User user, int dealId);
+
+        Task<Deal> PaymentFinished(Deal deal);
     }
 }

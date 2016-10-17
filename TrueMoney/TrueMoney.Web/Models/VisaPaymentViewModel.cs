@@ -10,7 +10,7 @@
         public float PaymentCount { get; set; }
 
         public int PayForId { get; set; }
-        public int LoanId { get; set; }
+        public int DealId { get; set; }
 
         [Required]
         [Display(Name = "Card number")]

@@ -7,8 +7,11 @@
     public class Deal : Entity
     {
         public User Borrower { get; set; }
+        public User Lender { get; set; }
+        public DealStatus Status { get; set; } = DealStatus.Open;
 
         public DateTime CreateDate { get; set; }
+        public DateTime CloseDate { get; set; }
 
         public float Count { get; set; }
 
@@ -20,17 +23,21 @@
 
         public IList<Offer> Offers { get; set; } = new List<Offer>();
 
-        public bool IsClosed { get; set; }
-
-        public int FinishLoadId { get; set; }
-
         public int FinishOfferId { get; set; }
-
-        public DateTime CloseDate { get; set; }
 
         public string Description { get; set; }
 
         public bool WaitForApprove { get; set; }
+
+        public PaymentPlan PaymentPlan { get; set; }
+
+        public bool IsClosed
+        {
+            get
+            {
+                return Status == DealStatus.Closed;
+            }
+        }
 
         public bool IsTakePart(User user)
         {

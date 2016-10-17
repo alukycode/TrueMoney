@@ -28,7 +28,7 @@
         /// </summary>
         public User For { get; set; }
 
-        public Loan Loan { get; set; }
+        public Deal Deal { get; set; }
 
         public bool IsPayed { get; set; }
     }

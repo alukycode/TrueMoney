@@ -9,7 +9,7 @@ namespace TrueMoney.Services
 {
     using System.Web;
 
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
 
@@ -70,11 +70,14 @@ namespace TrueMoney.Services
                 MiddleName = middleName,
                 AspUserId = aspUserId,
             };
-            user.Passport.Number = passportNumber;
-            user.Passport.Series = passportSerie;
-            user.Passport.DateOfIssuing = passportDateOfIssuing;
-            user.Passport.GiveOrganisation = passportGiveOrganisation;
-            user.BankAccount = new BankAccount { AccountNumber = bankAccountNumber, Id = 0, Owner = user };
+            user.Passport = new Passport
+            {
+                Number = passportNumber,
+                Series = passportSerie,
+                DateOfIssuing = passportDateOfIssuing,
+                GiveOrganisation = passportGiveOrganisation
+            };
+            user.AccountNumber = bankAccountNumber;
 
             await _userRepository.Add(user);
 

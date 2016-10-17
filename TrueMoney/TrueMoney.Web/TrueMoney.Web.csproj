@@ -213,7 +213,6 @@
     <Compile Include="Controllers\DealController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\LoanController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -325,8 +324,6 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Deal\Index.cshtml" />
     <Content Include="Views\Deal\Details.cshtml" />
-    <Content Include="Views\Loan\Details.cshtml" />
-    <Content Include="Views\Loan\Index.cshtml" />
     <Content Include="Views\Deal\Create.cshtml" />
     <Content Include="Views\User\Details.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
@@ -335,7 +332,7 @@
     <Content Include="Views\Partials\CreateOfferForm.cshtml" />
     <Content Include="Views\Payment\Visa.cshtml" />
     <Content Include="Views\Payment\Success.cshtml" />
-    <Content Include="Views\Loan\YouActivity.cshtml" />
+    <Content Include="Views\Deal\YouActivity.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

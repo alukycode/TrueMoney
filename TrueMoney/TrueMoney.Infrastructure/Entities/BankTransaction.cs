@@ -9,9 +9,9 @@
     {
         public float Amount { get; set; }
 
-        public BankAccount From { get; set; }
+        public User From { get; set; }
 
-        public BankAccount For { get; set; }
+        public User For { get; set; }
 
         public DateTime StartTime { get; set; }
 
