@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TrueMoney.Infrastructure.Entities;
+using TrueMoney.Infrastructure.Enums;
 
 namespace TrueMoney.Data.Entities
 {

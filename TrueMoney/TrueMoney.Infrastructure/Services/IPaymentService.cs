@@ -1,4 +1,6 @@
-﻿namespace TrueMoney.Infrastructure.Services
+﻿using TrueMoney.Infrastructure.Enums;
+
+namespace TrueMoney.Infrastructure.Services
 {
     using System.Threading.Tasks;
 

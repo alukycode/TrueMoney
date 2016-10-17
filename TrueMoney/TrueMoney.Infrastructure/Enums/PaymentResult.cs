@@ -1,4 +1,4 @@
-﻿namespace TrueMoney.Infrastructure.Entities
+﻿namespace TrueMoney.Infrastructure.Enums
 {
     public enum PaymentResult
     {

@@ -1,4 +1,6 @@
-﻿namespace TrueMoney.Infrastructure.Entities
+﻿using TrueMoney.Infrastructure.Enums;
+
+namespace TrueMoney.Infrastructure.Entities
 {
     using System;
     using System.Collections.Generic;

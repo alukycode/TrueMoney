@@ -42,13 +42,13 @@
   <ItemGroup>
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Deal.cs" />
-    <Compile Include="Entities\DealStatus.cs" />
+    <Compile Include="Enums\DealStatus.cs" />
     <Compile Include="Entities\Loan.cs" />
     <Compile Include="Entities\Offer.cs" />
     <Compile Include="Entities\Passport.cs" />
     <Compile Include="Entities\Payment.cs" />
     <Compile Include="Entities\BankTransaction.cs" />
-    <Compile Include="Entities\PaymentResult.cs" />
+    <Compile Include="Enums\PaymentResult.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\VisaDetails.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
