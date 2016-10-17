@@ -11,30 +11,30 @@
     public class PaymentService : IPaymentService
     {
         private readonly IUserService _userService;
-
-        private readonly ILoanService _loanService;
+        private readonly IDealService _dealService;
 
         private readonly IBankApi _bankApi;
 
-        public PaymentService(IUserService userService, ILoanService loanService, IBankApi bankApi)
+        public PaymentService(IUserService userService, IDealService dealService, IBankApi bankApi)
         {
             _userService = userService;
-            _loanService = loanService;
+            _dealService = dealService;
+            _bankApi = bankApi;
         }
-        public async Task<PaymentResult> LendMoney(User user, int loanId, int payForId, float count, VisaDetails visaDetails)
+        public async Task<PaymentResult> LendMoney(User user, int dealId, int payForId, float count, VisaDetails visaDetails)
         {
             var payForUser = await _userService.GetUserById(payForId);
-            var loan = await _loanService.GetById(loanId);
+            var deal = await _dealService.GetById(dealId);
 
-            if (payForUser != null && loan != null && Equals(loan.Borrower, payForUser) && Equals(loan.Lender, user))
+            if (payForUser != null && deal != null && Equals(deal.Borrower, payForUser) && Equals(deal.Lender, user))
             {
-                var result =await 
+                var result = await
                     _bankApi.Do(
                         new Bank.BankEntities.BankTransaction
                         {
                             Amount = count,
-                            AccountNumber1 = user.BankAccount.AccountNumber,
-                            AccountNumber2 = payForUser.BankAccount.AccountNumber,
+                            AccountNumber1 = user.AccountNumber,
+                            AccountNumber2 = payForUser.AccountNumber,
                             BankAction = BankAction.Transfer,
                             Secret = ""
                         });
@@ -42,6 +42,7 @@
                 switch (result)
                 {
                     case BankResponse.Success:
+                        await _dealService.PaymentFinished(deal);
                         return PaymentResult.Success;
                     case BankResponse.NotEnoughtMoney:
                         return PaymentResult.NotEnoughtMoney;

@@ -4,23 +4,18 @@
 <div>
     <h4>Личный кабинет</h4>
     <h5>Ваш активный займ:</h5>
-    @foreach (var item in Model.Loans.Where(x => !x.IsClosed))
-    {
-        @RenderLoan(item)
-    }
-    <h5>Ваши завершённые займы:</h5>
-    @foreach (var item in Model.Loans.Where(x => x.IsClosed))
-    {
-        @RenderLoan(item)
-    }
-    ---------------------------<br/>
-    <h5>Ваша активная заявка:</h5>
     @foreach (var item in Model.Deals.Where(x => !x.IsClosed))
     {
         @RenderDeal(item)
     }
-    <h5>Ваши закрытые заявки:</h5>
+    <h5>Ваши завершённые займы:</h5>
     @foreach (var item in Model.Deals.Where(x => x.IsClosed))
+    {
+        @RenderDeal(item)
+    }
+    ---------------------------<br/>
+    <h5>Ваша активная заявка:</h5>
+    @foreach (var item in Model.Deals.Where(x => x.Status == DealStatus.InProgress || x.Status == DealStatus.WaitForLoan))
     {
         @RenderDeal(item)
     }
@@ -56,14 +51,6 @@
     ---------------------------<br />
     @Html.ActionLink("Список всех заявок", "Index", "Deal", routeValues: null, htmlAttributes: null)<br />
 </div>
-
-@helper RenderLoan(Loan loan)
-{
-    <p>
-        <strong>@loan.Id</strong> - @loan.Count - @loan.Rate
-        @Html.ActionLink("Детали", "Details", "Loan", routeValues: new { id = loan.Id }, htmlAttributes: null)<br />
-    </p>
-}
 
 @helper RenderOffer(Offer offer)
 {

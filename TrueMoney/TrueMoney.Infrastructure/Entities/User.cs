@@ -1,6 +1,5 @@
 ﻿namespace TrueMoney.Infrastructure.Entities
 {
-    using System;
     using System.Collections.Generic;
 
     public class User : Entity
@@ -24,21 +23,13 @@
 
         public string AspUserId { get; set; }
 
-        public BankAccount BankAccount { get; set; }
+        public string AccountNumber { get; set; }
         public bool IsHaveOpenDealOrLoan { get; set; }
 
-        public int Rating { get; set; } = 0;
-    }
+        public int Rating { get; set; }
 
-    // review: для каждого класса свой файл
-    public class Passport
-    {
-        public string Series { get; set; }
+        public IList<Deal> Deals { get; set; }
 
-        public string Number { get; set; }
-
-        public DateTime DateOfIssuing { get; set; }
-
-        public string GiveOrganisation { get; set; }
+        public IList<Offer> Offers { get; set; }
     }
 }

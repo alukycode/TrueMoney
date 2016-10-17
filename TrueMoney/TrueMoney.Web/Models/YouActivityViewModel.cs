@@ -8,6 +8,5 @@
     {
         public IList<Deal> Deals { get; set; } = new List<Deal>();
         public IList<Offer> Offers { get; set; } = new List<Offer>();
-        public IList<Loan> Loans { get; set; } = new List<Loan>();
     }
 }

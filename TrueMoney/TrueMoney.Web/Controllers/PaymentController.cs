@@ -23,7 +23,7 @@ namespace TrueMoney.Web.Controllers
             _userService = userService;
         }
 
-        public async Task<ActionResult> Visa(string paymentName, float paymentCount, int payForId, int loadId)
+        public async Task<ActionResult> Visa(string paymentName, float paymentCount, int payForId, int dealId)
         {
             if (!string.IsNullOrEmpty(paymentName)
                 && paymentCount > 0)
@@ -36,7 +36,7 @@ namespace TrueMoney.Web.Controllers
                             PaymentCount = paymentCount,
                             PaymentName = paymentName,
                             PayForId = payForId,
-                            LoanId = loadId
+                            DealId = dealId
                         });
             }
 
@@ -51,7 +51,7 @@ namespace TrueMoney.Web.Controllers
             {
                 var payRes = await _paymentService.LendMoney(
                     CurrentUser,
-                    formModel.LoanId,
+                    formModel.DealId,
                     formModel.PayForId,
                     formModel.PaymentCount,
                     new VisaDetails

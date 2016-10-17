@@ -10,12 +10,10 @@
     public class DealService : IDealService
     {
         private readonly IUserService _userService;
-        private readonly ILoanService _loanService;
 
-        public DealService(IUserService userService, ILoanService loanService)
+        public DealService(IUserService userService)
         {
             _userService = userService;
-            this._loanService = loanService;
 
             // review: по-хорошему, эти данные должны быть в репозитории, в методе-заглушке и возвращаться из него
             data = new List<Deal> // todo
@@ -23,7 +21,6 @@
                            new Deal
                                {
                                    Id = 0,
-                                   IsClosed = false,
                                    Borrower = new User { Id = 0 },//todo - get real user
                                    CreateDate = new DateTime(2016, 10, 09),
                                    Count = 100,
@@ -34,7 +31,6 @@
                            new Deal
                                {
                                    Id = 1,
-                                   IsClosed = false,
                                    Borrower = new User { Id = 1 },//todo - get real user
                                    CreateDate = new DateTime(2016, 10, 09),
                                    Count = 200,
@@ -62,7 +58,6 @@
                            new Deal
                                {
                                    Id = 2,
-                                   IsClosed = false,
                                    Borrower = new User { Id = 2 },//todo - get real user
                                    CreateDate = new DateTime(2016, 10, 09),
                                    Count = 2000,
@@ -144,18 +139,18 @@
         public async Task<bool> CreateOffer(User user, int dealId, float rate)
         {
             var deal = data.FirstOrDefault(x => x.Id == dealId);
-            if (!user.IsHaveOpenDealOrLoan && user.IsActive && deal != null && !deal.IsClosed && 
-                !deal.Offers.Any(x=>!x.IsClosed && Equals(x.Lender, user))) // review: должна быть весомая причина чтобы проверять юзера на null, ведь такого быть не должно
+            if (!user.IsHaveOpenDealOrLoan && user.IsActive && deal != null && !deal.IsClosed &&
+                !deal.Offers.Any(x => !x.IsClosed && Equals(x.Lender, user))) // review: должна быть весомая причина чтобы проверять юзера на null, ведь такого быть не должно
             {
                 deal.Offers.Add(
                     new Offer
-                        {
-                            Id = number++,
-                            CreateTime = DateTime.Now,
-                            Lender = user,
-                            Deal = deal,
-                            Rate = rate
-                        });
+                    {
+                        Id = number++,
+                        CreateTime = DateTime.Now,
+                        Lender = user,
+                        Deal = deal,
+                        Rate = rate
+                    });
 
                 return true;
             }
@@ -163,30 +158,25 @@
             return false; // review: не нужно этих true/false, не получилось сделать по каким-то причинам - кидай эксепшен
         }
 
-        public async Task<int> FinishDeal(User user, int offerId, int dealId)
+        public async Task<Deal> FinishDealStartLoan(User user, int offerId, int dealId)
         {
-            var finishDeal = data.FirstOrDefault(x => x.Id == dealId);
-            var finishOffer = finishDeal?.Offers.FirstOrDefault(x => x.Id == offerId && Equals(x.Lender, user));
+            var deal = data.FirstOrDefault(x => x.Id == dealId);
+            var finishOffer = deal?.Offers.FirstOrDefault(x => x.Id == offerId && Equals(x.Lender, user));
             if (finishOffer != null)
             {
-                var newLoan = await this._loanService.Create(user, finishDeal, finishOffer);
-                if (newLoan != null)
-                {
-                    //finish deal
-                    finishDeal.IsClosed = true;
-                    finishDeal.CloseDate = DateTime.Now;
-                    finishDeal.FinishOfferId = finishOffer.Id;
-                    finishDeal.FinishLoadId = newLoan.Id;
+                deal.Status = DealStatus.WaitForLoan;
+                deal.WaitForApprove = false;
+                deal.CloseDate = DateTime.Now;
+                deal.FinishOfferId = finishOffer.Id;
+                deal.Rate = finishOffer.Rate;
+                deal.Lender = finishOffer.Lender;
 
-                    //finish offer
-                    finishOffer.IsClosed = true;
-                    finishOffer.CloseDate = DateTime.Now;
-
-                    return newLoan.Id;
-                }
+                //finish offer
+                finishOffer.IsClosed = true;
+                finishOffer.CloseDate = DateTime.Now;
             }
 
-            return -1; // review: что это блять за магические цифры
+            return deal;
         }
 
         public async Task<int> CreateDeal(User user, float count, int paymentCount, float rate, int dayCount, string description)
@@ -213,12 +203,12 @@
             return -1;
         }
 
-        public async Task<bool> DeleteDeal(User currentUser, int dealIp)
+        public async Task<bool> DeleteDeal(User currentUser, int dealId)
         {
-            var deal = data.FirstOrDefault(x => x.Id == dealIp);
+            var deal = data.FirstOrDefault(x => x.Id == dealId);
             if (deal != null && !deal.IsClosed && deal.IsTakePart(currentUser))
             {
-                deal.IsClosed = true;
+                deal.Status = DealStatus.Closed;
                 deal.CloseDate = DateTime.Now;
                 foreach (var offer in deal.Offers.Where(x => !x.IsClosed))
                 {
@@ -233,6 +223,19 @@
             }
 
             return false;
+        }
+
+        public async Task<Deal> PaymentFinished(Deal deal)
+        {
+            deal.Status = DealStatus.InProgress;
+            deal.PaymentPlan = CalculatePayments(deal);
+
+            return deal;
+        }
+
+        private PaymentPlan CalculatePayments(Deal deal)
+        {
+            return new PaymentPlan { Deal = deal, CreateTime = DateTime.Now };
         }
     }
 }

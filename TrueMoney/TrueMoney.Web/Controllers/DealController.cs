@@ -13,12 +13,9 @@ namespace TrueMoney.Web.Controllers
     {
         private readonly IDealService _dealService;
 
-        private readonly IUserService _userService;
-
-        public DealController(IDealService dealService, IUserService userService)
+        public DealController(IDealService dealService)
         {
             _dealService = dealService;
-            _userService = userService;
         }
         
         public async Task<ActionResult> Index()
@@ -67,11 +64,9 @@ namespace TrueMoney.Web.Controllers
         {
             if (offerId.HasValue && dealId.HasValue)
             {
-                var newLoanId = await _dealService.FinishDeal(CurrentUser, offerId.Value, dealId.Value);
-                if (newLoanId > -1)
-                {
-                    return RedirectToAction("Details", "Loan", new { id = newLoanId });
-                }
+                await _dealService.FinishDealStartLoan(CurrentUser, offerId.Value, dealId.Value);
+
+                return RedirectToAction("Details", "Deal", new { id = dealId.Value });
             }
 
             return GoHome();
@@ -145,6 +140,20 @@ namespace TrueMoney.Web.Controllers
             }
 
             return RedirectToAction("Details", new { id = dealId });
+        }
+
+        public async Task<ActionResult> YouActivity()
+        {
+            ViewBag.IsActive = CurrentUser.IsActive;
+            ViewBag.IsHaveOpenDealOrLoan = CurrentUser.IsHaveOpenDealOrLoan;
+            var viewModel = new YouActivityViewModel
+            {
+                Deals = await _dealService.GetAllByUser(CurrentUser),
+                Offers = await _dealService.GetAllOffersByUser(CurrentUser)
+            };
+
+
+            return View(viewModel);
         }
     }
 }
