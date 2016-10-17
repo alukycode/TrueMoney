@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using TrueMoney.Data;
-using TrueMoney.Data.Entities;
 using TrueMoney.Data.Repositories;
+using TrueMoney.Infrastructure.Entities;
 using TrueMoney.Mapping;
 
 namespace ForTesting
@@ -15,10 +15,13 @@ namespace ForTesting
     {
         static void Main(string[] args)
         {
-            using (var context = new TrueMoneyContext())
-            {
-                var user = context.Users.First();
-            }
+            MapperInitializer.Initialize();
+
+            var rep = new UserRepository();
+            var user = rep.GetById(1).Result;
+            user.AspUserId = "not test";
+            user.Passport.Number = "test";
+            rep.Update(user).Wait();
         }
     }
 }

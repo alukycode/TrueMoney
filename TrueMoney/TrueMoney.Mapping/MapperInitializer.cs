@@ -19,5 +19,14 @@ namespace TrueMoney.Mapping
                     conf.AddProfile(profile);
                 });
         }
+
+        public static void Initialize()
+        {
+            Mapper.Initialize(
+                conf =>
+                {
+                    conf.AddProfile<DataMappingProfile>();
+                });
+        }
     }
 }
