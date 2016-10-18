@@ -14,8 +14,24 @@ namespace TrueMoney.Data.Mapping
         {
             CreateMap<User, Entities.User>();
             CreateMap<Entities.User, User>();
+
             CreateMap<Passport, Entities.Passport>();
             CreateMap<Entities.Passport, Passport>();
+
+            //CreateMap<Offer, Entities.Offer>();
+            //CreateMap<Entities.Offer, Offer>();
+
+            CreateMap<Deal, Entities.Deal>();
+            CreateMap<Entities.Deal, Deal>();
+
+            //CreateMap<PaymentPlan, Entities.PaymentPlan>();
+            //CreateMap<Entities.PaymentPlan, PaymentPlan>();
+
+            //CreateMap<Payment, Entities.Payment>();
+            //CreateMap<Entities.Payment, Payment>();
+
+            //CreateMap<BankTransaction, Entities.BankTransaction>();
+            //CreateMap<Entities.BankTransaction, BankTransaction>();
         }
     }
 }

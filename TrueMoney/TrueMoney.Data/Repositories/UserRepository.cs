@@ -57,17 +57,17 @@ namespace TrueMoney.Data.Repositories
             var user = await LoadByAspId(aspId);
             return Mapper.Map<User>(user);
         }
+        #endregion
 
+        #region Private
         private async Task<Entities.User> LoadById(int id)
         {
             using (var context = new TrueMoneyContext())
             {
                 return await context.Users.Include(x => x.Passport).FirstOrDefaultAsync(x => x.Id == id);
             }
-        } 
-        #endregion
+        }
 
-        #region Private
         private async Task<List<Entities.User>> LoadAll()
         {
             using (var context = new TrueMoneyContext())

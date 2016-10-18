@@ -2,6 +2,7 @@
 
 namespace TrueMoney.Services
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Bank.BankApi;
@@ -23,39 +24,31 @@ namespace TrueMoney.Services
             _dealService = dealService;
             _bankApi = bankApi;
         }
-        public async Task<PaymentResult> LendMoney(User user, int dealId, int payForId, float count, VisaDetails visaDetails)
+        public async Task<PaymentResult> LendMoney(User user, int dealId, decimal amount, VisaDetails visaDetails)
         {
-            var payForUser = await _userService.GetUserById(payForId);
             var deal = await _dealService.GetById(dealId);
+            var recipientId = deal.Offers.First(x => x.IsApproved).Offerer.Id;
+            var recipient = await _userService.GetById(recipientId);
 
-            if (payForUser != null && deal != null && Equals(deal.Borrower, payForUser) && Equals(deal.Lender, user))
+            var result = await
+                _bankApi.Do(
+                    new Bank.BankEntities.BankTransaction
+                    {
+                        Amount = amount,
+                        SenderAccountNumber = user.AccountNumber,
+                        RecipientAccountNumber = recipient.AccountNumber,
+                    });
+
+            switch (result)
             {
-                var result = await
-                    _bankApi.Do(
-                        new Bank.BankEntities.BankTransaction
-                        {
-                            Amount = count,
-                            AccountNumber1 = user.AccountNumber,
-                            AccountNumber2 = payForUser.AccountNumber,
-                            BankAction = BankAction.Transfer,
-                            Secret = ""
-                        });
-
-                switch (result)
-                {
-                    case BankResponse.Success:
-                        await _dealService.PaymentFinished(deal);
-                        return PaymentResult.Success;
-                    case BankResponse.NotEnoughtMoney:
-                        return PaymentResult.NotEnoughtMoney;
-                    case BankResponse.Error:
-                    case BankResponse.PermissionError:
-                    case BankResponse.EmptyData:
-                        return PaymentResult.Error;
-                }
+                case BankResponse.Success:
+                    await _dealService.PaymentFinished(deal);
+                    return PaymentResult.Success;
+                case BankResponse.NotEnoughtMoney:
+                    return PaymentResult.NotEnoughtMoney;
+                default:
+                    return PaymentResult.Error;
             }
-
-            return PaymentResult.PermissionError;
         }
     }
 }

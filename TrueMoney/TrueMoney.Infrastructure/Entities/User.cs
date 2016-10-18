@@ -14,16 +14,10 @@
         
         public bool IsActive { get; set; }
 
-        // review: зачем нам Equals? сравнивать юзеров
-        public override bool Equals(object o)
-        {
-            var otherUser = o as User;
-            return otherUser != null && this.Id == otherUser.Id;
-        }
-
         public string AspUserId { get; set; }
 
         public string AccountNumber { get; set; }
+
         public bool IsHaveOpenDealOrLoan { get; set; }
 
         public int Rating { get; set; }

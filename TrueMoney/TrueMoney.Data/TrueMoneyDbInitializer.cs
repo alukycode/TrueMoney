@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using TrueMoney.Data.Entities;
 
@@ -16,6 +17,12 @@ namespace TrueMoney.Data
                     LastName = "Черногребель",
                     AspUserId = "test",
                     BankAccountNumber = "test",
+                    Passport = new Passport()
+                    {
+                        DateOfIssuing = DateTime.Now,
+                        Number = "test",
+                        Series = "test",
+                    }
                 },
                 new User
                 {

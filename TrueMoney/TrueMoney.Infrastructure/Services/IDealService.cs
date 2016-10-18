@@ -7,22 +7,22 @@
 
     public interface IDealService
     {
-        Task<IList<Deal>> GetAll();
+        Task<IList<Deal>> GetAllOpen();
         Task<Deal> GetById(int id);
         Task<IList<Deal>> GetAllByUser(User user);
         Task<Deal> GetByOfferId(int offerId);
 
         Task<IList<Offer>> GetAllOffersByUser(User user);
 
-        Task<bool> ApplyOffer(User user, int offerId, int dealId);
-        Task<bool> RevertOffer(User user, int offerId, int dealId);
-        Task<bool> CreateOffer(User user, int dealId, float rate);
+        Task ApplyOffer(int offerId, int dealId);
+        Task RevertOffer(int offerId);
+        Task CreateOffer(User user, int dealId, int rate);
 
         Task<Deal> FinishDealStartLoan(User user, int offerId, int dealId);
 
-        Task<int> CreateDeal(User user, float count, int paymentCount, float rate, int dayCount, string description);
+        Task<int> CreateDeal(User user, decimal count, int rate, string description);
 
-        Task<bool> DeleteDeal(User user, int dealId);
+        Task DeleteDeal(int dealId);
 
         Task<Deal> PaymentFinished(Deal deal);
     }

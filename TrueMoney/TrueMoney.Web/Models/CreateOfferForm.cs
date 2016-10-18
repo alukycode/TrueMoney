@@ -7,8 +7,8 @@ namespace TrueMoney.Web.Models
         public int DealId { get; set; }
 
         [Required]
-        [RegularExpression("^[0-9]{1,2}[.][0-9]{1,2}$", ErrorMessage = "Используйте формат XX.XX")]
+        //[RegularExpression("^[0-9]{1,2}[.][0-9]{1,2}$", ErrorMessage = "Используйте формат XX.XX")]
         [Display(Name = "Процентная ставка", Description = "Должна быть меньше максимальнодопустимой.")]
-        public float Rate { get; set; }
+        public int Rate { get; set; } //пока пусть лучше int
     }
 }

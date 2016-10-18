@@ -8,7 +8,7 @@
 
         public string Number { get; set; }
 
-        public DateTime DateOfIssuing { get; set; }
+        public DateTime? DateOfIssuing { get; set; }
 
         public string GiveOrganisation { get; set; }
     }

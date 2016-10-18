@@ -22,9 +22,9 @@ namespace TrueMoney.Data.Entities
 
         public PaymentPlan PaymentPlan { get; set; }
 
-        public bool IsApproved { get; set; }
-
         public DateTime CreateDate { get; set; }
+
+        public DateTime? CloseDate { get; set; }
 
         public string Description { get; set; }
 

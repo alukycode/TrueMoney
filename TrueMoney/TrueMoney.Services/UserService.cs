@@ -28,7 +28,7 @@ namespace TrueMoney.Services
             await _userRepository.Add(entity);
         }
 
-        public async Task<User> GetUserById(int id)
+        public async Task<User> GetById(int id)
         {
             return await _userRepository.GetById(id);
         }

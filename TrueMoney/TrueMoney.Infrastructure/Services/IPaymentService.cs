@@ -8,7 +8,7 @@ namespace TrueMoney.Infrastructure.Services
 
     public interface IPaymentService
     {
-        Task<PaymentResult> LendMoney(User user, int dealId, int payForId, float count, VisaDetails visaDetails);
+        Task<PaymentResult> LendMoney(User user, int dealId, decimal amount, VisaDetails visaDetails);
         //Task<PaymentResult> PayLoanPart(int dealId, int payerId, float count);
     }
 }

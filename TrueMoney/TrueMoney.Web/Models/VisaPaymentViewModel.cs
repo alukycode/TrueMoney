@@ -7,7 +7,7 @@
     {
         public string PaymentName { get; set; }
 
-        public float PaymentCount { get; set; }
+        public decimal PaymentCount { get; set; }
 
         public int PayForId { get; set; }
         public int DealId { get; set; }

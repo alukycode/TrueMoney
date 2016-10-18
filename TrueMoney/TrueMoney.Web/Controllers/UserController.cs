@@ -29,7 +29,7 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Details(int id)
         {
-            User user = await _userService.GetUserById(id); ;
+            User user = await _userService.GetById(id); ;
 
             if (user == null)
             {

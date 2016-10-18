@@ -11,12 +11,12 @@
 
         public DateTime PayTime { get; set; }
 
-        public float Amount { get; set; }
+        public decimal Amount { get; set; }
 
         /// <summary>
         /// Extra money if borrower did not pay in time
         /// </summary>
-        public float Liability { get; set; }
+        public decimal Liability { get; set; }
 
         /// <summary>
         /// Borrower

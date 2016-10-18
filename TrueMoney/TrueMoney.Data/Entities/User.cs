@@ -16,9 +16,9 @@ namespace TrueMoney.Data.Entities
 
         public string MiddleName { get; set; }
 
-        public int? PassportId { get; set; }
+        public virtual int? PassportId { get; set; }
 
-        public Passport Passport { get; set; }
+        public virtual Passport Passport { get; set; }
 
         [Required]
         public string AspUserId { get; set; }
@@ -32,6 +32,6 @@ namespace TrueMoney.Data.Entities
 
         public List<Deal> Deals { get; set; }
 
-        public List<Offer> Offers{ get; set; }
+        public List<Offer> Offers { get; set; }
     }
 }

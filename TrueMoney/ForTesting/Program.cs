@@ -20,7 +20,7 @@ namespace ForTesting
             var rep = new UserRepository();
             var user = rep.GetById(1).Result;
             user.AspUserId = "not test";
-            user.Passport.Number = "test";
+            user.Passport.Number = "not wtf? test";
             rep.Update(user).Wait();
         }
     }

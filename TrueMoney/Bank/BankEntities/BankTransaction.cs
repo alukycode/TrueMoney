@@ -11,14 +11,10 @@
 
         public Guid Id { get; set; }
 
-        public BankAction BankAction { get; set; }
+        public string SenderAccountNumber { get; set; }
 
-        public string AccountNumber1 { get; set; }
+        public string RecipientAccountNumber { get; set; }
 
-        public string AccountNumber2 { get; set; }
-
-        public string Secret { get; set; }
-
-        public float Amount { get; set; }
+        public decimal Amount { get; set; }
     }
 }

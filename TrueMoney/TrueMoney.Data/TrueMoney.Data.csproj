@@ -82,6 +82,10 @@
     <Compile Include="Migrations\201610161937457_addedFieldsChangedPassport.Designer.cs">
       <DependentUpon>201610161937457_addedFieldsChangedPassport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610181419250_entitiesUpdate.cs" />
+    <Compile Include="Migrations\201610181419250_entitiesUpdate.Designer.cs">
+      <DependentUpon>201610181419250_entitiesUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="TrueMoneyDbInitializer.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Passport.cs" />
@@ -148,6 +152,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610161937457_addedFieldsChangedPassport.resx">
       <DependentUpon>201610161937457_addedFieldsChangedPassport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610181419250_entitiesUpdate.resx">
+      <DependentUpon>201610181419250_entitiesUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

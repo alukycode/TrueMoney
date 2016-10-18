@@ -13,7 +13,7 @@ namespace TrueMoney.Infrastructure.Services
 
         Task Add(User entity);
 
-        Task<User> GetUserById(int id);
+        Task<User> GetById(int id);
 
         Task<User> GetByAspId(string id);
 
