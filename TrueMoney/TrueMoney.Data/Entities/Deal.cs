@@ -4,8 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TrueMoney.Infrastructure.Entities;
-using TrueMoney.Infrastructure.Enums;
+using TrueMoney.Common.Enums;
 
 namespace TrueMoney.Data.Entities
 {

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using TrueMoney.Infrastructure.Entities;
-using TrueMoney.Infrastructure.Services;
+using TrueMoney.Models.Account;
+using TrueMoney.Services;
 using TrueMoney.Web.Auth_Identity_Startup;
-using TrueMoney.Web.Models.Account;
 
 namespace TrueMoney.Web.Controllers
 {

@@ -56,8 +56,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mapping\DataMappingProfile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -70,13 +72,9 @@
       <Project>{DA385B71-A556-49E8-B871-F659D7640E8A}</Project>
       <Name>TrueMoney.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TrueMoney.Infrastructure\TrueMoney.Infrastructure.csproj">
-      <Project>{839f9578-e49f-4262-ba8f-4f90b443f7b2}</Project>
-      <Name>TrueMoney.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TrueMoney.Mapping\TrueMoney.Mapping.csproj">
-      <Project>{7127af3c-3562-4268-ac98-eb040eca175f}</Project>
-      <Name>TrueMoney.Mapping</Name>
+    <ProjectReference Include="..\TrueMoney.Services\TrueMoney.Services.csproj">
+      <Project>{fa74b88c-e50c-49ae-9794-870cdf8274c7}</Project>
+      <Name>TrueMoney.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -99,14 +99,6 @@
       <Project>{da385b71-a556-49e8-b871-f659d7640e8a}</Project>
       <Name>TrueMoney.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TrueMoney.Infrastructure\TrueMoney.Infrastructure.csproj">
-      <Project>{839f9578-e49f-4262-ba8f-4f90b443f7b2}</Project>
-      <Name>TrueMoney.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TrueMoney.Mapping\TrueMoney.Mapping.csproj">
-      <Project>{7127af3c-3562-4268-ac98-eb040eca175f}</Project>
-      <Name>TrueMoney.Mapping</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TrueMoney.Services\TrueMoney.Services.csproj">
       <Project>{fa74b88c-e50c-49ae-9794-870cdf8274c7}</Project>
       <Name>TrueMoney.Services</Name>

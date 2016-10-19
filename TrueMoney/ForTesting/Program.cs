@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using TrueMoney.Data;
 using TrueMoney.Data.Repositories;
-using TrueMoney.Infrastructure.Entities;
-using TrueMoney.Mapping;
+using TrueMoney.Services.Mapping;
 
 namespace ForTesting
 {

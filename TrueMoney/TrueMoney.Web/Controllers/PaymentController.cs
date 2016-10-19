@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using TrueMoney.Infrastructure.Enums;
+﻿using System.Web.Mvc;
+using TrueMoney.Common.Enums;
+using TrueMoney.Models;
+using TrueMoney.Services;
 
 namespace TrueMoney.Web.Controllers
 {
     using System.Threading.Tasks;
-
-    using TrueMoney.Infrastructure.Entities;
-    using TrueMoney.Infrastructure.Services;
-    using TrueMoney.Web.Models;
 
     public class PaymentController : BaseController
     {
@@ -51,16 +45,18 @@ namespace TrueMoney.Web.Controllers
                 && formModel.PaymentCount > 0)
             {
                 var payRes = await _paymentService.LendMoney(
-                    CurrentUser,
+                    CurrentUserId,
                     formModel.DealId,
-                    formModel.PaymentCount,
-                    new VisaDetails
-                    {
-                        CardNumber = formModel.CardNumber,
-                        CvvCode = formModel.CvvCode,
-                        Name = formModel.Name,
-                        ValidBefore = formModel.ValidBefore
-                    });
+                    formModel.PaymentCount
+                    // todo: create model
+                    //new VisaDetails
+                    //{
+                    //    CardNumber = formModel.CardNumber,
+                    //    CvvCode = formModel.CvvCode,
+                    //    Name = formModel.Name,
+                    //    ValidBefore = formModel.ValidBefore
+                    //}
+                    );
                 switch (payRes)
                 {
                     case PaymentResult.Success:

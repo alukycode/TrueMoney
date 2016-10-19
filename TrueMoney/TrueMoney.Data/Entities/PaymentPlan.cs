@@ -18,6 +18,6 @@ namespace TrueMoney.Data.Entities
 
         public List<BankTransaction> BankTransactions { get; set; } //Если транзакций не будет в базе, то при добавлении первой транзации вылетит налреференс, потому что коллекция будет пустой, так что инициализировать ее нужно в конструкторе, ага
 
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateTime { get; set; }
     }
 }

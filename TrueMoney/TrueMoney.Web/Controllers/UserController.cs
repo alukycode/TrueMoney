@@ -1,12 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using TrueMoney.Infrastructure.Services;
+using TrueMoney.Services;
 
 namespace TrueMoney.Web.Controllers
 {
-    using Infrastructure.Entities;
-
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
@@ -24,12 +22,12 @@ namespace TrueMoney.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("Details", new { id = CurrentUser.Id });
+            return RedirectToAction("Details", new { id = CurrentUserId });
         }
 
         public async Task<ActionResult> Details(int id)
         {
-            User user = await _userService.GetById(id); ;
+            var user = await _userService.GetById(id); ;
 
             if (user == null)
             {

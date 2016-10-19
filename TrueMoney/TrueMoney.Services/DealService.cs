@@ -1,4 +1,7 @@
-﻿using TrueMoney.Infrastructure.Enums;
+﻿
+using TrueMoney.Common.Enums;
+using TrueMoney.Data.Entities;
+using TrueMoney.Models.Basic;
 
 namespace TrueMoney.Services
 {
@@ -6,8 +9,6 @@ namespace TrueMoney.Services
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using TrueMoney.Infrastructure.Entities;
-    using TrueMoney.Infrastructure.Services;
 
     public class DealService : IDealService
     {
@@ -66,16 +67,18 @@ namespace TrueMoney.Services
 
         static List<Deal> data;
 
-        private static int number = 3;
+        private static int number = 3; // что за нумбер блять
 
-        public async Task<IList<Deal>> GetAllOpen()
+        public async Task<IList<DealModel>> GetAllOpen()
         {
-            return data.Where(x => x.Status != DealStatus.Closed).ToList();
+            throw new NotImplementedException();
+            //return data.Where(x => x.DealStatus != DealStatus.Closed).ToList();
         }
 
-        public async Task<IList<Deal>> GetAll()
+        public async Task<IList<DealModel>> GetAll()
         {
-            return data;
+            throw new NotImplementedException();
+            //return data;
         }
 
         public async Task<Deal> GetById(int id)
@@ -83,9 +86,11 @@ namespace TrueMoney.Services
             return data.FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task<IList<Deal>> GetAllByUser(User user)
+        public async Task<IList<DealModel>> GetAllByUser(int userId)
         {
-            return data.Where(x => Equals(x.Owner, user)).ToList();
+            //return data.Where(x => Equals(x.Owner, user)).ToList();
+
+            throw new NotImplementedException();
         }
 
         public async Task<Deal> GetByOfferId(int offerId)
@@ -93,15 +98,16 @@ namespace TrueMoney.Services
             return data.FirstOrDefault(x => x.Offers.Any(y => y.Id == offerId));
         }
 
-        public async Task<IList<Offer>> GetAllOffersByUser(User user)
+        public async Task<IList<OfferModel>> GetAllOffersByUser(int userId)
         {
             var res = new List<Offer>();
             foreach (var deal in data)
             {
-                res.AddRange(deal.Offers.Where(x => x.Offerer.Id == user.Id));
+                res.AddRange(deal.Offers.Where(x => x.Offerer.Id == userId));
             }
 
-            return res;
+            //return res;
+            throw new NotImplementedException();
         }
 
         public async Task ApplyOffer(int offerId, int dealId)
@@ -143,22 +149,24 @@ namespace TrueMoney.Services
                 });
         }
 
-        public async Task<Deal> FinishDealStartLoan(User user, int offerId, int dealId)
+        public async Task<DealModel> FinishDealStartLoan(int userId, int offerId, int dealId)
         {
             var deal = data.FirstOrDefault(x => x.Id == dealId);
             var finishOffer = deal.Offers.First(x => x.Id == offerId);
-            deal.Status = DealStatus.WaitForLoan;
+            deal.DealStatus = DealStatus.WaitForLoan;
             deal.CloseDate = DateTime.Now; //это же должна быть тата, когда полностью закрыли всю сделку
             deal.InterestRate = finishOffer.InterestRate;
             //finish offer
             finishOffer.IsApproved = true;
 
-            return deal;
+            //return deal;
+            
+            throw new NotImplementedException();
         }
 
         public async Task<int> CreateDeal(User user, decimal count, int rate, string description) //Должен быть метод Add(Deal deal) и все, сама сущность будет мапиться из контроллера на новую, которую ты и будешь создавать
         {
-            if (user.IsActive && !user.IsHaveOpenDealOrLoan)
+            // todo: commented after changing project structure -- if (user.IsActive && !user.IsHaveOpenDealOrLoan)
             {
                 data.Add(
                     new Deal
@@ -170,7 +178,7 @@ namespace TrueMoney.Services
                         Description = description,
                         InterestRate = rate,
                     });
-                user.IsHaveOpenDealOrLoan = true;
+                // todo: commented after changing project structure -- user.IsHaveOpenDealOrLoan = true;
 
                 return data[number - 1].Id;
             }
@@ -185,7 +193,7 @@ namespace TrueMoney.Services
 
         public async Task<Deal> PaymentFinished(Deal deal)
         {
-            deal.Status = DealStatus.InProgress;
+            deal.DealStatus = DealStatus.InProgress;
             deal.PaymentPlan = CalculatePayments(deal);
 
             return deal;

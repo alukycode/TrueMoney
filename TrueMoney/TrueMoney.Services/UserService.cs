@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TrueMoney.Infrastructure.Entities;
-using TrueMoney.Infrastructure.Repositories;
-using TrueMoney.Infrastructure.Services;
+using TrueMoney.Data.Entities;
+using TrueMoney.Models.Basic;
 
 namespace TrueMoney.Services
 {
@@ -11,46 +10,48 @@ namespace TrueMoney.Services
 
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
-
-        public UserService(IUserRepository userRepository)
+        public UserService()
         {
-            _userRepository = userRepository;
+            
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<UserModel>> GetAll()
         {
-            return await _userRepository.GetAll();
+            throw new NotImplementedException();
+            //return await _userRepository.GetAll();
         }
 
-        public async Task Add(User entity)
+        public async Task Add(UserModel entity)
         {
-            await _userRepository.Add(entity);
+            throw new NotImplementedException();
+            //await _userRepository.Add(entity);
         }
 
-        public async Task<User> GetById(int id)
+        public async Task<UserModel> GetById(int id)
         {
-            return await _userRepository.GetById(id);
+            throw new NotImplementedException();
+            //return await _userRepository.GetById(id);
         }
 
-        public async Task<User> GetByAspId(string id)
+        public async Task<UserModel> GetByAspId(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
                 throw new ArgumentNullException(nameof(id));
             }
 
-            return await _userRepository.GetByAspId(id);
+            throw new NotImplementedException();
+            //return await _userRepository.GetByAspId(id);
         }
 
-        public async Task<User> GetUserByName(string name)
+        public async Task<UserModel> GetUserByName(string name)
         {
             //return await this._userRepository.GetUserByName(name);
             throw new NotImplementedException();
         }
 
         // review: пример, где приходит слишком много полей, а могла бы приходить InputModel. Этого метода вообще быть не должно, есть Add
-        public async Task<User> Create(
+        public async Task<UserModel> Create(
             int id,
             string email,
             string firstName,
@@ -63,25 +64,26 @@ namespace TrueMoney.Services
             string bankAccountNumber,
             string aspUserId)
         {
-            var user = new User
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                MiddleName = middleName,
-                AspUserId = aspUserId,
-            };
-            user.Passport = new Passport
-            {
-                Number = passportNumber,
-                Series = passportSerie,
-                DateOfIssuing = passportDateOfIssuing,
-                GiveOrganisation = passportGiveOrganisation
-            };
-            user.AccountNumber = bankAccountNumber;
+            throw new NotImplementedException();
+            ////var user = new User
+            ////{
+            ////    FirstName = firstName,
+            ////    LastName = lastName,
+            ////    MiddleName = middleName,
+            ////    AspUserId = aspUserId,
+            ////};
+            ////user.Passport = new Passport
+            ////{
+            ////    Number = passportNumber,
+            ////    Series = passportSerie,
+            ////    DateOfIssuing = passportDateOfIssuing,
+            ////    GiveOrganisation = passportGiveOrganisation
+            ////};
+            ////user.AccountNumber = bankAccountNumber;
 
-            await _userRepository.Add(user);
+            ////await _userRepository.Add(user);
 
-            return user;
+            ////return user;
         }
     }
 }

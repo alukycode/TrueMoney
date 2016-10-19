@@ -1,4 +1,6 @@
-﻿using TrueMoney.Infrastructure.Enums;
+﻿using TrueMoney.Common.Enums;
+using TrueMoney.Data.Entities;
+using TrueMoney.Models.Basic;
 
 namespace TrueMoney.Services
 {
@@ -7,9 +9,6 @@ namespace TrueMoney.Services
 
     using Bank.BankApi;
     using Bank.BankEntities;
-
-    using TrueMoney.Infrastructure.Entities;
-    using TrueMoney.Infrastructure.Services;
 
     public class PaymentService : IPaymentService
     {
@@ -24,7 +23,7 @@ namespace TrueMoney.Services
             _dealService = dealService;
             _bankApi = bankApi;
         }
-        public async Task<PaymentResult> LendMoney(User user, int dealId, decimal amount, VisaDetails visaDetails)
+        public async Task<PaymentResult> LendMoney(int userId, int dealId, decimal amount) // todo: VisaDetails lost after structure changes, create model
         {
             var deal = await _dealService.GetById(dealId);
             var recipientId = deal.Offers.First(x => x.IsApproved).Offerer.Id;
@@ -35,8 +34,9 @@ namespace TrueMoney.Services
                     new Bank.BankEntities.BankTransaction
                     {
                         Amount = amount,
-                        SenderAccountNumber = user.AccountNumber,
-                        RecipientAccountNumber = recipient.AccountNumber,
+                        // todo: commented after structure changes
+                        //SenderAccountNumber = user.AccountNumber,
+                        //RecipientAccountNumber = recipient.AccountNumber,
                     });
 
             switch (result)

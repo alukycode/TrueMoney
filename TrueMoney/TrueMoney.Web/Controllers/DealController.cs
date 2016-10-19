@@ -1,12 +1,13 @@
-﻿using TrueMoney.Web.Models;
+﻿using System;
+using System.Linq;
+using TrueMoney.Common.Enums;
+using TrueMoney.Models;
+using TrueMoney.Services;
 
 namespace TrueMoney.Web.Controllers
 {
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Infrastructure.Enums;
-    using Infrastructure.Services;
 
     [Authorize]
     public class DealController : BaseController
@@ -21,19 +22,22 @@ namespace TrueMoney.Web.Controllers
         public async Task<ActionResult> Index()
         {
             var list = await this._dealService.GetAllOpen();
-            return this.View(list.Where(x => x.Status != DealStatus.Closed));
+            //return this.View(list.Where(x => x.DealStatus != DealStatus.Closed));
+
+            throw new NotImplementedException();
         }
 
         public async Task<ActionResult> Details(int? id)
         {
-            ViewBag.CurrentUserId = CurrentUser.Id;
-            if (id.HasValue)
-            {
-                var model = await _dealService.GetById(id.Value);
-                return View(model);
-            }
+            throw new NotImplementedException();
+            //ViewBag.CurrentUserId = CurrentUserId;
+            //if (id.HasValue)
+            //{
+            //    var model = await _dealService.GetById(id.Value);
+            //    return View(model);
+            //}
 
-            return GoHome();
+            //return GoHome();
         }
 
         //я пока закоммитаю то, что не компилиться
@@ -65,7 +69,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (offerId.HasValue && dealId.HasValue)
             {
-                await _dealService.FinishDealStartLoan(CurrentUser, offerId.Value, dealId.Value);
+                await _dealService.FinishDealStartLoan(CurrentUserId, offerId.Value, dealId.Value);
 
                 return RedirectToAction("Details", "Deal", new { id = dealId.Value });
             }
@@ -102,30 +106,31 @@ namespace TrueMoney.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateOffer(CreateOfferForm model)
         {
-            if (ModelState.IsValid)
-            {
-                var deal = await _dealService.GetById(model.DealId);
-                if (model.Rate > deal.InterestRate)
-                {
-                    ModelState.AddModelError("Rate", "Вы превысили маскимальнодопустимую процентную ставку.");
-                    return View("Details", deal);
-                }
+            throw new NotImplementedException();
+            //if (ModelState.IsValid)
+            //{
+            //    var deal = await _dealService.GetById(model.DealId);
+            //    if (model.Rate > deal.InterestRate)
+            //    {
+            //        ModelState.AddModelError("Rate", "Вы превысили маскимальнодопустимую процентную ставку.");
+            //        return View("Details", deal);
+            //    }
 
-                if (!CurrentUser.IsActive)
-                {
-                    ModelState.AddModelError("", "Вы ещё не прошли подтверждение регистрации.");
-                    return View("Details", deal);
-                }
+            //    if (!CurrentUser.IsActive)
+            //    {
+            //        ModelState.AddModelError("", "Вы ещё не прошли подтверждение регистрации.");
+            //        return View("Details", deal);
+            //    }
 
-                await _dealService.CreateOffer(CurrentUser, model.DealId, model.Rate);
-                //if (!res)
-                //{
-                //    ModelState.AddModelError("", "Что-то пошло не так."); если эксепшен падает, то что-то пошло не так
-                //    return View("Details", deal);
-                //}
-            }
+            //    await _dealService.CreateOffer(CurrentUser, model.DealId, model.Rate);
+            //    //if (!res)
+            //    //{
+            //    //    ModelState.AddModelError("", "Что-то пошло не так."); если эксепшен падает, то что-то пошло не так
+            //    //    return View("Details", deal);
+            //    //}
+            //}
 
-            return RedirectToAction("Details", new { id = model.DealId });
+            //return RedirectToAction("Details", new { id = model.DealId });
         }
 
         //public async Task<ActionResult> Delete(int? dealId)
@@ -145,14 +150,11 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> YouActivity()
         {
-            ViewBag.IsActive = CurrentUser.IsActive;
-            ViewBag.IsHaveOpenDealOrLoan = CurrentUser.IsHaveOpenDealOrLoan;
             var viewModel = new YouActivityViewModel
             {
-                Deals = await _dealService.GetAllByUser(CurrentUser),
-                Offers = await _dealService.GetAllOffersByUser(CurrentUser)
+                Deals = await _dealService.GetAllByUser(CurrentUserId),
+                Offers = await _dealService.GetAllOffersByUser(CurrentUserId)
             };
-
 
             return View(viewModel);
         }
