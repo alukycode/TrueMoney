@@ -25,17 +25,13 @@ namespace TrueMoney.Web.Controllers
             return RedirectToAction("Details", new { id = CurrentUserId });
         }
 
+
+        // нормальный метод
         public async Task<ActionResult> Details(int id)
         {
-            var user = await _userService.GetById(id); ;
+            var userModel = await _userService.GetDetails(CurrentUserId, id);
 
-            if (user == null)
-            {
-                return RedirectToAction("Index");
-            }
-
-            ViewBag.CurrentUser = user;
-            return View(user);
+            return View(userModel);
         }
     }
 }

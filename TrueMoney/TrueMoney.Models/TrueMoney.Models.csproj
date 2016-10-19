@@ -125,6 +125,7 @@
     <Compile Include="Manage\VerifyPhoneNumberViewModel.cs" />
     <Compile Include="Basic\OfferModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserDetailsViewModel.cs" />
     <Compile Include="VisaPaymentViewModel.cs" />
     <Compile Include="YouActivityViewModel.cs" />
   </ItemGroup>

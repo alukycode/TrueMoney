@@ -1,31 +1,30 @@
-﻿@model TrueMoney.Models.Basic.UserModel
+﻿@model TrueMoney.Models.UserDetailsViewModel
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.FirstName</h2>
+<h2>@Model.User.FirstName</h2>
 
 <div>
     <h4>User</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
+            @Html.DisplayNameFor(model => model.User.FirstName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.FirstName)
+            @Html.DisplayFor(model => model.User.FirstName)
         </dd>
 
     </dl>
 </div>
 <p>
-
-    @* review: пример где CurrentUser НЕ нужен на вьюхе, вместо него должно быть свойство Model.IsCanCreateLoan*@
-    @if (ViewBag.CurrentUser.Id == Model.Id)
+    @if (@Model.IsCurrentUser)
     {
         @Html.ActionLink("Создать заявку на займ", "Create", "Deal")
     }
+
     @Html.ActionLink("В личный кабинет", "Index")
 </p>

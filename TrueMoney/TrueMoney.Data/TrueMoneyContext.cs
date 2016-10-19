@@ -8,25 +8,25 @@ using TrueMoney.Data.Entities;
 
 namespace TrueMoney.Data
 {
-    public class TrueMoneyContext : DbContext
+    public class TrueMoneyContext : DbContext, ITrueMoneyContext
     {
         public TrueMoneyContext() : base("DefaultConnection")
         {
             Database.SetInitializer(new TrueMoneyDbInitializer());
         }
 
-        public DbSet<User> Users{ get; set; }
+        public IDbSet<User> Users{ get; set; }
 
-        public DbSet<Passport> Passports { get; set; }
+        public IDbSet<Passport> Passports { get; set; }
 
-        public DbSet<Deal> Deals{ get; set; }
+        public IDbSet<Deal> Deals{ get; set; }
 
-        public DbSet<Offer> Offers { get; set; }
+        public IDbSet<Offer> Offers { get; set; }
 
-        public DbSet<PaymentPlan> PaymentPlans { get; set; }
+        public IDbSet<PaymentPlan> PaymentPlans { get; set; }
 
-        public DbSet<Payment> Payments { get; set; }
+        public IDbSet<Payment> Payments { get; set; }
 
-        public DbSet<BankTransaction> BankTransactions { get; set; }
+        public IDbSet<BankTransaction> BankTransactions { get; set; }
     }
 }

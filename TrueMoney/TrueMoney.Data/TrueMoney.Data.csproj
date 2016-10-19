@@ -54,6 +54,7 @@
     <Compile Include="Entities\Offer.cs" />
     <Compile Include="Entities\Payment.cs" />
     <Compile Include="Entities\PaymentPlan.cs" />
+    <Compile Include="ITrueMoneyContext.cs" />
     <Compile Include="Migrations\201610161519214_ChangedUserAddedPassport.cs" />
     <Compile Include="Migrations\201610161519214_ChangedUserAddedPassport.Designer.cs">
       <DependentUpon>201610161519214_ChangedUserAddedPassport.cs</DependentUpon>
@@ -150,6 +151,9 @@
       <Project>{edca40cd-bf8f-43c3-9320-6061379acf10}</Project>
       <Name>TrueMoney.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

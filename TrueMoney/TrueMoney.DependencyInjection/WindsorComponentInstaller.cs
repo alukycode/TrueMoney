@@ -1,7 +1,7 @@
 ﻿using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using TrueMoney.Data.Repositories;
+using TrueMoney.Data;
 using TrueMoney.Services;
 
 namespace TrueMoney.DependencyInjection
@@ -13,21 +13,20 @@ namespace TrueMoney.DependencyInjection
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
-                Classes.FromAssembly(typeof(UserRepository).Assembly)
-                    .Where(type => type.Name.EndsWith("Repository"))
-                    .WithService.DefaultInterfaces()
-                    .LifestyleSingleton());
+                Component.For<ITrueMoneyContext>().ImplementedBy<TrueMoneyContext>().LifestylePerWebRequest());
 
+            // todo: is it possible to use singleton services with dependency from per-web-request context? do we need it?
             container.Register(
                 Classes.FromAssembly(typeof(UserService).Assembly)
                     .Where(type => type.Name.EndsWith("Service"))
                     .WithService.DefaultInterfaces() // for class UserSevice it will be interface IUserSevice
-                    .LifestyleSingleton());
+                    .LifestylePerWebRequest());
+
             container.Register(
                 Classes.FromAssembly(typeof(BankApi).Assembly)
                     .Where(type => type.Name.EndsWith("Api"))
                     .WithService.DefaultInterfaces()
-                    .LifestyleSingleton());
+                    .LifestylePerWebRequest());
         }
     }
 }

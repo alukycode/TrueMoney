@@ -8,5 +8,8 @@ namespace TrueMoney.Models.Basic
 {
     public class UserModel
     {
+        public int Id { get; set; }
+        
+        public string FirstName { get; set; }
     }
 }
