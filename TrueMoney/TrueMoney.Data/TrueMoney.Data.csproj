@@ -83,6 +83,10 @@
     <Compile Include="Migrations\201610181419250_entitiesUpdate.Designer.cs">
       <DependentUpon>201610181419250_entitiesUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610200001221_MamkuEbal.cs" />
+    <Compile Include="Migrations\201610200001221_MamkuEbal.Designer.cs">
+      <DependentUpon>201610200001221_MamkuEbal.cs</DependentUpon>
+    </Compile>
     <Compile Include="TrueMoneyDbInitializer.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Passport.cs" />
@@ -144,6 +148,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610181419250_entitiesUpdate.resx">
       <DependentUpon>201610181419250_entitiesUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610200001221_MamkuEbal.resx">
+      <DependentUpon>201610200001221_MamkuEbal.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
