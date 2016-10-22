@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using TrueMoney.Models.Basic;
@@ -16,23 +17,18 @@ namespace TrueMoney.Web.Controllers
             _userService = DependencyResolver.Current.GetService<IUserService>();
         }
 
-        // todo: async await?
-        public int CurrentUserId
+        public async Task<int> CurrentUserId()
         {
-            get
+            var currentUserIdentityId = User.Identity.GetUserId();
+            if (currentUserIdentityId == null)
             {
-                var currentUserIdentityId = User.Identity.GetUserId();
-                if (currentUserIdentityId == null)
-                {
-                    throw new UnauthorizedAccessException("user should be authorized to perform this action");
-                }
-
-                var id = _userService.GetUserIdByAspId(currentUserIdentityId);
-                return id.Result;
+                throw new UnauthorizedAccessException("user should be authorized to perform this action");
             }
+
+            return await _userService.GetUserIdByAspId(currentUserIdentityId);
         }
 
-        protected ActionResult GoHome() // Сомнительный метод
+        protected ActionResult GoHome() // Сомнительный метод, удалять его я, конечно же, не буду.
         {
             return RedirectToAction("YouActivity", "Deal");
         }

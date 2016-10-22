@@ -43,7 +43,7 @@ namespace TrueMoney.Web.Controllers
                 && formModel.PaymentCount > 0)
             {
                 var payRes = await _paymentService.LendMoney(
-                    CurrentUserId,
+                    await CurrentUserId(),
                     formModel.DealId,
                     formModel.PaymentCount
                     // todo: create model
