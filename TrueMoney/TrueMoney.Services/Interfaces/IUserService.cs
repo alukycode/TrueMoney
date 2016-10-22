@@ -17,6 +17,8 @@ namespace TrueMoney.Services
 
         Task<UserModel> GetByAspId(string id);
 
+        Task<int> GetUserIdByAspId(string id);
+
         Task<UserModel> GetById(int id);
 
         Task<UserModel> GetUserByName(string name);

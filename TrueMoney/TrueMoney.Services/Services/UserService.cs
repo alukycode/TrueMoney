@@ -18,7 +18,6 @@ namespace TrueMoney.Services.Services
 
         public UserService(ITrueMoneyContext context)
         {
-            _context = context;
         }
 
         // нормальный метод
@@ -61,6 +60,19 @@ namespace TrueMoney.Services.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task<int> GetUserIdByAspId(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+            using (var context = new TrueMoneyContext())
+            {
+                var temp = (await context.Users.FirstAsync(x => x.AspUserId == id));
+                return temp.Id;
+            }
+        }
+
         public async Task<UserModel> GetByAspId(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -76,42 +88,6 @@ namespace TrueMoney.Services.Services
         {
             //return await this._userRepository.GetUserByName(name);
             throw new NotImplementedException();
-        }
-
-        // review: пример, где приходит слишком много полей, а могла бы приходить InputModel. Этого метода вообще быть не должно, есть Add
-        public async Task<UserModel> Create(
-            int id,
-            string email,
-            string firstName,
-            string lastName,
-            string middleName,
-            string passportSerie,
-            string passportNumber,
-            string passportGiveOrganisation,
-            DateTime passportDateOfIssuing,
-            string bankAccountNumber,
-            string aspUserId)
-        {
-            throw new NotImplementedException();
-            ////var user = new User
-            ////{
-            ////    FirstName = firstName,
-            ////    LastName = lastName,
-            ////    MiddleName = middleName,
-            ////    AspUserId = aspUserId,
-            ////};
-            ////user.Passport = new Passport
-            ////{
-            ////    Number = passportNumber,
-            ////    Series = passportSerie,
-            ////    DateOfIssuing = passportDateOfIssuing,
-            ////    GiveOrganisation = passportGiveOrganisation
-            ////};
-            ////user.AccountNumber = bankAccountNumber;
-
-            ////await _userRepository.Add(user);
-
-            ////return user;
-        }
+        }        
     }
 }

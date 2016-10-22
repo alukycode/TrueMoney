@@ -16,13 +16,14 @@ namespace TrueMoney.Web.Controllers
     {
         private readonly IDealService _dealService;
 
-        public DealController(IDealService dealService)
+        public DealController(IDealService dealService, IUserService userService) : base(userService)
         {
             _dealService = dealService;
         }
         
         public async Task<ActionResult> Index()
         {
+            var user = CurrentUserId;
             var list = await this._dealService.GetAllOpen(CurrentUserId);
             return this.View(list);
         }

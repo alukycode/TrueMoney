@@ -10,12 +10,10 @@ namespace TrueMoney.Web.Controllers
     public class PaymentController : BaseController
     {
         private readonly IPaymentService _paymentService;
-        private readonly IUserService _userService;
 
-        public PaymentController(IPaymentService paymentService, IUserService userService)
+        public PaymentController(IPaymentService paymentService, IUserService userService) : base(userService)
         {
             _paymentService = paymentService;
-            _userService = userService;
         }
 
         public async Task<ActionResult> Visa(string paymentName, decimal paymentCount, int payForId, int dealId)

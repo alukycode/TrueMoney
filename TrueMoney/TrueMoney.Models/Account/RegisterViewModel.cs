@@ -4,11 +4,6 @@ namespace TrueMoney.Models.Account
 {
     public class RegisterViewModel
     {
-        public RegisterViewModel()
-        {
-            Passport = new PassportViewModel();
-        }
-
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

@@ -2,31 +2,35 @@
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using TrueMoney.Models.Basic;
+using TrueMoney.Services;
+using TrueMoney.Services.Services;
 
 namespace TrueMoney.Web.Controllers
 {
     public class BaseController : Controller
     {
+        protected readonly IUserService _userService;
+
+        public BaseController(IUserService userService)
+        {
+            if (userService == null)
+            {
+                throw new ArgumentNullException(nameof(userService));
+            }
+
+            _userService = userService;
+        }
+
         // todo: async await?
         public int CurrentUserId
         {
             get
             {
-                return 1;
-
-                //int userId;
-                //if (Int32.TryParse(Request.QueryString["user"], out userId))
-                //{
-                //    return new UserModel { Id = userId, IsActive = true,};
-                //}
-                //var aspNetId = User.Identity.GetUserId();
-                //// var user = _userService.GetUserByAspNetId(aspNetId);
-                //// return user;
-                //return new UserModel { Id = 1, IsActive = true, };
+                return _userService.GetUserIdByAspId(User.Identity.GetUserId()).Result;
             }
         }
 
-        protected ActionResult GoHome()
+        protected ActionResult GoHome() // Сомнительный метод
         {
             return RedirectToAction("YouActivity", "Deal");
         }

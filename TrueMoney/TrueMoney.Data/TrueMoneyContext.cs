@@ -19,14 +19,14 @@ namespace TrueMoney.Data
 
         public IDbSet<Passport> Passports { get; set; }
 
-        //public IDbSet<Deal> Deals{ get; set; }
+        public IDbSet<Deal> Deals { get; set; }
 
-        //public IDbSet<Offer> Offers { get; set; }
+        public IDbSet<Offer> Offers { get; set; }
 
-        //public IDbSet<PaymentPlan> PaymentPlans { get; set; }
+        public IDbSet<PaymentPlan> PaymentPlans { get; set; }
 
-        //public IDbSet<Payment> Payments { get; set; }
+        public IDbSet<Payment> Payments { get; set; }
 
-        //public IDbSet<BankTransaction> BankTransactions { get; set; }
+        public IDbSet<BankTransaction> BankTransactions { get; set; }
     }
 }

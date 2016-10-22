@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,13 +14,11 @@ namespace ForTesting
     {
         static void Main(string[] args)
         {
-            ////MapperInitializer.Initialize();
-
-            ////var rep = new UserRepository();
-            ////var user = rep.GetById(1).Result;
-            ////user.AspUserId = "not test";
-            ////user.Passport.Number = "not wtf? test";
-            ////rep.Update(user).Wait();
+            using (var context = new TrueMoneyContext())
+            {
+                var temp = context.Users.FirstAsync(x => x.AspUserId == "38fa30b4-9ffc-4e8d-a346-f907dd0d5169").Result;
+                var s = temp.Id;
+            }
         }
     }
 }
