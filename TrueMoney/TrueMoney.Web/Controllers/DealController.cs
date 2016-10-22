@@ -16,7 +16,7 @@ namespace TrueMoney.Web.Controllers
     {
         private readonly IDealService _dealService;
 
-        public DealController(IDealService dealService, IUserService userService) : base(userService)
+        public DealController(IDealService dealService)
         {
             _dealService = dealService;
         }

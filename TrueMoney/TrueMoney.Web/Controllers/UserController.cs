@@ -7,15 +7,17 @@ namespace TrueMoney.Web.Controllers
 {
     public class UserController : BaseController
     {
-        public UserController(IUserService userService) : base(userService)
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
         {
+            _userService = userService;
         }
 
         public async Task<ActionResult> Index()
         {
             return RedirectToAction("Details", new { id = CurrentUserId });
         }
-
 
         // нормальный метод
         public async Task<ActionResult> Details(int id)

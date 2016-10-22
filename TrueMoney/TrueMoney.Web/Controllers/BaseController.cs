@@ -9,16 +9,11 @@ namespace TrueMoney.Web.Controllers
 {
     public class BaseController : Controller
     {
-        protected readonly IUserService _userService;
+        private readonly IUserService _userService;
 
-        public BaseController(IUserService userService)
+        public BaseController()
         {
-            if (userService == null)
-            {
-                throw new ArgumentNullException(nameof(userService));
-            }
-
-            _userService = userService;
+            _userService = DependencyResolver.Current.GetService<UserService>();
         }
 
         // todo: async await?

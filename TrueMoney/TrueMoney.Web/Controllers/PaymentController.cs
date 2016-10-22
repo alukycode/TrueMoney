@@ -11,7 +11,7 @@ namespace TrueMoney.Web.Controllers
     {
         private readonly IPaymentService _paymentService;
 
-        public PaymentController(IPaymentService paymentService, IUserService userService) : base(userService)
+        public PaymentController(IPaymentService paymentService)
         {
             _paymentService = paymentService;
         }
