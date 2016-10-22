@@ -7,13 +7,13 @@ namespace TrueMoney.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class MamkuEbal : IMigrationMetadata
+    public sealed partial class Init : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(MamkuEbal));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Init));
         
         string IMigrationMetadata.Id
         {
-            get { return "201610200001221_MamkuEbal"; }
+            get { return "201610221318573_Init"; }
         }
         
         string IMigrationMetadata.Source
