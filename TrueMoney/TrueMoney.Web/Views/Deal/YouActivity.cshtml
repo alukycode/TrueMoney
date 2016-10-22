@@ -1,4 +1,5 @@
-﻿@model TrueMoney.Models.YouActivityViewModel
+﻿@using TrueMoney.Models.Basic
+@model TrueMoney.Models.ViewModels.YouActivityViewModel
 
 <div>
     <h4>Личный кабинет</h4>
@@ -14,12 +15,12 @@
     }
     ---------------------------<br/>
     <h5>Ваша активная заявка:</h5>
-    @foreach (var item in Model.Deals.Where(x => x.Status == DealStatus.InProgress || x.Status == DealStatus.WaitForLoan))
+    @foreach (var item in Model.Deals.Where(x => x.IsInProgress || x.IsWaitForLoan))
     {
         @RenderDeal(item)
     }
 
-    @if (ViewBag.IsActive)
+    @if (Model.IsCurrentUserActive)
     {
         if (!ViewBag.IsHaveOpenDealOrLoan)
         {
@@ -51,18 +52,18 @@
     @Html.ActionLink("Список всех заявок", "Index", "Deal", routeValues: null, htmlAttributes: null)<br />
 </div>
 
-@helper RenderOffer(Offer offer)
+@helper RenderOffer(OfferModel offer)
 {
     <p>
         <strong>@offer.Id</strong> - @offer.Rate
-        @Html.ActionLink("Просмотреть заявку", "Details", "Deal", routeValues: new { id = offer.Deal.Id }, htmlAttributes: null)<br />
+        @Html.ActionLink("Просмотреть заявку", "Details", "Deal", routeValues: new { id = offer.DealId }, htmlAttributes: null)<br />
     </p>
 }
 
-@helper RenderDeal(Deal deal)
+@helper RenderDeal(DealModel deal)
 {
     <p>
-        <strong>@deal.Id</strong> - @deal.Count - @deal.Rate
+        <strong>@deal.Id</strong> - @deal.Amount - @deal.Rate
         @Html.ActionLink("Просмотреть заявку", "Details", "Deal", routeValues: new { id = deal.Id }, htmlAttributes: null)<br />
     </p>
 }

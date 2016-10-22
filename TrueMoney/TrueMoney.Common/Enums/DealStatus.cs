@@ -3,6 +3,7 @@
     public enum DealStatus
     {
         Open,
+        WaitForApprove,
         WaitForLoan,
         InProgress,
         Closed

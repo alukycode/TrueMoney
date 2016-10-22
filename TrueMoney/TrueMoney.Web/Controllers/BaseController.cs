@@ -28,7 +28,7 @@ namespace TrueMoney.Web.Controllers
 
         protected ActionResult GoHome()
         {
-            return RedirectToAction("YouActivity", "Loan");
+            return RedirectToAction("YouActivity", "Deal");
         }
     }
 }

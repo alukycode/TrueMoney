@@ -9,6 +9,8 @@ namespace TrueMoney.Web.Controllers
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
+    using TrueMoney.Models.ViewModels;
+
     [Authorize]
     public class DealController : BaseController
     {
@@ -21,23 +23,19 @@ namespace TrueMoney.Web.Controllers
         
         public async Task<ActionResult> Index()
         {
-            var list = await this._dealService.GetAllOpen();
-            //return this.View(list.Where(x => x.DealStatus != DealStatus.Closed));
-
-            throw new NotImplementedException();
+            var list = await this._dealService.GetAllOpen(CurrentUserId);
+            return this.View(list);
         }
 
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int id)
         {
-            throw new NotImplementedException();
-            //ViewBag.CurrentUserId = CurrentUserId;
-            //if (id.HasValue)
-            //{
-            //    var model = await _dealService.GetById(id.Value);
-            //    return View(model);
-            //}
-
-            //return GoHome();
+            var model = await _dealService.GetById(id, CurrentUserId);
+            if (model != null)
+            {
+                return View(model);
+            }
+            
+            return GoHome();
         }
 
         //я пока закоммитаю то, что не компилиться

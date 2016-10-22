@@ -10,6 +10,10 @@ namespace TrueMoney.Services
     using System.Linq;
     using System.Threading.Tasks;
 
+    using AutoMapper;
+
+    using TrueMoney.Models.ViewModels;
+
     public class DealService : IDealService
     {
         private readonly IUserService _userService;
@@ -67,30 +71,96 @@ namespace TrueMoney.Services
 
         static List<Deal> data;
 
-        private static int number = 3; // что за нумбер блять
+        private static int number = 3; // что за нумбер блять - ид для новых энитити пока Саня не сделает базу
 
-        public async Task<IList<DealModel>> GetAllOpen()
+        public async Task<IList<DealIndexViewModel>> GetAllOpen(int userId)
         {
-            throw new NotImplementedException();
-            //return data.Where(x => x.DealStatus != DealStatus.Closed).ToList();
+            return
+                data.Where(x => x.DealStatus == DealStatus.Open)
+                    .Select(
+                        x =>
+                        new DealIndexViewModel
+                        {
+                            Deal = new DealModel
+                            {
+                                Amount = x.Amount,
+                                CreateDate = x.CreateDate,
+                                Id = x.Id,
+                                DayCount = x.DealPeriod.Days,
+                                Description = x.Description,
+                                Rate = x.InterestRate
+                            },
+                            IsCurrentUserOwner = x.OwnerId == userId
+                        })
+                    .ToList();
         }
 
-        public async Task<IList<DealModel>> GetAll()
+        public async Task<IList<DealIndexViewModel>> GetAll(int userId)
         {
-            throw new NotImplementedException();
-            //return data;
-        }
-
-        public async Task<Deal> GetById(int id)
-        {
-            return data.FirstOrDefault(x => x.Id == id);
+            return
+                data.Select(
+                        x =>
+                        new DealIndexViewModel
+                        {
+                            Deal = new DealModel
+                            {
+                                Amount = x.Amount,
+                                CreateDate = x.CreateDate,
+                                Id = x.Id,
+                                DayCount = x.DealPeriod.Days,
+                                Description = x.Description,
+                                Rate = x.InterestRate
+                            },
+                            IsCurrentUserOwner = x.OwnerId == userId
+                        })
+                    .ToList();
         }
 
         public async Task<IList<DealModel>> GetAllByUser(int userId)
         {
-            //return data.Where(x => Equals(x.Owner, user)).ToList();
+            return
+                data.Where(x => x.OwnerId == userId)
+                    .Select(x => new DealModel
+                    {
+                        Amount = x.Amount,
+                        CreateDate = x.CreateDate,
+                        Id = x.Id,
+                        DayCount = x.DealPeriod.Days,
+                        Description = x.Description,
+                        Rate = x.InterestRate
+                    })
+                    .ToList();
+        }
 
-            throw new NotImplementedException();
+        public async Task<DealDetailsViewModel> GetById(int id, int userId)
+        {
+            var res = new DealDetailsViewModel();
+            var deal = data.FirstOrDefault(x => x.Id == id);
+
+            if (deal != null)
+            {
+                res.IsCurrentUserBorrower = deal.OwnerId == userId;
+                res.IsCurrentUserLender = deal.Offers.Any(x => x.OffererId == userId);
+                res.Deal = new DealModel
+                {
+                    BorrowerFullName = string.Concat(deal.Owner.FirstName, " ", deal.Owner.LastName),
+                    BorrowerId = deal.OwnerId,
+                    Amount = deal.Amount,
+                    CreateDate = deal.CreateDate,
+                    DayCount = deal.DealPeriod.Days,
+                    Description = deal.Description,
+                    IsInProgress = deal.DealStatus == DealStatus.InProgress,
+                    IsOpen = deal.DealStatus == DealStatus.Open,
+                    IsWaitForLoan = deal.DealStatus == DealStatus.WaitForLoan,
+                    IsWaitForApprove = deal.DealStatus == DealStatus.WaitForApprove,
+                    Offers = deal.Offers.Select(x => new OfferModel())
+                };
+                res.CurrentUserId = userId;
+                // todo - map offer to offer details
+                //res.CurrentUserOffer = deal.Offers.FirstOrDefault(x => x.OffererId == userId);
+            }
+
+            return res;
         }
 
         public async Task<Deal> GetByOfferId(int offerId)
@@ -160,7 +230,7 @@ namespace TrueMoney.Services
             finishOffer.IsApproved = true;
 
             //return deal;
-            
+
             throw new NotImplementedException();
         }
 
@@ -191,10 +261,12 @@ namespace TrueMoney.Services
             //тут будет просто await _dealRepository.Delete(dealId);
         }
 
-        public async Task<Deal> PaymentFinished(Deal deal)
+        public async Task<DealModel> PaymentFinished(DealModel deal)
         {
-            deal.DealStatus = DealStatus.InProgress;
-            deal.PaymentPlan = CalculatePayments(deal);
+            //deal.DealStatus = DealStatus.InProgress;
+            //deal.PaymentPlan = CalculatePayments(deal);
+            deal.IsInProgress = true;//change status to InProgress in db
+            deal.IsWaitForLoan = false;
 
             return deal;
         }

@@ -1,121 +1,121 @@
-﻿@using TrueMoney.Models
-@model TrueMoney.Infrastructure.Entities.Deal
+﻿@using TrueMoney.Common.Enums
+@using TrueMoney.Models
+@model TrueMoney.Models.ViewModels.DealDetailsViewModel
 
 @{
-    ViewBag.Title = "Информация о заявлении " + Model.Id;
+    ViewBag.Title = "Информация о заявлении " + Model.Deal.Id;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>@ViewBag.Title</h2>
 
 <div>
-    <h4>@Model.Id</h4>
+    <h4>@Model.Deal.Id</h4>
     <hr/>
-    @if (Model.IsClosed)
+    @if (!Model.Deal.IsOpen)
     {
         <text>closed</text>
     }
-    else if (!Model.WaitForApprove)
+    else if (!Model.Deal.IsWaitForApprove)
     {
 
         <dl class="dl-horizontal">
             <dt>
-                @Html.DisplayNameFor(model => model.CreateDate)
+                @Html.DisplayNameFor(model => model.Deal.CreateDate)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.CreateDate)
+                @Html.DisplayFor(model => model.Deal.CreateDate)
             </dd>
 
             <dt>
-                @Html.DisplayNameFor(model => model.Count)
+                @Html.DisplayNameFor(model => model.Deal.Amount)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.Count)
+                @Html.DisplayFor(model => model.Deal.Amount)
             </dd>
 
             <dt>
-                @Html.DisplayNameFor(model => model.Rate)
+                @Html.DisplayNameFor(model => model.Deal.Rate)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.Rate)
+                @Html.DisplayFor(model => model.Deal.Rate)
             </dd>
 
             <dt>
-                @Html.DisplayNameFor(model => model.DayCount)
+                @Html.DisplayNameFor(model => model.Deal.DayCount)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.DayCount)
+                @Html.DisplayFor(model => model.Deal.DayCount)
             </dd>
 
             <dt>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Deal.Description)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.Description)
+                @Html.DisplayFor(model => model.Deal.Description)
             </dd>
-            @if (ViewBag.CurrentUserId == Model.Borrower.Id)
+            @if (Model.IsCurrentUserBorrower)
             {
                 //show info about offers only for deal borrower
-                foreach (var offer in Model.Offers)
+                foreach (var offer in Model.Deal.Offers)
                 {
-                    @Html.DisplayFor(x => offer)
-                    @Html.ActionLink("Подтвердить предложение", "ApplyOffer", new { offerId = offer.Id, dealId = Model.Id })
+                    <p>@offer.FullName предлагает бабало под @offer.Rate %</p>
+                    @Html.ActionLink("Подтвердить предложение", "ApplyOffer", new { offerId = offer.Id, dealId = Model.Deal.Id })
                 }
             }
-            else if (Model.Offers != null && Model.Offers.Any(x => x.Lender.Id == ViewBag.CurrentUserId))
+            else if (Model.IsCurrentUserLender)
             {
-                var yourOffer = Model.Offers.FirstOrDefault(x => x.Lender.Id == ViewBag.CurrentUserId);
-                <p>Вы предложили свои деньги в размере @Model.Count на @Model.DayCount дней под @yourOffer.Rate %</p>
-                @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = yourOffer.Id, dealId = Model.Id })
+                <p>Вы предложили свои деньги в размере @Model.Deal.Amount на @Model.Deal.DayCount дней под @Model.CurrentUserOffer.Rate %</p>
+                @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = Model.CurrentUserOffer.Id, dealId = Model.Deal.Id })
             }
             else
             {
-                @Html.Partial("~/Views/Partials/CreateOfferForm.cshtml", new CreateOfferForm { DealId = Model.Id })
+                @Html.Partial("~/Views/Partials/CreateOfferForm.cshtml", new CreateOfferForm { DealId = Model.Deal.Id })
             }
         </dl>
     }
     else
     {
-        var mainOffer = Model.Offers.FirstOrDefault(x => x.Lender.Id == ViewBag.CurrentUserId && x.WaitForApprove);
-        if (ViewBag.CurrentUserId == Model.Borrower.Id)
+        var mainOffer = Model.Deal.Offers.FirstOrDefault(x =>x.IsWaitForApprove);
+        if (Model.IsCurrentUserBorrower)
         {
             <text>wait for lender approve from user with id =
-                @Model.Offers.FirstOrDefault(x => x.WaitForApprove).Lender.Id</text>
+                @Model.Deal.Offers.FirstOrDefault(x => x.IsWaitForApprove).LenderId</text>
         }
-        else if (mainOffer != null && Model.WaitForApprove)
+        else if (mainOffer != null && mainOffer.IsCurrentUserLender)
         {
-            @Html.ActionLink("Дать взаймы", "FinishDeal", new { offerId = mainOffer.Id, dealId = Model.Id })
-            @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = mainOffer.Id, dealId = Model.Id })
+            @Html.ActionLink("Дать взаймы", "FinishDeal", new { offerId = mainOffer.Id, dealId = Model.Deal.Id })
+            @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = mainOffer.Id, dealId = Model.Deal.Id })
 
         }
         else
         {
             <text>sorry, borrower try to finish with user.id =
-                @Model.Offers.FirstOrDefault(x => x.WaitForApprove).Lender.Id</text>
+                @Model.Deal.Offers.FirstOrDefault(x => x.IsWaitForApprove).LenderId</text>
         }
     }
 </div>
-@if (ViewBag.CurrentUserId == Model.Borrower.Id && !Model.IsClosed)
+@if (Model.IsCanDeleteOffer)
 {
-    @Html.ActionLink("Удалить заявку", "Delete", new { dealId = Model.Id })
+    @Html.ActionLink("Удалить заявку", "Delete", new { dealId = Model.Deal.Id })
 }
 
-@if (Model.Lender != null && ViewBag.CurrentUserId == Model.Lender.Id && Model.Status == DealStatus.WaitForLoan)
+@if (Model.IsMustLoanMoney)
 {
     <h4>перевиди бабло челу</h4>
     <p>
         Visa - @Html.ActionLink("Перечислить займ", "Visa", "Payment", routeValues: new RouteValueDictionary(
              new
              {
-                 paymentName = $"Перевод денег на счёт {Model.Borrower.FirstName}. Займ № {Model.Id}.",
-                 paymentCount = Model.Count,
-                 payForId = Model.Borrower.Id,
-                 dealId = Model.Id
+                 paymentName = $"Перевод денег на счёт {Model.Deal.BorrowerFullName}. Займ № {Model.Deal.Id}.",
+                 paymentCount = Model.Deal.Amount,
+                 payForId = Model.Deal.BorrowerId,
+                 dealId = Model.Deal.Id
              }), htmlAttributes: null)
     </p>
 }

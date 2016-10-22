@@ -25,8 +25,8 @@ namespace TrueMoney.Services
         }
         public async Task<PaymentResult> LendMoney(int userId, int dealId, decimal amount) // todo: VisaDetails lost after structure changes, create model
         {
-            var deal = await _dealService.GetById(dealId);
-            var recipientId = deal.Offers.First(x => x.IsApproved).Offerer.Id;
+            var deal = await _dealService.GetById(dealId, userId);
+            var recipientId = deal.Deal.Offers.First(x => x.IsApproved).LenderId;
             var recipient = await _userService.GetById(recipientId);
 
             var result = await
@@ -42,7 +42,7 @@ namespace TrueMoney.Services
             switch (result)
             {
                 case BankResponse.Success:
-                    await _dealService.PaymentFinished(deal);
+                    await _dealService.PaymentFinished(deal.Deal);
                     return PaymentResult.Success;
                 case BankResponse.NotEnoughtMoney:
                     return PaymentResult.NotEnoughtMoney;
