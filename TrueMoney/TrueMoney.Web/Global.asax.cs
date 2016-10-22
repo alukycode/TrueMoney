@@ -31,24 +31,9 @@ namespace TrueMoney.Web
         {
             IWindsorContainer container = new WindsorContainer();
 
-            container.Install(FromAssembly.Instance(typeof(WindsorComponentInstaller).Assembly));
-
-            // asp.net identity
-            // http://tech.trailmax.info/2014/09/aspnet-identity-and-ioc-container-registration/
-            // not sure about transient lifestyle
-            container.Register(
-                Component.For<ApplicationDbContext>().LifestyleTransient(),
-                Component.For<ApplicationSignInManager>().LifestyleTransient(),
-                Component.For<ApplicationUserManager>().LifestyleTransient(),
-                //Component.For<EmailService>().LifestyleTransient(),
-                Component.For<IAuthenticationManager>()
-                    .UsingFactoryMethod(kernel => HttpContext.Current.GetOwinContext().Authentication)
-                    .LifestyleTransient(),
-                Component
-                    .For<IUserStore<ApplicationUser>>()
-                    .ImplementedBy<UserStore<ApplicationUser>>()
-                    .DependsOn(Dependency.OnComponent<DbContext, ApplicationDbContext>())
-                    .LifestyleTransient());
+            container.Install(
+                FromAssembly.Instance(typeof (WindsorComponentInstaller).Assembly),
+                FromAssembly.Instance(typeof (IdentityInstaller).Assembly));
 
             // controllers
             container.Register(Classes.FromThisAssembly().BasedOn<IController>().LifestyleTransient());
