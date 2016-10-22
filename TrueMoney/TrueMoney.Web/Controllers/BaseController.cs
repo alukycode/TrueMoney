@@ -13,7 +13,7 @@ namespace TrueMoney.Web.Controllers
 
         public BaseController()
         {
-            _userService = DependencyResolver.Current.GetService<UserService>();
+            _userService = DependencyResolver.Current.GetService<IUserService>();
         }
 
         // todo: async await?
@@ -21,7 +21,14 @@ namespace TrueMoney.Web.Controllers
         {
             get
             {
-                return _userService.GetUserIdByAspId(User.Identity.GetUserId()).Result;
+                var currentUserIdentityId = User.Identity.GetUserId();
+                if (currentUserIdentityId == null)
+                {
+                    throw new UnauthorizedAccessException("user should be authorized to perform this action");
+                }
+
+                var id = _userService.GetUserIdByAspId(currentUserIdentityId);
+                return id.Result;
             }
         }
 
