@@ -80,55 +80,61 @@ namespace TrueMoney.Web.Controllers
             return View(new CreateDealForm());
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult> Create(CreateDealForm model)
-        //{
-        //    if (model.PaymentCount < 1 && model.PaymentCount > model.DayCount)
-        //    {
-        //        ModelState.AddModelError("PaymentCount", "Неверное количество платежей.");
-        //    }
-        //    if (ModelState.IsValid)
-        //    {
+        [HttpPost]
+        public async Task<ActionResult> Create(CreateDealForm model)
+        {
+            if (model.PaymentCount < 1 && model.PaymentCount > model.DayCount)
+            {
+                ModelState.AddModelError("PaymentCount", "Неверное количество платежей.");
+            }
+            if (ModelState.IsValid)
+            {
+                var deal = await _dealService.CreateDeal(model, CurrentUserId);
 
-        //        var dealId =
-        //            await _dealService.CreateDeal(CurrentUser, model.Count, model.PaymentCount, model.Rate, model.DayCount, model.Description);
-        //        if (dealId > -1)
-        //        {
-        //            return RedirectToAction("Details", new { id = dealId });
-        //        }
-        //    }
+                return RedirectToAction("Details", new { id = deal.Id });
+            }
 
-        //    return View(model);
-        //}
+            return View(model);
+        }
+
+        public async Task<ActionResult> CreateOffer(int dealId)
+        {
+            var formModel = await _dealService.GetCreateOfferForm(dealId, CurrentUserId);
+            if (formModel.IsUserCanCreateOffer)
+            {
+                return View("CreateOfferForm", formModel);
+            }
+
+            return GoHome();
+        }
 
         [HttpPost]
         public async Task<ActionResult> CreateOffer(CreateOfferForm model)
         {
-            throw new NotImplementedException();
-            //if (ModelState.IsValid)
-            //{
-            //    var deal = await _dealService.GetById(model.DealId);
-            //    if (model.Rate > deal.InterestRate)
-            //    {
-            //        ModelState.AddModelError("Rate", "Вы превысили маскимальнодопустимую процентную ставку.");
-            //        return View("Details", deal);
-            //    }
+            if (model.DealRate > model.Rate)
+            {
+                ModelState.AddModelError("Rate", "Вы превысили маскимальнодопустимую процентную ставку.");
+            }
 
-            //    if (!CurrentUser.IsActive)
-            //    {
-            //        ModelState.AddModelError("", "Вы ещё не прошли подтверждение регистрации.");
-            //        return View("Details", deal);
-            //    }
+            if (!model.IsUserCanCreateOffer)
+            {
+                ModelState.AddModelError("", "Вы ещё не прошли подтверждение регистрации.");
+            }
 
-            //    await _dealService.CreateOffer(CurrentUser, model.DealId, model.Rate);
-            //    //if (!res)
-            //    //{
-            //    //    ModelState.AddModelError("", "Что-то пошло не так."); если эксепшен падает, то что-то пошло не так
-            //    //    return View("Details", deal);
-            //    //}
-            //}
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var deal = await _dealService.CreateOffer(model, CurrentUserId);
+                    return View("Details", deal);
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", "Что-то пошло не так.");
+                }
+            }
 
-            //return RedirectToAction("Details", new { id = model.DealId });
+            return RedirectToAction("Details", new { id = model.DealId });
         }
 
         //public async Task<ActionResult> Delete(int? dealId)

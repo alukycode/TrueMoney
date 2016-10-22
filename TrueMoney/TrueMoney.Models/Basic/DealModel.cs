@@ -9,7 +9,7 @@
 
         public bool IsOpen { get; set; }
 
-        public float Rate { get; set; }
+        public decimal Rate { get; set; }
 
         public DateTime CreateDate { get; set; }
 

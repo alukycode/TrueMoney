@@ -16,12 +16,6 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var currentUser = (await _userService.GetAll()).First();
-            if (currentUser == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             return RedirectToAction("Details", new { id = CurrentUserId });
         }
 

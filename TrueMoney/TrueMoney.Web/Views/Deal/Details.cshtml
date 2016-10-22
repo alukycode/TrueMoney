@@ -75,7 +75,7 @@
             }
             else
             {
-                @Html.Partial("~/Views/Partials/CreateOfferForm.cshtml", new CreateOfferForm { DealId = Model.Deal.Id })
+                @Html.ActionLink("Сделать предложение", "CreateOffer", new {dealId = Model.Deal.Id})
             }
         </dl>
     }

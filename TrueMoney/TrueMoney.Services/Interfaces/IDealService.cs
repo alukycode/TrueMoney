@@ -5,13 +5,14 @@ using TrueMoney.Models.Basic;
 
 namespace TrueMoney.Services
 {
+    using TrueMoney.Models;
     using TrueMoney.Models.ViewModels;
 
     public interface IDealService
     {
         Task ApplyOffer(int offerId, int dealId);
-        Task<int> CreateDeal(User user, decimal count, int rate, string description);
-        Task CreateOffer(User user, int dealId, int rate);
+        Task<DealModel> CreateDeal(CreateDealForm createDealForm, int userId);
+        Task<DealDetailsViewModel> CreateOffer(CreateOfferForm createOfferForm, int userId);
         Task DeleteDeal(int dealId);
         Task<DealModel> FinishDealStartLoan(int userId, int offerId, int dealId);
         Task<IList<DealIndexViewModel>> GetAll(int userId);
@@ -22,5 +23,7 @@ namespace TrueMoney.Services
         Task<Deal> GetByOfferId(int offerId);
         Task<DealModel> PaymentFinished(DealModel deal);
         Task RevertOffer(int offerId);
+        Task<CreateDealForm> GetCreateDealForm(int userId);
+        Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId);
     }
 }
