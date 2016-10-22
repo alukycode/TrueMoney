@@ -23,14 +23,13 @@ namespace TrueMoney.Web.Controllers
         
         public async Task<ActionResult> Index()
         {
-            var user = CurrentUserId;
-            var list = await this._dealService.GetAllOpen(CurrentUserId);
+            var list = await this._dealService.GetAllOpen(await CurrentUserId());
             return this.View(list);
         }
 
         public async Task<ActionResult> Details(int id)
         {
-            var model = await _dealService.GetById(id, CurrentUserId);
+            var model = await _dealService.GetById(id, await CurrentUserId());
             if (model != null)
             {
                 return View(model);
@@ -68,7 +67,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (offerId.HasValue && dealId.HasValue)
             {
-                await _dealService.FinishDealStartLoan(CurrentUserId, offerId.Value, dealId.Value);
+                await _dealService.FinishDealStartLoan(await CurrentUserId(), offerId.Value, dealId.Value);
 
                 return RedirectToAction("Details", "Deal", new { id = dealId.Value });
             }
@@ -90,7 +89,7 @@ namespace TrueMoney.Web.Controllers
             }
             if (ModelState.IsValid)
             {
-                var deal = await _dealService.CreateDeal(model, CurrentUserId);
+                var deal = await _dealService.CreateDeal(model, await CurrentUserId());
 
                 return RedirectToAction("Details", new { id = deal.Id });
             }
@@ -100,7 +99,7 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> CreateOffer(int dealId)
         {
-            var formModel = await _dealService.GetCreateOfferForm(dealId, CurrentUserId);
+            var formModel = await _dealService.GetCreateOfferForm(dealId, await CurrentUserId());
             if (formModel.IsUserCanCreateOffer)
             {
                 return View("CreateOfferForm", formModel);
@@ -126,7 +125,7 @@ namespace TrueMoney.Web.Controllers
             {
                 try
                 {
-                    var deal = await _dealService.CreateOffer(model, CurrentUserId);
+                    var deal = await _dealService.CreateOffer(model, await CurrentUserId());
                     return View("Details", deal);
                 }
                 catch (Exception)
@@ -157,8 +156,8 @@ namespace TrueMoney.Web.Controllers
         {
             var viewModel = new YouActivityViewModel
             {
-                Deals = await _dealService.GetAllByUser(CurrentUserId),
-                Offers = await _dealService.GetAllOffersByUser(CurrentUserId)
+                Deals = await _dealService.GetAllByUser(await CurrentUserId()),
+                Offers = await _dealService.GetAllOffersByUser(await CurrentUserId())
             };
 
             return View(viewModel);

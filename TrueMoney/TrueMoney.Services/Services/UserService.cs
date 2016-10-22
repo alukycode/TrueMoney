@@ -18,6 +18,7 @@ namespace TrueMoney.Services.Services
 
         public UserService(ITrueMoneyContext context)
         {
+            _context = context;
         }
 
         // нормальный метод
@@ -66,11 +67,8 @@ namespace TrueMoney.Services.Services
             {
                 throw new ArgumentNullException(nameof(id));
             }
-            using (var context = new TrueMoneyContext())
-            {
-                var temp = (await context.Users.FirstAsync(x => x.AspUserId == id));
-                return temp.Id;
-            }
+
+            return (await _context.Users.FirstAsync(x => x.AspUserId == id)).Id;
         }
 
         public async Task<UserModel> GetByAspId(string id)
@@ -88,6 +86,6 @@ namespace TrueMoney.Services.Services
         {
             //return await this._userRepository.GetUserByName(name);
             throw new NotImplementedException();
-        }        
+        }
     }
 }
