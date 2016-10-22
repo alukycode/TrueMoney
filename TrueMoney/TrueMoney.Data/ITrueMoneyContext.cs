@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Threading.Tasks;
 using TrueMoney.Data.Entities;
 
 namespace TrueMoney.Data
@@ -13,6 +14,6 @@ namespace TrueMoney.Data
         //IDbSet<Payment> Payments { get; set; }
         IDbSet<User> Users { get; set; }
 
-        int SaveChanges();
+        Task<int> SaveChangesAsync();
     }
 }

@@ -53,15 +53,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DealService.cs" />
+    <Compile Include="Services\DealService.cs" />
     <Compile Include="Interfaces\IDealService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Interfaces\IPaymentService.cs" />
     <Compile Include="Mapping\MapperInitializer.cs" />
-    <Compile Include="PaymentService.cs" />
+    <Compile Include="Services\PaymentService.cs" />
     <Compile Include="Rating\RatingAction.cs" />
     <Compile Include="Rating\RatingHelper.cs" />
-    <Compile Include="UserService.cs" />
+    <Compile Include="Services\UserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

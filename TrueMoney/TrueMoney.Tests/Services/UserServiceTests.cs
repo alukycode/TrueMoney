@@ -7,7 +7,7 @@ using Moq;
 using NUnit.Framework;
 using TrueMoney.Data;
 using TrueMoney.Data.Entities;
-using TrueMoney.Services;
+using TrueMoney.Services.Services;
 
 namespace TrueMoney.Tests
 {

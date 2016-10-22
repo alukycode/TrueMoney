@@ -2,7 +2,7 @@
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using TrueMoney.Data;
-using TrueMoney.Services;
+using TrueMoney.Services.Services;
 
 namespace TrueMoney.DependencyInjection
 {

@@ -12,6 +12,7 @@ namespace TrueMoney.Services.Services
 
     using AutoMapper;
 
+    using TrueMoney.Models;
     using TrueMoney.Models.ViewModels;
 
     public class DealService : IDealService
@@ -205,18 +206,44 @@ namespace TrueMoney.Services.Services
             //return false;
         }
 
-        public async Task CreateOffer(User user, int dealId, int rate)
+        public async Task<CreateDealForm> GetCreateDealForm(int userId)
+        {
+            var res = new CreateDealForm();
+            var dealsByUser = await GetAllByUser(userId);
+            if (dealsByUser.All(x => x.IsClosed))
+            {
+                res.IsUserCanCreateDeal = true;
+            }
+
+            return res;
+        }
+
+        public async Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId)
         {
             var deal = data.FirstOrDefault(x => x.Id == dealId);
+            return new CreateOfferForm
+                       {
+                           DealRate = deal.InterestRate,
+                           DealId = dealId,
+                           IsUserCanCreateOffer =
+                               deal.OwnerId != userId && deal.Offers.All(x => x.OffererId != userId)
+                       };
+        }
+
+        public async Task<DealDetailsViewModel> CreateOffer(CreateOfferForm createOfferForm, int userId)
+        {
+            var deal = data.FirstOrDefault(x => x.Id == createOfferForm.DealId);
             deal.Offers.Add(
                 new Offer
                 {
                     Id = number++,
                     CreateTime = DateTime.Now,
-                    Offerer = user,
+                    Offerer = new User { Id = userId},
                     Deal = deal,
-                    InterestRate = rate
+                    InterestRate = createOfferForm.Rate
                 });
+
+            return await GetById(deal.Id, userId);//todo - return deal model from db
         }
 
         public async Task<DealModel> FinishDealStartLoan(int userId, int offerId, int dealId)
@@ -234,26 +261,23 @@ namespace TrueMoney.Services.Services
             throw new NotImplementedException();
         }
 
-        public async Task<int> CreateDeal(User user, decimal count, int rate, string description) //Должен быть метод Add(Deal deal) и все, сама сущность будет мапиться из контроллера на новую, которую ты и будешь создавать
+        public async Task<DealModel> CreateDeal(CreateDealForm createDealForm, int userId)
         {
-            // todo: commented after changing project structure -- if (user.IsActive && !user.IsHaveOpenDealOrLoan)
-            {
-                data.Add(
+            data.Add(
                     new Deal
                     {
                         Id = number++,
-                        Owner = user,
+                        Owner = new User { Id = userId},
                         CreateDate = DateTime.Now,
-                        Amount = count,
-                        Description = description,
-                        InterestRate = rate,
+                        Amount = createDealForm.Amount,
+                        Description = createDealForm.Description,
+                        InterestRate = createDealForm.Rate,
+                        PaymentCount = createDealForm.PaymentCount
+                        
                     });
                 // todo: commented after changing project structure -- user.IsHaveOpenDealOrLoan = true;
 
-                return data[number - 1].Id;
-            }
-
-            return -1;
+            return (await GetById(number - 1, userId)).Deal;//todo - return deal model from db
         }
 
         public async Task DeleteDeal(int dealId)
