@@ -11,6 +11,7 @@ namespace TrueMoney.Services.Mapping
                 {
                     conf.AddProfile<UserMappingProfile>();
                     conf.AddProfile<PassportMappingProfile>();
+                    conf.AddProfile<DealProfile>();
                 });
         }
     }

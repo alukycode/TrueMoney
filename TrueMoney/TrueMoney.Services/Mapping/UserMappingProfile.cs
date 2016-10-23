@@ -15,6 +15,7 @@ namespace TrueMoney.Services.Mapping
         public UserMappingProfile()
         {
             CreateMap<RegisterViewModel, User>();
+            CreateMap<User, UserModel>();
         }
     }
 }

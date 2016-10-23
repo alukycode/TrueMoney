@@ -36,8 +36,8 @@ namespace TrueMoney.Services.Services
                     new Bank.BankEntities.BankTransaction
                     {
                         Amount = visaPaymentViewModel.PaymentCount,
-                        SenderAccountNumber = deal.Deal.Borrower.AccountNumber,
-                        RecipientAccountNumber = recipient.AccountNumber,
+                        SenderAccountNumber = deal.Deal.Borrower.BankAccountNumber,
+                        RecipientAccountNumber = recipient.BankAccountNumber,
                     });
 
             switch (result)

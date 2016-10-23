@@ -150,21 +150,7 @@ namespace TrueMoney.Services.Services
             {
                 res.IsCurrentUserBorrower = deal.OwnerId == userId;
                 res.IsCurrentUserLender = deal.Offers.Any(x => x.OffererId == userId);
-                res.Deal = new DealModel
-                {
-                    BorrowerFullName = string.Concat(deal.Owner.FirstName, " ", deal.Owner.LastName),
-                    Borrower = new UserModel { Id = deal.Owner.Id },//todo - get user model
-                    Amount = deal.Amount,
-                    CreateDate = deal.CreateDate,
-                    DayCount = deal.DealPeriod.Days,
-                    Description = deal.Description,
-                    IsInProgress = deal.DealStatus == DealStatus.InProgress,
-                    IsOpen = deal.DealStatus == DealStatus.Open,
-                    IsWaitForLoan = deal.DealStatus == DealStatus.WaitForLoan,
-                    IsWaitForApprove = deal.DealStatus == DealStatus.WaitForApprove,
-                    Rate = deal.InterestRate,
-                    Id = deal.Id
-                };
+                res.Deal = Mapper.Map<DealModel>(deal, opt => opt.Items["currentUserId"] = userId);
                 res.CurrentUserId = userId;
                 res.Offers =
                     deal.Offers.Select(
