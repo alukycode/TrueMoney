@@ -2,13 +2,13 @@
 {
     public class OfferModel
     {
-        public int LenderId { get; set; }
+        public UserModel Lender { get; set; }
 
         public bool IsCurrentUserLender { get; set; }
 
         public bool IsWaitForApprove { get; set; }
 
-        public float Rate { get; set; }
+        public decimal Rate { get; set; }
 
         public int Id { get; set; }
 

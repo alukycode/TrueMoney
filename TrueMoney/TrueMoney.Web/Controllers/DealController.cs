@@ -20,7 +20,7 @@ namespace TrueMoney.Web.Controllers
         {
             _dealService = dealService;
         }
-        
+
         public async Task<ActionResult> Index()
         {
             var list = await this._dealService.GetAllOpen(await CurrentUserId());
@@ -34,45 +34,35 @@ namespace TrueMoney.Web.Controllers
             {
                 return View(model);
             }
-            
+
             return GoHome();
         }
 
-        //я пока закоммитаю то, что не компилиться
-        //public async Task<ActionResult> ApplyOffer(int? offerId, int? dealId)
-        //{
-        //    if (offerId.HasValue && dealId.HasValue)
-        //    {
-        //        await _dealService.ApplyOffer(CurrentUser, offerId.Value, dealId.Value);
-
-        //        return RedirectToAction("Details", new { id = dealId.Value });
-        //    }
-
-        //    return GoHome();
-        //}
-
-        //public async Task<ActionResult> RevertOffer(int? offerId, int? dealId)
-        //{
-        //    if (offerId.HasValue && dealId.HasValue)
-        //    {
-        //        await this._dealService.RevertOffer(CurrentUser, offerId.Value, dealId.Value);
-
-        //        return RedirectToAction("Details", new { id = dealId.Value });
-        //    }
-
-        //    return GoHome();
-        //}
-
-        public async Task<ActionResult> FinishDeal(int? offerId, int? dealId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ApplyOffer(int offerId, int dealId)
         {
-            if (offerId.HasValue && dealId.HasValue)
-            {
-                await _dealService.FinishDealStartLoan(await CurrentUserId(), offerId.Value, dealId.Value);
+            await _dealService.ApplyOffer(offerId, await CurrentUserId());
 
-                return RedirectToAction("Details", "Deal", new { id = dealId.Value });
-            }
+            return RedirectToAction("Details", new { id = dealId });
+        }
 
-            return GoHome();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RevertOffer(int offerId, int dealId)
+        {
+            await _dealService.RevertOffer(offerId, await CurrentUserId());
+
+            return RedirectToAction("Details", new { id = dealId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> FinishDeal(int offerId, int dealId)
+        {
+            await _dealService.FinishDealStartLoan(await CurrentUserId(), offerId, dealId);
+
+            return RedirectToAction("Details", "Deal", new { id = dealId });
         }
 
         public async Task<ActionResult> Create()
@@ -137,20 +127,14 @@ namespace TrueMoney.Web.Controllers
             return RedirectToAction("Details", new { id = model.DealId });
         }
 
-        //public async Task<ActionResult> Delete(int? dealId)
-        //{
-        //    if (dealId.HasValue)
-        //    {
-        //        var res = await _dealService.DeleteDeal(CurrentUser, dealId.Value);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete(int dealId)
+        {
+            await _dealService.DeleteDeal(dealId, await CurrentUserId());
 
-        //        if (res)
-        //        {
-        //            return RedirectToAction("Index");
-        //        }
-        //    }
-
-        //    return RedirectToAction("Details", new { id = dealId });
-        //}
+            return GoHome();
+        }
 
         public async Task<ActionResult> YouActivity()
         {

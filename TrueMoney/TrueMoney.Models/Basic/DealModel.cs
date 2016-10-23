@@ -20,16 +20,14 @@
         public string Description { get; set; }
 
         public bool IsWaitForLoan { get; set; }
-
-        public IEnumerable<OfferModel> Offers { get; set; }
-
+        
         public bool IsClosed { get; set; }
 
         public bool IsWaitForApprove { get; set; }
 
         public bool IsInProgress { get; set; }
 
-        public int BorrowerId { get; set; }
+        public UserModel Borrower { get; set; }
 
         public string BorrowerFullName { get; set; }
     }

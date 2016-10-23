@@ -10,6 +10,9 @@ namespace TrueMoney.Services.Services
     using Bank.BankApi;
     using Bank.BankEntities;
 
+    using TrueMoney.Models;
+    using TrueMoney.Services.Interfaces;
+
     public class PaymentService : IPaymentService
     {
         private readonly IUserService _userService;
@@ -23,20 +26,18 @@ namespace TrueMoney.Services.Services
             _dealService = dealService;
             _bankApi = bankApi;
         }
-        public async Task<PaymentResult> LendMoney(int userId, int dealId, decimal amount) // todo: VisaDetails lost after structure changes, create model
+        public async Task<PaymentResult> LendMoney(VisaPaymentViewModel visaPaymentViewModel, int userId)
         {
-            var deal = await _dealService.GetById(dealId, userId);
-            var recipientId = deal.Deal.Offers.First(x => x.IsApproved).LenderId;
-            var recipient = await _userService.GetById(recipientId);
+            var deal = await _dealService.GetById(visaPaymentViewModel.DealId, userId);
+            var recipient = deal.CurrentUserOffer.Lender;
 
             var result = await
                 _bankApi.Do(
                     new Bank.BankEntities.BankTransaction
                     {
-                        Amount = amount,
-                        // todo: commented after structure changes
-                        //SenderAccountNumber = user.AccountNumber,
-                        //RecipientAccountNumber = recipient.AccountNumber,
+                        Amount = visaPaymentViewModel.PaymentCount,
+                        SenderAccountNumber = deal.Deal.Borrower.AccountNumber,
+                        RecipientAccountNumber = recipient.AccountNumber,
                     });
 
             switch (result)

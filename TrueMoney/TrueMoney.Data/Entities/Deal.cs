@@ -15,7 +15,7 @@ namespace TrueMoney.Data.Entities
         [Required]
         public User Owner { get; set; }
 
-        public List<Offer> Offers { get; set; }
+        public List<Offer> Offers { get; set; } = new List<Offer>();
 
         public int? PaymentPlanId { get; set; }
 

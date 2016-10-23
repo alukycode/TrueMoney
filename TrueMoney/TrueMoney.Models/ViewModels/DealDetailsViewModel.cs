@@ -19,6 +19,8 @@
 
         public OfferModel CurrentUserOffer { get; set; }
 
+        public IEnumerable<OfferModel> Offers { get; set; }
+
         public bool IsCanDeleteOffer => IsCurrentUserBorrower && !Deal.IsClosed && !Deal.IsInProgress;
         
         public bool IsMustLoanMoney => IsCurrentUserLender && !Deal.IsWaitForLoan;

@@ -25,7 +25,7 @@ namespace TrueMoney.Models
         public string Name { get; set; }
 
         [Required]
-        [RegularExpression("^[0-0]{3}$")]
+        [RegularExpression("^[0-9]{3}$")]
         public string CvvCode { get; set; }
 
         [Required]
