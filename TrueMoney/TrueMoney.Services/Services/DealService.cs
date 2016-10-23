@@ -82,11 +82,15 @@ namespace TrueMoney.Services.Services
 
         private static int number = 3; // что за нумбер блять - ид для новых энитити пока Саня не сделает базу
 
-        public async Task<IList<DealIndexViewModel>> GetAllOpen(int userId)
+        public async Task<IList<DealIndexViewModel>> GetAllOpen(int currentUserId)
         {
-            return Mapper.Map<IList<DealIndexViewModel>>(
-                data.Where(x => x.DealStatus == DealStatus.Open),
-                opt => opt.Items["currentUserId"] = userId);
+            var result = Mapper.Map<IList<DealIndexViewModel>>(data.Where(x => x.DealStatus == DealStatus.Open));
+            foreach (var item in result) // пока так, ибо дохуя менять, чтобы сделать нормально
+            {
+                item.CurrentUserId = currentUserId;
+            }
+
+            return result;
         }
 
         public async Task<IList<DealIndexViewModel>> GetAll(int userId)
@@ -144,9 +148,9 @@ namespace TrueMoney.Services.Services
         {
             var res = new CreateDealForm();
             var dealsByUser = await GetAllByUser(userId);
-            if (dealsByUser.All(x => x.IsClosed))
+            //if (dealsByUser.All(x => x.IsClosed))
             {
-                res.IsUserCanCreateDeal = true;
+                res.IsUserCanCreateDeal = true; //какого хуя это вообще тут проверяется?? у него даже кнопки создать быть не должно
             }
 
             return res;
@@ -221,8 +225,7 @@ namespace TrueMoney.Services.Services
         {
             //deal.DealStatus = DealStatus.InProgress;
             //deal.PaymentPlan = CalculatePayments(deal);
-            deal.IsInProgress = true;//change status to InProgress in db
-            deal.IsWaitForLoan = false;
+            deal.DealStatus = DealStatus.InProgress;
 
             return deal;
         }

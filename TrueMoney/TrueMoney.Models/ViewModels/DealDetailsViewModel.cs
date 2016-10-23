@@ -17,12 +17,12 @@
 
         public bool ShowOffers => IsCurrentUserBorrower;
 
-        public OfferModel CurrentUserOffer { get; set; }
+        public OfferModel CurrentUserOffer { get; set; } // что это? зачем это в деталях сделки??
 
         public IEnumerable<OfferModel> Offers { get; set; }
 
-        public bool IsCanDeleteOffer => IsCurrentUserBorrower && !Deal.IsClosed && !Deal.IsInProgress;
+        //public bool IsCanDeleteOffer => IsCurrentUserBorrower && !Deal.IsClosed && !Deal.IsInProgress;
         
-        public bool IsMustLoanMoney => IsCurrentUserLender && !Deal.IsWaitForLoan;
+        //public bool IsMustLoanMoney => IsCurrentUserLender && !Deal.IsWaitForLoan;
     }
 }

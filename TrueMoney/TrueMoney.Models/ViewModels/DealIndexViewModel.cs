@@ -8,6 +8,8 @@
     {
         public DealModel Deal { get; set; }
 
-        public bool IsCurrentUserOwner { get; set; }
+        public int CurrentUserId { get; set; }
+
+        //public bool IsCurrentUserOwner { get; set; }
     }
 }

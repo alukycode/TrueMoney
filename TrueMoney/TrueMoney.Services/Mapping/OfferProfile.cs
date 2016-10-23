@@ -10,7 +10,7 @@
     {
         public OfferProfile()
         {
-            CreateMap<Offer, OfferModel>().ConvertUsing<OfferToOfferModelConverter>();
+            CreateMap<Offer, OfferModel>();
         }
     }
 }

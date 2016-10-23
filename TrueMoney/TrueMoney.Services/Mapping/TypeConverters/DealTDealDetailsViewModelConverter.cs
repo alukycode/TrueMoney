@@ -18,16 +18,16 @@
 
             return new DealDetailsViewModel
                        {
-                           IsCurrentUserBorrower = source.OwnerId == currentUserId,
-                           IsCurrentUserLender = source.Offers.Any(x => x.OffererId == currentUserId),
-                           Deal = Mapper.Map<DealModel>(source, opt => opt.Items["currentUserId"] = currentUserId),
-                           CurrentUserId = currentUserId,
-                           Offers = Mapper.Map<IList<OfferModel>>(source.Offers, opt => opt.Items["currentUserId"] = currentUserId),
-                           CurrentUserOffer = currentUserOffer != null
-                                   ? Mapper.Map<OfferModel>(
-                                       currentUserOffer,
-                                       opt => opt.Items["currentUserId"] = currentUserId)
-                                   : null
+                           //IsCurrentUserBorrower = source.OwnerId == currentUserId,
+                           //IsCurrentUserLender = source.Offers.Any(x => x.OffererId == currentUserId),
+                           //Deal = Mapper.Map<DealModel>(source, opt => opt.Items["currentUserId"] = currentUserId),
+                           //CurrentUserId = currentUserId,
+                           //Offers = Mapper.Map<IList<OfferModel>>(source.Offers, opt => opt.Items["currentUserId"] = currentUserId),
+                           //CurrentUserOffer = currentUserOffer != null
+                           //        ? Mapper.Map<OfferModel>(
+                           //            currentUserOffer,
+                           //            opt => opt.Items["currentUserId"] = currentUserId)
+                           //        : null
                        };
         }
     }

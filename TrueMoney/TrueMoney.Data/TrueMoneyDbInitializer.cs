@@ -96,7 +96,7 @@ namespace TrueMoney.Data
                 {
                     Amount = 13,
                     CreateDate = DateTime.Now,
-                    DealPeriod = new TimeSpan(5000, 0, 0, 0),
+                    DealPeriod = 5000,
                     InterestRate = 12,
                     DealStatus = DealStatus.InProgress,
                     Offers = new List<Offer>()
@@ -114,7 +114,7 @@ namespace TrueMoney.Data
                 {
                     Amount = 123,
                     CreateDate = DateTime.Now,
-                    DealPeriod = new TimeSpan(60, 0, 0, 0),
+                    DealPeriod = 60,
                     InterestRate = 2,
                 }
             };

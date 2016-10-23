@@ -12,15 +12,15 @@
             var currentUserId = (int)context.Items["currentUserId"];
             return new OfferModel
                        {
-                           DealId = source.DealId,
-                           Id = source.Id,
-                           Rate = source.InterestRate,
-                           IsCurrentUserLender = source.OffererId == currentUserId,
-                           IsApproved = source.IsApproved,
-                           Lender =
-                               Mapper.Map<UserModel>(
-                                   source.Offerer,
-                                   opt => opt.Items["currentUserId"] = currentUserId),
+                           //DealId = source.DealId,
+                           //Id = source.Id,
+                           //InterestRate = source.InterestRate,
+                           //IsCurrentUserLender = source.OffererId == currentUserId,
+                           //IsApproved = source.IsApproved,
+                           //Offerer =
+                           //    Mapper.Map<UserModel>(
+                           //        source.Offerer,
+                           //        opt => opt.Items["currentUserId"] = currentUserId),
                        };
         }
     }
