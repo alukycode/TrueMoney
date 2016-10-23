@@ -21,7 +21,6 @@
                                Mapper.Map<UserModel>(
                                    source.Offerer,
                                    opt => opt.Items["currentUserId"] = currentUserId),
-                           IsWaitForApprove = source.IsWaitApproved
                        };
         }
     }
