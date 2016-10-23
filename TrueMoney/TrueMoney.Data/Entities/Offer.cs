@@ -23,5 +23,7 @@ namespace TrueMoney.Data.Entities
         public DateTime CreateTime { get; set; }
 
         public bool IsApproved { get; set; }
+
+        public bool IsWaitApproved { get; set; }
     }
 }

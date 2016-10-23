@@ -84,90 +84,28 @@ namespace TrueMoney.Services.Services
 
         public async Task<IList<DealIndexViewModel>> GetAllOpen(int userId)
         {
-            return
-                data.Where(x => x.DealStatus == DealStatus.Open)
-                    .Select(
-                        x =>
-                        new DealIndexViewModel
-                        {
-                            Deal = new DealModel
-                            {
-                                Amount = x.Amount,
-                                CreateDate = x.CreateDate,
-                                Id = x.Id,
-                                DayCount = x.DealPeriod.Days,
-                                Description = x.Description,
-                                Rate = x.InterestRate
-                            },
-                            IsCurrentUserOwner = x.OwnerId == userId
-                        })
-                    .ToList();
+            return Mapper.Map<IList<DealIndexViewModel>>(
+                data.Where(x => x.DealStatus == DealStatus.Open),
+                opt => opt.Items["currentUserId"] = userId);
         }
 
         public async Task<IList<DealIndexViewModel>> GetAll(int userId)
         {
-            return
-                data.Select(
-                        x =>
-                        new DealIndexViewModel
-                        {
-                            Deal = new DealModel
-                            {
-                                Amount = x.Amount,
-                                CreateDate = x.CreateDate,
-                                Id = x.Id,
-                                DayCount = x.DealPeriod.Days,
-                                Description = x.Description,
-                                Rate = x.InterestRate
-                            },
-                            IsCurrentUserOwner = x.OwnerId == userId
-                        })
-                    .ToList();
+            return Mapper.Map<IList<DealIndexViewModel>>(data, opt => opt.Items["currentUserId"] = userId);
         }
 
         public async Task<IList<DealModel>> GetAllByUser(int userId)
         {
             return
                 data.Where(x => x.OwnerId == userId)
-                    .Select(x => new DealModel
-                    {
-                        Amount = x.Amount,
-                        CreateDate = x.CreateDate,
-                        Id = x.Id,
-                        DayCount = x.DealPeriod.Days,
-                        Description = x.Description,
-                        Rate = x.InterestRate
-                    })
-                    .ToList();
+                    .Select(x => Mapper.Map<DealModel>(x, opt => opt.Items["currentUserId"] = userId)).ToList();
         }
 
         public async Task<DealDetailsViewModel> GetById(int id, int userId)
         {
-            var res = new DealDetailsViewModel();
             var deal = data.FirstOrDefault(x => x.Id == id);
 
-            if (deal != null)
-            {
-                res.IsCurrentUserBorrower = deal.OwnerId == userId;
-                res.IsCurrentUserLender = deal.Offers.Any(x => x.OffererId == userId);
-                res.Deal = Mapper.Map<DealModel>(deal, opt => opt.Items["currentUserId"] = userId);
-                res.CurrentUserId = userId;
-                res.Offers =
-                    deal.Offers.Select(
-                        x =>
-                        new OfferModel
-                            {
-                                DealId = x.DealId,
-                                Id = x.Id,
-                                Rate = x.InterestRate,
-                                IsCurrentUserLender = x.OffererId == userId,
-                                IsApproved = x.IsApproved,
-                                Lender = new UserModel { Id = x.Offerer.Id, FirstName = x.Offerer.FirstName }
-                            });
-                res.CurrentUserOffer = res.Offers?.FirstOrDefault(x => x.Lender.Id == userId);
-            }
-
-            return res;
+            return Mapper.Map<DealDetailsViewModel>(deal, opt => opt.Items["currentUserId"] = userId);
         }
 
         public async Task<Deal> GetByOfferId(int offerId)
@@ -186,14 +124,7 @@ namespace TrueMoney.Services.Services
                 }
             }
 
-            return res.Select(x => new OfferModel
-            {
-                DealId = x.DealId,
-                Id = x.Id,
-                Rate = x.InterestRate,
-                IsCurrentUserLender = x.OffererId == userId,
-                IsApproved = x.IsApproved
-            }).ToList();
+            return Mapper.Map<IList<OfferModel>>(res, opt => opt.Items["currentUserId"] = userId);
         }
 
         public async Task ApplyOffer(int offerId, int dealId)
