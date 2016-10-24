@@ -4,8 +4,8 @@ namespace TrueMoney.Models
 {
     public class UserDetailsViewModel
     {
-        public UserModel User;
+        public UserModel User { get; set; }
 
-        public bool IsCurrentUser;
+        public int CurrentUserId { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace TrueMoney.Web.Controllers
 {
     using System.Threading.Tasks;
     using System.Web.Mvc;
-
+    using Services.Interfaces;
     using TrueMoney.Models.ViewModels;
 
     [Authorize]
@@ -23,8 +23,8 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var list = await this._dealService.GetAllOpen(await CurrentUserId());
-            return this.View(list);
+            var model = await _dealService.GetAllOpen(await CurrentUserId());
+            return View(model);
         }
 
         public async Task<ActionResult> Details(int id)
@@ -136,13 +136,9 @@ namespace TrueMoney.Web.Controllers
             return GoHome();
         }
 
-        public async Task<ActionResult> YouActivity()
+        public async Task<ActionResult> YourActivity() // для меня загадка, почему активностью юзера занимается контроллер сделок
         {
-            var viewModel = new YouActivityViewModel
-            {
-                Deals = await _dealService.GetAllByUser(await CurrentUserId()),
-                Offers = await _dealService.GetAllOffersByUser(await CurrentUserId())
-            };
+            var viewModel = await _dealService.GetYourActivityViewModel(await CurrentUserId());
 
             return View(viewModel);
         }

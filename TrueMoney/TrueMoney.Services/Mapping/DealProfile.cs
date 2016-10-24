@@ -11,8 +11,14 @@
     {
         public DealProfile()
         {
-            CreateMap<Deal, DealModel>().ConvertUsing<DealToDealModelConverter>();
-            CreateMap<Deal, DealDetailsViewModel>().ConvertUsing<DealTDealDetailsViewModelConverter>();
+            CreateMap<Deal, DealModel>()
+                .ForMember(
+                    destination => destination.OwnerFullName,
+                    member => member
+                        .ResolveUsing(
+                            x => $"{x.Owner.FirstName} {x.Owner.LastName}"
+                        ));
+            CreateMap<Deal, DealDetailsViewModel>();
         }
     }
 }

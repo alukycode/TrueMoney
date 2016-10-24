@@ -24,6 +24,8 @@ namespace TrueMoney.Tests
                 new User {Id = 2, FirstName = "Two"},
                 new User {Id = 3, FirstName = "Three"},
             };
+            var userId = 1;
+            var currentUserId = 1;
 
             // Create mock unit of work
             var mockData = new Mock<ITrueMoneyContext>();
@@ -33,11 +35,11 @@ namespace TrueMoney.Tests
             var userService = new UserService(mockData.Object);
 
             // Invoke
-            var result = userService.GetDetails(1, 1).Result;
+            var result = userService.GetDetails(userId, currentUserId).Result;
 
             // Assert
             Assert.NotNull(result);
-            Assert.True(result.IsCurrentUser);
+            Assert.AreEqual(result.CurrentUserId, currentUserId);
             Assert.AreEqual(inMemoryItems.First().FirstName, result.User.FirstName);
         }
     }

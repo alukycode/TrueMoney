@@ -4,7 +4,7 @@
 
     using TrueMoney.Models.Basic;
 
-    public class YouActivityViewModel
+    public class YourActivityViewModel
     {
         public IList<DealModel> Deals { get; set; } = new List<DealModel>();
 

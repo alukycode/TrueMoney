@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using TrueMoney.Services;
+using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Web.Controllers
 {

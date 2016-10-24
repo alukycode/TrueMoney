@@ -28,20 +28,7 @@ namespace TrueMoney.Data.Entities
 
         public string Description { get; set; }
 
-        public long DealPeriodTicks { get; set; }
-
-        [NotMapped]
-        public TimeSpan DealPeriod
-        {
-            get
-            {
-                return TimeSpan.FromTicks(DealPeriodTicks);
-            }
-            set
-            {
-                DealPeriodTicks = value.Ticks;
-            }
-        }
+        public int DealPeriod { get; set; }
 
         public decimal Amount { get; set; }
 
