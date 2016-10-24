@@ -2,7 +2,7 @@
 {
     public class OfferModel
     {
-        //public UserModel Offerer { get; set; }
+        public int OffererId { get; set; }
 
         public bool IsCurrentUserLender { get; set; }
 

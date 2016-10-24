@@ -12,11 +12,11 @@
 <div>
     <h4>@Model.Deal.Id</h4>
     <hr />
-    @if (!Model.Deal.IsOpen)
+    @if (Model.Deal.DealStatus == DealStatus.Closed)
     {
         <text>closed</text>
     }
-    else if (!Model.Deal.IsWaitForApprove)
+    else if (Model.Deal.DealStatus != DealStatus.WaitForApprove)
     {
 
         <dl class="dl-horizontal">
