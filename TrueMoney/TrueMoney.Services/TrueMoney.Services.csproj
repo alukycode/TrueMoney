@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IOfferService.cs" />
     <Compile Include="Mapping\OfferProfile.cs" />
     <Compile Include="Mapping\TypeConverters\DealTDealDetailsViewModelConverter.cs" />
     <Compile Include="Mapping\TypeConverters\DealToDealModelConverter.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Interfaces\IPaymentService.cs" />
     <Compile Include="Mapping\MapperInitializer.cs" />
+    <Compile Include="Services\OfferService.cs" />
     <Compile Include="Services\PaymentService.cs" />
     <Compile Include="Rating\RatingAction.cs" />
     <Compile Include="Rating\RatingHelper.cs" />

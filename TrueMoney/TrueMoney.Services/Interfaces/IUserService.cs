@@ -5,7 +5,7 @@ using TrueMoney.Models;
 using TrueMoney.Models.Account;
 using TrueMoney.Models.Basic;
 
-namespace TrueMoney.Services
+namespace TrueMoney.Services.Interfaces
 {
     public interface IUserService
     {

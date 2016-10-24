@@ -16,7 +16,7 @@
 
         public int DealId { get; set; }
 
-        public bool IsClosed { get; set; }
+        public bool IsClosed { get; set; } //Нахуй это поле? нахуй хранить удаленные предложения??
 
         public bool IsApproved { get; set; }
     }

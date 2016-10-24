@@ -31,7 +31,7 @@
 
         //public bool IsInProgress { get; set; }
 
-        //public UserModel Owner { get; set; }
+        public int OwnerId { get; set; }
 
         public string OwnerFullName { get; set; }
     }

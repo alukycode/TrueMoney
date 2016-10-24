@@ -7,21 +7,40 @@ namespace TrueMoney.Services.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
 
     using AutoMapper;
-
+    using Data;
+    using Interfaces;
     using TrueMoney.Models;
     using TrueMoney.Models.ViewModels;
 
     public class DealService : IDealService
     {
         private readonly IUserService _userService;
+        private readonly IOfferService _offerService;
+        private readonly ITrueMoneyContext _context;
 
-        public DealService(IUserService userService)
+        public DealService(
+            IUserService userService,
+            ITrueMoneyContext context,
+            IOfferService offerService)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            if (offerService == null)
+            {
+                throw new ArgumentNullException(nameof(offerService));
+            }
+
+            _context = context;
             _userService = userService;
+            _offerService = offerService;
 
             // review: по-хорошему, эти данные должны быть в репозитории, в методе-заглушке и возвращаться из него
             data = new List<Deal> // todo
@@ -82,15 +101,29 @@ namespace TrueMoney.Services.Services
 
         private static int number = 3; // что за нумбер блять - ид для новых энитити пока Саня не сделает базу
 
-        public async Task<IList<DealIndexViewModel>> GetAllOpen(int currentUserId)
+        public async Task<DealIndexViewModel> GetAllOpen(int currentUserId) //Пример адекватного метода
         {
-            var result = Mapper.Map<IList<DealIndexViewModel>>(data.Where(x => x.DealStatus == DealStatus.Open));
-            foreach (var item in result) // пока так, ибо дохуя менять, чтобы сделать нормально
+            var openDeals = await _context.Deals.Where(x => x.DealStatus == DealStatus.Open).ToListAsync();
+            var result = new DealIndexViewModel()
             {
-                item.CurrentUserId = currentUserId;
-            }
+                CurrentUserId = currentUserId,
+                Deals = Mapper.Map<List<DealModel>>(openDeals)
+            };
 
             return result;
+        }
+
+        public async Task<YourActivityViewModel> GetYourActivityViewModel(int currentUserId) // проверять, что текущий юзер вообще может вызвать этот метод надо бы на контроллере
+        {
+            var deals = await GetByUser(currentUserId); 
+            var offers = await _offerService.GetByUser(currentUserId);
+            var model = new YourActivityViewModel
+            {
+                Deals = deals, 
+                Offers = offers 
+            };
+
+            return model;
         }
 
         public async Task<IList<DealIndexViewModel>> GetAll(int userId)
@@ -98,11 +131,10 @@ namespace TrueMoney.Services.Services
             return Mapper.Map<IList<DealIndexViewModel>>(data, opt => opt.Items["currentUserId"] = userId);
         }
 
-        public async Task<IList<DealModel>> GetAllByUser(int userId)
+        public async Task<IList<DealModel>> GetByUser(int userId) // еще один пример нормального метода
         {
-            return
-                data.Where(x => x.OwnerId == userId)
-                    .Select(x => Mapper.Map<DealModel>(x, opt => opt.Items["currentUserId"] = userId)).ToList();
+            var deals = await _context.Deals.Where(x => x.OwnerId == userId).ToListAsync();
+            return Mapper.Map<List<DealModel>>(deals);
         }
 
         public async Task<DealDetailsViewModel> GetById(int id, int userId)
@@ -115,20 +147,6 @@ namespace TrueMoney.Services.Services
         public async Task<Deal> GetByOfferId(int offerId)
         {
             return data.FirstOrDefault(x => x.Offers.Any(y => y.Id == offerId));
-        }
-
-        public async Task<IList<OfferModel>> GetAllOffersByUser(int userId)
-        {
-            var res = new List<Offer>();
-            foreach (var deal in data)
-            {
-                if (deal.Offers != null)
-                {
-                    res.AddRange(deal.Offers.Where(x => x.OffererId == userId));
-                }
-            }
-
-            return Mapper.Map<IList<OfferModel>>(res, opt => opt.Items["currentUserId"] = userId);
         }
 
         public async Task ApplyOffer(int offerId, int dealId)
@@ -147,7 +165,7 @@ namespace TrueMoney.Services.Services
         public async Task<CreateDealForm> GetCreateDealForm(int userId)
         {
             var res = new CreateDealForm();
-            var dealsByUser = await GetAllByUser(userId);
+            var dealsByUser = await GetByUser(userId);
             //if (dealsByUser.All(x => x.IsClosed))
             {
                 res.IsUserCanCreateDeal = true; //какого хуя это вообще тут проверяется?? у него даже кнопки создать быть не должно

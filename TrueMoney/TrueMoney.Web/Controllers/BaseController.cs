@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using TrueMoney.Models.Basic;
 using TrueMoney.Services;
+using TrueMoney.Services.Interfaces;
 using TrueMoney.Services.Services;
 
 namespace TrueMoney.Web.Controllers
@@ -30,7 +31,7 @@ namespace TrueMoney.Web.Controllers
 
         protected ActionResult GoHome() // Сомнительный метод, удалять его я, конечно же, не буду.
         {
-            return RedirectToAction("YouActivity", "Deal");
+            return RedirectToAction("YourActivity", "Deal");
         }
     }
 }

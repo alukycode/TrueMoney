@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using TrueMoney.Models.Account;
 using TrueMoney.Services;
+using TrueMoney.Services.Interfaces;
 using TrueMoney.Web.Auth_Identity_Startup;
 
 namespace TrueMoney.Web.Controllers

@@ -9,6 +9,7 @@ using TrueMoney.Data.Entities;
 using TrueMoney.Models;
 using TrueMoney.Models.Account;
 using TrueMoney.Models.Basic;
+using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Services.Services
 {
@@ -28,11 +29,8 @@ namespace TrueMoney.Services.Services
 
             var result = new UserDetailsViewModel
             {
-                User = new UserModel // use mapper here
-                {
-                    FirstName = dbUser.FirstName
-                },
-                IsCurrentUser = currentUserId == userId
+                User = Mapper.Map<UserModel>(dbUser),
+                CurrentUserId = currentUserId
             };
 
             return result;
@@ -41,10 +39,8 @@ namespace TrueMoney.Services.Services
         public async Task<UserModel> GetById(int id)
         {
             var dbUser = await _context.Users.FirstAsync(x => x.Id == id);
-            var userModel = new UserModel // use mapper here
-            {
-                FirstName = dbUser.FirstName
-            };
+            var userModel = Mapper.Map<UserModel>(dbUser);
+
             return userModel;
         }
 
@@ -77,9 +73,9 @@ namespace TrueMoney.Services.Services
             {
                 throw new ArgumentNullException(nameof(id));
             }
+            var dbUser = await _context.Users.FirstAsync(x => x.AspUserId == id);
 
-            throw new NotImplementedException();
-            //return await _userRepository.GetByAspId(id);
+            return Mapper.Map<UserModel>(dbUser);
         }
 
         public async Task<UserModel> GetUserByName(string name)

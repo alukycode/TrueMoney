@@ -21,10 +21,8 @@
     </dl>
 </div>
 <p>
-    @if (@Model.IsCurrentUser)
+    @if (@Model.CurrentUserId == Model.User.Id)
     {
         @Html.ActionLink("Создать заявку на займ", "Create", "Deal")
     }
-
-    @Html.ActionLink("В личный кабинет", "Index")
 </p>
