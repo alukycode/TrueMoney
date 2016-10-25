@@ -114,7 +114,29 @@
 
                 break;
             case DealStatus.Closed:
-
+                var paidCount = Model.Payments.Sum(x => x.Amount);
+                var extraPaidCount = Model.Payments.Sum(x => x.Liability);
+                var actualPeriod = (Model.PaymentPlanModel.CreateTime - Model.Payments.Last().PaidDate).Value.Days;
+                if (Model.IsCurrentUserBorrower)
+                {
+                    <p>ВЫ успешно завершили заем</p>
+                    <p>Отдолжив @Model.Deal.Amount рублей под @Model.Deal.InterestRate на @Model.Deal.DealPeriod день.</p>
+                    if (Model.Deal.DealPeriod <= actualPeriod)
+                    {
+                        <p>Завершили в срок и выплатили @paidCount</p>
+                    }
+                    else
+                    {
+                        <p>Не успели выплатить вовремя и заплатили @paidCount, 
+        из них @(paidCount - Model.Deal.Amount * (100 + Model.Deal.InterestRate)) было потрачено
+        на возмещение задержек выплат</p>
+                    }
+                    <p>Вы потратили @(paidCount - Model.Deal.Amount) рублей.</p>
+                }
+                else if (Model.IsCurrentUserLender)
+                {
+                    <p>Вы заработали @(paidCount - Model.Deal.Amount) рублей за @Model.Deal.DealPeriod</p>
+                }
                 break;
         }
     </dl>
