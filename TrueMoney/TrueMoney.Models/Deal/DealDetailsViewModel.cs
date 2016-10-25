@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+
     using Common.Enums;
     using TrueMoney.Models.Basic;
 
@@ -17,12 +19,18 @@
 
         public bool ShowOffers => IsCurrentUserBorrower;
 
-        public OfferModel CurrentUserOffer { get; set; } // что это? зачем это в деталях сделки??
+        public OfferModel CurrentUserOffer
+        {
+            get
+            {
+                return Offers.FirstOrDefault(x => x.OffererId == CurrentUserId);
+            }
+        }
 
         public IEnumerable<OfferModel> Offers { get; set; }
 
-        public bool IsCanDeleteOffer => IsCurrentUserBorrower && Deal.DealStatus != DealStatus.Closed && Deal.DealStatus != DealStatus.InProgress;
+        public bool CanDeleteOffer => IsCurrentUserBorrower && Deal.DealStatus != DealStatus.Closed && Deal.DealStatus != DealStatus.InProgress;
 
-        //public bool IsMustLoanMoney => IsCurrentUserLender && !Deal.IsWaitForLoan;
+        public bool MustLoanMoney => IsCurrentUserLender && Deal.DealStatus != DealStatus.WaitForLoan;
     }
 }
