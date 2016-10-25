@@ -21,5 +21,7 @@ namespace TrueMoney.Data.Entities
         public decimal Liability { get; set; }
 
         public bool IsPaid { get; set; }
+
+        public DateTime? PaidDate { get; set; }
     }
 }
