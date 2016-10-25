@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Interfaces\IOfferService.cs" />
     <Compile Include="Mapping\OfferProfile.cs" />
+    <Compile Include="Mapping\PaymentPlanMappingProfile.cs" />
     <Compile Include="Mapping\TypeConverters\DealTDealDetailsViewModelConverter.cs" />
     <Compile Include="Mapping\TypeConverters\DealToDealModelConverter.cs" />
     <Compile Include="Mapping\DealProfile.cs" />

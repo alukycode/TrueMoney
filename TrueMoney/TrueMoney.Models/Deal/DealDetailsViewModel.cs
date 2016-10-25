@@ -29,6 +29,8 @@
 
         public IEnumerable<OfferModel> Offers { get; set; }
 
+        public PaymentPlanModel PaymentPlanModel { get; set; }
 
+        public IEnumerable<PaymentModel> Payments { get; set; }
     }
 }

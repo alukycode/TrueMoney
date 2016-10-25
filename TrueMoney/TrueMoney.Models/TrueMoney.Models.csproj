@@ -111,6 +111,8 @@
     <Compile Include="Account\ResetPasswordViewModel.cs" />
     <Compile Include="Account\SendCodeViewModel.cs" />
     <Compile Include="Account\VerifyCodeViewModel.cs" />
+    <Compile Include="Basic\PaymentModel.cs" />
+    <Compile Include="Basic\PaymentPlanModel.cs" />
     <Compile Include="Basic\UserModel.cs" />
     <Compile Include="Deal\CreateDealForm.cs" />
     <Compile Include="CreateOfferForm.cs" />

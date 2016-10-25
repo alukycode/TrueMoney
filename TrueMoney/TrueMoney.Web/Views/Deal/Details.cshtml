@@ -72,7 +72,22 @@
 
                 break;
             case DealStatus.InProgress:
-
+                var number = 1;
+                <p>Deal started @Model.PaymentPlanModel.CreateTime.ToString("D")</p>
+                <dd>
+                    Платежи:
+                    @foreach (var payment in Model.Payments)
+                    {
+                        if (payment.IsPaid)
+                        {
+                            <p>@number++ - paid @payment.Amount + @payment.Liability on payment.PaidDate</p>
+                        }
+                        else
+                        {
+                            <p>@number++ - pay @payment.Amount + @payment.Liability before @payment.DueDate</p>
+                        }
+                    }
+                </dd>
                 break;
             case DealStatus.Closed:
 
