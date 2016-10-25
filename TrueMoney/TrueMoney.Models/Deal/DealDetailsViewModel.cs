@@ -29,8 +29,6 @@
 
         public IEnumerable<OfferModel> Offers { get; set; }
 
-        public bool CanDeleteOffer => IsCurrentUserBorrower && Deal.DealStatus != DealStatus.Closed && Deal.DealStatus != DealStatus.InProgress;
 
-        public bool MustLoanMoney => IsCurrentUserLender && Deal.DealStatus != DealStatus.WaitForLoan;
     }
 }
