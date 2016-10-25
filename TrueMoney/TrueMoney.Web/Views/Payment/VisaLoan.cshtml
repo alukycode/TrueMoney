@@ -2,7 +2,7 @@
 
 <h4>@Model.PaymentName</h4>
 <h5>@Model.PaymentCount</h5>
-@using (Html.BeginForm("Visa", "Payment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("VisaLoan", "Payment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     

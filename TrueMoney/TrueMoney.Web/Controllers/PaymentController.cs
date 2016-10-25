@@ -18,7 +18,7 @@ namespace TrueMoney.Web.Controllers
             _paymentService = paymentService;
         }
 
-        public async Task<ActionResult> Visa(string paymentName, decimal paymentCount, int payForId, int dealId)
+        public async Task<ActionResult> VisaLoan(string paymentName, decimal paymentCount, int payForId, int dealId)
         {
             if (!string.IsNullOrEmpty(paymentName)
                 && paymentCount > 0)
@@ -39,7 +39,7 @@ namespace TrueMoney.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Visa(VisaPaymentViewModel formModel)
+        public async Task<ActionResult> VisaLoan(VisaPaymentViewModel formModel)
         {
             if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)
                 && formModel.PaymentCount > 0)
