@@ -166,10 +166,10 @@ namespace TrueMoney.Services.Services
         {
             var res = new CreateDealForm();
             var dealsByUser = await GetByUser(userId);
-            //if (dealsByUser.All(x => x.IsClosed))
+            if (dealsByUser.All(x => x.DealStatus == DealStatus.Closed))
             {
                 res.IsUserCanCreateDeal = true; //какого хуя это вообще тут проверяется?? у него даже кнопки создать быть не должно
-            }
+            }                                   //Димон: тут как раз это и првоерятеся, рисовать форму или нет
 
             return res;
         }
