@@ -10,7 +10,10 @@
     {
         public OfferProfile()
         {
-            CreateMap<Offer, OfferModel>();
+            CreateMap<Offer, OfferModel>()
+                .ForMember(
+                    destination => destination.OffererFullName,
+                    member => member.ResolveUsing(x => $"{x.Offerer.FirstName} {x.Offerer.LastName}"));
         }
     }
 }

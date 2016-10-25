@@ -7,9 +7,13 @@ namespace TrueMoney.Models
     {
         public string PaymentName { get; set; }
 
+        [Required]
         public decimal PaymentCount { get; set; }
 
+        public bool CanSetPaymentCount { get; set; }
+
         public int PayForId { get; set; }
+
         public int DealId { get; set; }
 
         [Required]

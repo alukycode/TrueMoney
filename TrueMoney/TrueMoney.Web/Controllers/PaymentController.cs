@@ -25,7 +25,7 @@ namespace TrueMoney.Web.Controllers
             {
 
                 return
-                    View(
+                    View("Visa",
                         new VisaPaymentViewModel
                         {
                             PaymentCount = paymentCount,
@@ -64,7 +64,56 @@ namespace TrueMoney.Web.Controllers
                 }
             }
 
-            return View(formModel);
+            return View("Visa", formModel);
+        }
+
+        public async Task<ActionResult> VisaPayout(string paymentName, int payForId, int dealId)
+        {
+            if (!string.IsNullOrEmpty(paymentName))
+            {
+
+                return
+                    View("Visa",
+                        new VisaPaymentViewModel
+                        {
+                            PaymentCount = 0,
+                            PaymentName = paymentName,
+                            PayForId = payForId,
+                            DealId = dealId,
+                            CanSetPaymentCount = true
+                        });
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> VisaPayout(VisaPaymentViewModel formModel)
+        {
+            if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)
+                && formModel.PaymentCount > 0)
+            {
+                var payRes =PaymentResult.Error;// await _paymentService.LendMoney(formModel, await CurrentUserId());
+                switch (payRes)
+                {
+                    case PaymentResult.Success:
+                        return View("Success", formModel);
+                    case PaymentResult.EmptyData:
+                        ModelState.AddModelError("", "Заполните форму");
+                        break;
+                    case PaymentResult.Error:
+                        ModelState.AddModelError("", "Server Error");
+                        break;
+                    case PaymentResult.NotEnoughtMoney:
+                        ModelState.AddModelError("", "Недостаточно средств на счёте");
+                        break;
+                    case PaymentResult.PermissionError:
+                        ModelState.AddModelError("", "Ошибка доступа к счёту");
+                        break;
+                }
+            }
+
+            return View("Visa", formModel);
         }
     }
 }

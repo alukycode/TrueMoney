@@ -309,12 +309,12 @@
     <Content Include="Views\Home\Lend.cshtml" />
     <Content Include="Views\Home\Borrow.cshtml" />
     <Content Include="Views\Deal\CreateOfferForm.cshtml" />
-    <Content Include="Views\Payment\VisaLoan.cshtml" />
     <Content Include="Views\Payment\Success.cshtml" />
     <Content Include="Views\Deal\YourActivity.cshtml" />
     <Content Include="Views\Error\404.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Error\_ExceptionInfo.cshtml" />
+    <Content Include="Views\Payment\Visa.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
