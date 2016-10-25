@@ -59,6 +59,10 @@
     <Compile Include="Migrations\201610221318573_Init.Designer.cs">
       <DependentUpon>201610221318573_Init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610231929213_ChangedDealPeriod.cs" />
+    <Compile Include="Migrations\201610231929213_ChangedDealPeriod.Designer.cs">
+      <DependentUpon>201610231929213_ChangedDealPeriod.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrueMoneyDbInitializer.cs" />
     <Compile Include="Entities\Entity.cs" />
@@ -83,6 +87,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201610221318573_Init.resx">
       <DependentUpon>201610221318573_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610231929213_ChangedDealPeriod.resx">
+      <DependentUpon>201610231929213_ChangedDealPeriod.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

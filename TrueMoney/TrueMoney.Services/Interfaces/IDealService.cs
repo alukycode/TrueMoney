@@ -10,10 +10,10 @@ namespace TrueMoney.Services
 
     public interface IDealService
     {
-        Task ApplyOffer(int offerId, int dealId);
+        Task ApplyOffer(int offerId, int userId);
         Task<DealModel> CreateDeal(CreateDealForm createDealForm, int userId);
         Task<DealDetailsViewModel> CreateOffer(CreateOfferForm createOfferForm, int userId);
-        Task DeleteDeal(int dealId);
+        Task DeleteDeal(int dealId, int userId);
         Task<DealModel> FinishDealStartLoan(int userId, int offerId, int dealId);
         Task<IList<DealIndexViewModel>> GetAll(int userId);
         Task<IList<DealModel>> GetAllByUser(int userId);
@@ -22,7 +22,7 @@ namespace TrueMoney.Services
         Task<DealDetailsViewModel> GetById(int id, int userId);
         Task<Deal> GetByOfferId(int offerId);
         Task<DealModel> PaymentFinished(DealModel deal);
-        Task RevertOffer(int offerId);
+        Task RevertOffer(int offerId, int userId);
         Task<CreateDealForm> GetCreateDealForm(int userId);
         Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId);
     }

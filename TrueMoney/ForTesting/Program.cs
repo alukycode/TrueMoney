@@ -16,8 +16,7 @@ namespace ForTesting
         {
             using (var context = new TrueMoneyContext())
             {
-                var temp = context.Users.FirstAsync(x => x.AspUserId == "38fa30b4-9ffc-4e8d-a346-f907dd0d5169").Result;
-                var s = temp.Id;
+                var temp = context.Users.FirstOrDefault();
             }
         }
     }

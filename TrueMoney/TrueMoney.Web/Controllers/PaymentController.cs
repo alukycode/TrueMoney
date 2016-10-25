@@ -7,6 +7,8 @@ namespace TrueMoney.Web.Controllers
 {
     using System.Threading.Tasks;
 
+    using TrueMoney.Services.Interfaces;
+
     public class PaymentController : BaseController
     {
         private readonly IPaymentService _paymentService;
@@ -42,19 +44,7 @@ namespace TrueMoney.Web.Controllers
             if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)
                 && formModel.PaymentCount > 0)
             {
-                var payRes = await _paymentService.LendMoney(
-                    await CurrentUserId(),
-                    formModel.DealId,
-                    formModel.PaymentCount
-                    // todo: create model
-                    //new VisaDetails
-                    //{
-                    //    CardNumber = formModel.CardNumber,
-                    //    CvvCode = formModel.CvvCode,
-                    //    Name = formModel.Name,
-                    //    ValidBefore = formModel.ValidBefore
-                    //}
-                    );
+                var payRes = await _paymentService.LendMoney(formModel, await CurrentUserId());
                 switch (payRes)
                 {
                     case PaymentResult.Success:

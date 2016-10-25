@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
-using TrueMoney.Common.Enums;
-using TrueMoney.Models.Basic;
-
-namespace TrueMoney.Services
+﻿namespace TrueMoney.Services.Interfaces
 {
+    using System.Threading.Tasks;
+
+    using TrueMoney.Common.Enums;
+    using TrueMoney.Models;
+
     public interface IPaymentService
     {
-        Task<PaymentResult> LendMoney(int userId, int dealId, decimal amount);
+        Task<PaymentResult> LendMoney(VisaPaymentViewModel visaPaymentViewModel, int userId);
     }
 }

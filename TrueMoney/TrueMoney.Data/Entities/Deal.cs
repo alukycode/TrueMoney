@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace TrueMoney.Data.Entities
         [Required]
         public User Owner { get; set; }
 
-        public List<Offer> Offers { get; set; }
+        public List<Offer> Offers { get; set; } = new List<Offer>();
 
         public int? PaymentPlanId { get; set; }
 
@@ -27,7 +28,20 @@ namespace TrueMoney.Data.Entities
 
         public string Description { get; set; }
 
-        public TimeSpan DealPeriod { get; set; }
+        public long DealPeriodTicks { get; set; }
+
+        [NotMapped]
+        public TimeSpan DealPeriod
+        {
+            get
+            {
+                return TimeSpan.FromTicks(DealPeriodTicks);
+            }
+            set
+            {
+                DealPeriodTicks = value.Ticks;
+            }
+        }
 
         public decimal Amount { get; set; }
 

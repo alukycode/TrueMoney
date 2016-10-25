@@ -11,7 +11,7 @@
 
 <div>
     <h4>@Model.Deal.Id</h4>
-    <hr/>
+    <hr />
     @if (!Model.Deal.IsOpen)
     {
         <text>closed</text>
@@ -62,47 +62,115 @@
             @if (Model.IsCurrentUserBorrower)
             {
                 //show info about offers only for deal borrower
-                foreach (var offer in Model.Deal.Offers)
+                foreach (var offer in Model.Offers)
                 {
                     <p>@offer.FullName предлагает бабало под @offer.Rate %</p>
-                    @Html.ActionLink("Подтвердить предложение", "ApplyOffer", new { offerId = offer.Id, dealId = Model.Deal.Id })
+                    <div class="row">
+                        <div class="col-md-8">
+                            @using (Html.BeginForm("ApplyOffer", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("offerId", offer.Id)
+                                @Html.Hidden("dealId", Model.Deal.Id)
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <input type="submit" value="Подтвердить предложение" class="btn btn-default" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
                 }
             }
             else if (Model.IsCurrentUserLender)
             {
                 <p>Вы предложили свои деньги в размере @Model.Deal.Amount на @Model.Deal.DayCount дней под @Model.CurrentUserOffer.Rate %</p>
-                @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = Model.CurrentUserOffer.Id, dealId = Model.Deal.Id })
+                <div class="row">
+                    <div class="col-md-8">
+                        @using (Html.BeginForm("RevertOffer", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("offerId", Model.CurrentUserOffer.Id)
+                            @Html.Hidden("dealId", Model.Deal.Id)
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Отменить предложение" class="btn btn-default"/>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
             }
             else
             {
-                @Html.ActionLink("Сделать предложение", "CreateOffer", new {dealId = Model.Deal.Id})
+                @Html.ActionLink("Сделать предложение", "CreateOffer", new { dealId = Model.Deal.Id })
             }
         </dl>
     }
     else
     {
-        var mainOffer = Model.Deal.Offers.FirstOrDefault(x =>x.IsWaitForApprove);
+        var mainOffer = Model.Offers.FirstOrDefault(x => x.IsWaitForApprove);
         if (Model.IsCurrentUserBorrower)
         {
             <text>wait for lender approve from user with id =
-                @Model.Deal.Offers.FirstOrDefault(x => x.IsWaitForApprove).LenderId</text>
+                @Model.Offers.FirstOrDefault(x => x.IsWaitForApprove).Lender.Id</text>
         }
         else if (mainOffer != null && mainOffer.IsCurrentUserLender)
         {
-            @Html.ActionLink("Дать взаймы", "FinishDeal", new { offerId = mainOffer.Id, dealId = Model.Deal.Id })
-            @Html.ActionLink("Отменить предложение", "RevertOffer", new { offerId = mainOffer.Id, dealId = Model.Deal.Id })
-
+            <div class="row">
+                <div class="col-md-8">
+                    @using (Html.BeginForm("FinishDeal", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("offerId", mainOffer.Id)
+                        @Html.Hidden("dealId", Model.Deal.Id)
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Дать взаймы" class="btn btn-default"/>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    @using (Html.BeginForm("RevertOffer", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("offerId", mainOffer.Id)
+                        @Html.Hidden("dealId", Model.Deal.Id)
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Отменить предложение" class="btn btn-default" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         }
         else
         {
             <text>sorry, borrower try to finish with user.id =
-                @Model.Deal.Offers.FirstOrDefault(x => x.IsWaitForApprove).LenderId</text>
+                @Model.Offers.FirstOrDefault(x => x.IsWaitForApprove).Lender.Id</text>
         }
     }
 </div>
 @if (Model.IsCanDeleteOffer)
 {
-    @Html.ActionLink("Удалить заявку", "Delete", new { dealId = Model.Deal.Id })
+    <div class="row">
+        <div class="col-md-8">
+            @using (Html.BeginForm("Delete", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("dealId", Model.Deal.Id)
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Удалить заявку" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 }
 
 @if (Model.IsMustLoanMoney)
@@ -114,7 +182,7 @@
              {
                  paymentName = $"Перевод денег на счёт {Model.Deal.BorrowerFullName}. Займ № {Model.Deal.Id}.",
                  paymentCount = Model.Deal.Amount,
-                 payForId = Model.Deal.BorrowerId,
+                 payForId = Model.Deal.Borrower.Id,
                  dealId = Model.Deal.Id
              }), htmlAttributes: null)
     </p>

@@ -53,7 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mapping\OfferProfile.cs" />
+    <Compile Include="Mapping\TypeConverters\DealTDealDetailsViewModelConverter.cs" />
+    <Compile Include="Mapping\TypeConverters\DealToDealModelConverter.cs" />
+    <Compile Include="Mapping\DealProfile.cs" />
     <Compile Include="Mapping\PassportMappingProfile.cs" />
+    <Compile Include="Mapping\TypeConverters\OfferToOfferModelConverter.cs" />
     <Compile Include="Mapping\UserMappingProfile.cs" />
     <Compile Include="Services\DealService.cs" />
     <Compile Include="Interfaces\IDealService.cs" />
