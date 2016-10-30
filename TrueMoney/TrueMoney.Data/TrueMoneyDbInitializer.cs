@@ -17,7 +17,22 @@ namespace TrueMoney.Data
 
         public static void InitializeData(TrueMoneyContext context)
         {
-            List<User> users = new List<User>
+            List<User> users = GenerateUsers();
+
+            var user = users.First();
+            user.Deals = GenerateDeals(users.Skip(1).ToList());
+
+            foreach (var item in users)
+            {
+                context.Users.Add(item);
+            }
+
+            context.SaveChanges();
+        }
+
+        private static List<User> GenerateUsers()
+        {
+            return new List<User>
             {
                 new User
                 {
@@ -53,18 +68,6 @@ namespace TrueMoney.Data
                     BankAccountNumber = "test",
                 }
             };
-
-            var user = users.First();
-            var offerer = users.ElementAt(1);
-            user.Deals = GenerateDeals(offerer);
-            user.Deals.First().PaymentPlan = GeneratePlan();
-
-            foreach (var item in users)
-            {
-                context.Users.Add(item);
-            }
-
-            context.SaveChanges();
         }
 
         private static PaymentPlan GeneratePlan()
@@ -88,8 +91,16 @@ namespace TrueMoney.Data
             };
         }
 
-        private static List<Deal> GenerateDeals(User offerer)
+        private static List<Deal> GenerateDeals(List<User> offerers)
         {
+            var offer = new Offer()
+            {
+                CreateTime = DateTime.Now,
+                InterestRate = 10,
+                IsApproved = true,
+                Offerer = offerers[0],
+            };
+
             var result = new List<Deal>()
             {
                 new Deal()
@@ -101,14 +112,10 @@ namespace TrueMoney.Data
                     DealStatus = DealStatus.InProgress,
                     Offers = new List<Offer>()
                     {
-                        new Offer()
-                        {
-                            CreateTime = DateTime.Now,
-                            InterestRate = 10,
-                            IsApproved = true,
-                            Offerer = offerer,
-                        }
-                    }
+                        offer,
+                    },
+                    ResultOffer = offer,
+                    PaymentPlan = GeneratePlan()
                 },
                 new Deal()
                 {
@@ -116,6 +123,52 @@ namespace TrueMoney.Data
                     CreateDate = DateTime.Now,
                     DealPeriod = 60,
                     InterestRate = 2,
+                    Offers = new List<Offer>()
+                    {
+                        new Offer()
+                        {
+                            CreateTime = DateTime.Now,
+                            InterestRate = 20,
+                            IsApproved = true,
+                            Offerer = offerers[0],
+                        }
+                    },
+                },
+                new Deal
+                {
+                    CreateDate = new DateTime(2016, 10, 09),
+                    InterestRate = 25,
+                    Description = "for business",
+                    Amount = 100
+                },
+                new Deal
+                {
+                    Amount = 200,
+                    CreateDate = new DateTime(2016, 10, 09),
+                    InterestRate = 25,
+                    Description = "to buy keyboard",
+                    Offers = new List<Offer>
+                    {
+                        new Offer
+                        {
+                            Offerer = offerers[1],
+                            CreateTime = new DateTime(2016,10,09),
+                            InterestRate = 20
+                        },
+                        new Offer
+                        {
+                            Offerer = offerers[0],
+                            CreateTime = new DateTime(2016,10,09),
+                            InterestRate = 21
+                        }
+                    },
+                },
+                new Deal
+                {
+                    CreateDate = new DateTime(2016, 10, 09),
+                    InterestRate = 5,
+                    Description = "to rent a bitches",
+                    Amount = 300
                 }
             };
 

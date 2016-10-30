@@ -12,7 +12,7 @@ namespace TrueMoney.Data.Entities
         public int PaymentPlanId { get; set; }
 
         [Required]
-        public PaymentPlan PaymentPlan { get; set; }
+        public virtual PaymentPlan PaymentPlan { get; set; }
 
         public DateTime DateOfPayment { get; set; }
 

@@ -71,6 +71,10 @@
     <Compile Include="Migrations\201610251318425_AddedPaidDate.Designer.cs">
       <DependentUpon>201610251318425_AddedPaidDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610302057009_AddedResultOffer.cs" />
+    <Compile Include="Migrations\201610302057009_AddedResultOffer.Designer.cs">
+      <DependentUpon>201610302057009_AddedResultOffer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrueMoneyDbInitializer.cs" />
     <Compile Include="Entities\Entity.cs" />
@@ -104,6 +108,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610251318425_AddedPaidDate.resx">
       <DependentUpon>201610251318425_AddedPaidDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610302057009_AddedResultOffer.resx">
+      <DependentUpon>201610302057009_AddedResultOffer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

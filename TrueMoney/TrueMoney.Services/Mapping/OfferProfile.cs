@@ -4,7 +4,6 @@
 
     using TrueMoney.Data.Entities;
     using TrueMoney.Models.Basic;
-    using TrueMoney.Services.Mapping.TypeConverters;
 
     public class OfferProfile : Profile
     {

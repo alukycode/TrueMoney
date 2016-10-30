@@ -10,11 +10,11 @@ namespace TrueMoney.Services.Interfaces
 
     public interface IDealService
     {
-        Task ApplyOffer(int offerId, int userId);
+        Task ApproveOffer(int offerId);
 
-        Task<DealModel> CreateDeal(CreateDealForm createDealForm, int userId);
+        Task<int> CreateDeal(CreateDealForm createDealForm, int userId);
 
-        Task<DealDetailsViewModel> CreateOffer(CreateOfferForm createOfferForm, int userId);
+        Task CreateOffer(CreateOfferForm createOfferForm, int userId);
 
         Task DeleteDeal(int dealId, int userId);
 
@@ -28,11 +28,11 @@ namespace TrueMoney.Services.Interfaces
 
         Task<DealDetailsViewModel> GetById(int id, int userId);
 
-        Task<Deal> GetByOfferId(int offerId);
+        //Task<Deal> GetByOfferId(int offerId); пока не используется, ну и сервисы не должны возвращать сущности базы
 
         Task<DealModel> PaymentFinished(DealModel deal);
 
-        Task RevertOffer(int offerId, int userId);
+        Task RevertOffer(int offerId);
 
         Task<CreateDealForm> GetCreateDealForm(int userId);
 

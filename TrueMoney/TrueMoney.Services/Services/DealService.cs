@@ -1,5 +1,4 @@
-﻿
-using TrueMoney.Common.Enums;
+﻿using TrueMoney.Common.Enums;
 using TrueMoney.Data.Entities;
 using TrueMoney.Models.Basic;
 
@@ -38,68 +37,15 @@ namespace TrueMoney.Services.Services
                 throw new ArgumentNullException(nameof(offerService));
             }
 
+            if (userService == null)
+            {
+                throw new ArgumentNullException(nameof(userService));
+            }
+
             _context = context;
             _userService = userService;
             _offerService = offerService;
-
-            // review: по-хорошему, эти данные должны быть в репозитории, в методе-заглушке и возвращаться из него
-            data = new List<Deal> // todo
-                       {
-                           new Deal
-                               {
-                                   Id = 0,
-                                   Owner = new User { Id = 0 },//todo - get real user
-                                   OwnerId = 0,
-                                   CreateDate = new DateTime(2016, 10, 09),
-                                   InterestRate = 25,
-                                   Description = "for business",
-                                   Amount = 100
-                               },
-                           new Deal
-                               {
-                                   Id = 1,
-                                   Owner = new User { Id = 1 },//todo - get real user
-                                   OwnerId = 1,
-                                   Amount = 200,
-                                   CreateDate = new DateTime(2016, 10, 09),
-                                   InterestRate = 25,
-                                   Description = "to buy keyboard",
-                                   Offers = new List<Offer>
-                                                {
-                                                    new Offer
-                                                        {
-                                                            Id = 0,
-                                                            Offerer = new User { Id = 2 },
-                                                            OffererId = 2,
-                                                            CreateTime = new DateTime(2016,10,09),
-                                                            InterestRate = 20
-                                                        },
-                                                    new Offer
-                                                        {
-                                                            Id = 1,
-                                                            Offerer = new User { Id = 0 },
-                                                            OffererId = 0,
-                                                            CreateTime = new DateTime(2016,10,09),
-                                                            InterestRate = 21
-                                                        }
-                                                },
-                               },
-                           new Deal
-                               {
-                                   Id = 2,
-                                   Owner = new User { Id = 2 },//todo - get real user
-                                   OwnerId = 2,
-                                   CreateDate = new DateTime(2016, 10, 09),
-                                   InterestRate = 5,
-                                   Description = "to rent a bitches",
-                                   Amount = 300
-                               }
-                       };
         }
-
-        static List<Deal> data;
-
-        private static int number = 3; // что за нумбер блять - ид для новых энитити пока Саня не сделает базу
 
         public async Task<DealIndexViewModel> GetAllOpen(int currentUserId) //Пример адекватного метода
         {
@@ -140,37 +86,45 @@ namespace TrueMoney.Services.Services
 
         public async Task<DealDetailsViewModel> GetById(int id, int userId)
         {
+            var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == id);
             var result = new DealDetailsViewModel
                              {
                                  CurrentUserId = userId,
-                                 Offers = Mapper.Map<IList<OfferModel>>(_context.Offers.Where(x => x.DealId == id).ToList()),
-                                 Deal = Mapper.Map<DealModel>(await _context.Deals.FirstOrDefaultAsync(x=>x.Id == id)),
-                                 PaymentPlanModel = Mapper.Map<PaymentPlanModel>(_context.PaymentPlans.FirstOrDefault(x => x.DealId == id))
+                                 Offers = Mapper.Map<IList<OfferModel>>(deal.Offers),
+                                 Deal = Mapper.Map<DealModel>(deal),
+                                 PaymentPlanModel = Mapper.Map<PaymentPlanModel>(deal.PaymentPlan)
                              };
-            if (result.PaymentPlanModel != null)
+            if (deal.PaymentPlan != null)
             {
-                result.Payments = Mapper.Map<IList<PaymentModel>>(_context.Payments.Where(x => x.PaymentPlanId == result.PaymentPlanModel.Id));
+                result.Payments = Mapper.Map<IList<PaymentModel>>(deal.PaymentPlan.Payments);
             }
 
             return result;
         }
 
-        public async Task<Deal> GetByOfferId(int offerId)
+        //public async Task<Deal> GetByOfferId(int offerId)
+        //{
+        //    var deals = await _context.Deals
+        //        .Where(x => x.Offers.Any(y => y.OffererId == offerId))
+        //        .ToListAsync();
+
+        //    return Mapper.Map(deals); // а че за метод? он же вообще не юзается, пока коменчу
+        //}
+
+        public async Task ApproveOffer(int offerId)
         {
-            return data.FirstOrDefault(x => x.Offers.Any(y => y.Id == offerId));
+            var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
+            offer.Deal.DealStatus = DealStatus.WaitForApprove;
+            offer.IsApproved = true;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task ApplyOffer(int offerId, int dealId)
+        public async Task RevertOffer(int offerId)
         {
-            var deal = data.First(x => x.Id == dealId);
-            var offer = deal.Offers.First(x => x.Id == offerId);
-            //deal.WaitForApprove = true; меняй тут state
-        }
-
-        public async Task RevertOffer(int offerId, int userId)
-        {
-            //Тут должен юзаться OfferRepository, чтобы просто получить сущность по id и просто удалить ее, все!
-            throw new NotImplementedException();
+            var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
+            offer.Deal.DealStatus = DealStatus.Open;
+            offer.IsApproved = false;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<CreateDealForm> GetCreateDealForm(int userId)
@@ -179,44 +133,40 @@ namespace TrueMoney.Services.Services
             var dealsByUser = await GetByUser(userId);
             if (dealsByUser.All(x => x.DealStatus == DealStatus.Closed))
             {
-                res.IsUserCanCreateDeal = true; //какого хуя это вообще тут проверяется?? у него даже кнопки создать быть не должно
-            }                                   //Димон: тут как раз это и првоерятеся, рисовать форму или нет
+                res.IsUserCanCreateDeal = true; 
+            }                                   
 
             return res;
         }
 
         public async Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId)
         {
-            var deal = data.FirstOrDefault(x => x.Id == dealId);
+            var deal = await _context.Deals.FirstAsync(x => x.Id == dealId);
             return new CreateOfferForm
             {
                 DealRate = deal.InterestRate,
                 DealId = dealId,
                 IsUserCanCreateOffer =
-                               deal.OwnerId != userId && deal.Offers.All(x => x.OffererId != userId)
+                               deal.OwnerId != userId && deal.Offers.All(x => x.OffererId != userId) //какая-то сомнительная штука, надо будет перепроверить
             };
         }
 
-        public async Task<DealDetailsViewModel> CreateOffer(CreateOfferForm createOfferForm, int userId)
+        public async Task CreateOffer(CreateOfferForm model, int userId)
         {
-            //todo - update db model in db
-            var deal = data.FirstOrDefault(x => x.Id == createOfferForm.DealId);
-            deal.Offers.Add(
-                new Offer
-                {
-                    Id = number++,
-                    CreateTime = DateTime.Now,
-                    Offerer = new User { Id = userId },
-                    Deal = deal,
-                    InterestRate = createOfferForm.Rate
-                });
+            _context.Offers.Add(new Offer
+            {
+                CreateTime = DateTime.Now,
+                OffererId = model.OffererId,
+                DealId = model.DealId,
+                InterestRate = model.InterestRate
+            }); // тут нужен маппинг, но сейчас лень.
 
-            return await GetById(deal.Id, userId);//todo - return deal model from db
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<DealModel> FinishDealStartLoan(int userId, int offerId, int dealId)
+        public async Task<DealModel> FinishDealStartLoan(int userId, int offerId, int dealId) //TODO: отрефакторить по аналогии с предыдущими
         {
-            var deal = data.FirstOrDefault(x => x.Id == dealId);
+            var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
             var finishOffer = deal.Offers.First(x => x.Id == offerId);
             deal.DealStatus = DealStatus.WaitForLoan;
             deal.InterestRate = finishOffer.InterestRate;
@@ -226,26 +176,25 @@ namespace TrueMoney.Services.Services
             return (await GetById(deal.Id, userId)).Deal;//todo - return deal model from db
         }
 
-        public async Task<DealModel> CreateDeal(CreateDealForm createDealForm, int userId)
+        public async Task<int> CreateDeal(CreateDealForm model, int userId)//TODO: отрефакторить по аналогии с предыдущими
         {
-            data.Add(
-                    new Deal
-                    {
-                        Id = number++,
-                        Owner = new User { Id = userId },
-                        CreateDate = DateTime.Now,
-                        Amount = createDealForm.Amount,
-                        Description = createDealForm.Description,
-                        InterestRate = createDealForm.Rate,
-                        PaymentCount = createDealForm.PaymentCount
+            var deal = new Deal
+            {
+                OwnerId = model.OwnerId,
+                CreateDate = DateTime.Now,
+                Amount = model.Amount,
+                Description = model.Description,
+                InterestRate = model.Rate,
+                PaymentCount = model.PaymentCount
 
-                    });
+            };
+            _context.Deals.Add(deal);
             // todo: commented after changing project structure -- user.IsHaveOpenDealOrLoan = true;
-
-            return (await GetById(number - 1, userId)).Deal;//todo - return deal model from db
+            await _context.SaveChangesAsync();
+            return deal.Id; // надо поверить, что работает
         }
 
-        public async Task DeleteDeal(int dealId, int userId)
+        public async Task DeleteDeal(int dealId, int userId)//TODO: отрефакторить по аналогии с предыдущими
         {
             //тут будет просто await _dealRepository.Delete(dealId);
         }

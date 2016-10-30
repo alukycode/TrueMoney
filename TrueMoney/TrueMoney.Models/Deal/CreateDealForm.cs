@@ -1,4 +1,7 @@
-﻿namespace TrueMoney.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
+
+namespace TrueMoney.Models
 {
     public class CreateDealForm
     {
@@ -8,5 +11,8 @@
         public int DayCount { get; set; }
         public string Description { get; set; }
         public bool IsUserCanCreateDeal { get; set; }
+        [Required]
+        [HiddenInput]
+        public int OwnerId { get; set; }
     }
 }

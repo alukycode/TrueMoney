@@ -39,19 +39,19 @@ namespace TrueMoney.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ApplyOffer(int offerId, int dealId)
+        [ValidateAntiForgeryToken] //збс место для аджаксовых запросов
+        public async Task<ActionResult> ApproveOffer(int offerId) 
         {
-            await _dealService.ApplyOffer(offerId, await CurrentUserId());
+            await _dealService.ApproveOffer(offerId);
 
-            return RedirectToAction("Details", new { id = dealId });
+            return null; // хз, че тут пока что возвращать
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RevertOffer(int offerId, int dealId)
+        public async Task<ActionResult> RevertOffer(int offerId, int dealId) // надо тоже в аджакс хуйнуть
         {
-            await _dealService.RevertOffer(offerId, await CurrentUserId());
+            await _dealService.RevertOffer(offerId);
 
             return RedirectToAction("Details", new { id = dealId });
         }
@@ -77,11 +77,12 @@ namespace TrueMoney.Web.Controllers
             {
                 ModelState.AddModelError("PaymentCount", "Неверное количество платежей.");
             }
+
             if (ModelState.IsValid)
             {
-                var deal = await _dealService.CreateDeal(model, await CurrentUserId());
+                var id = await _dealService.CreateDeal(model, await CurrentUserId());
 
-                return RedirectToAction("Details", new { id = deal.Id });
+                return RedirectToAction("Details", new { id = id });
             }
 
             return View(model);
@@ -101,7 +102,7 @@ namespace TrueMoney.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateOffer(CreateOfferForm model)
         {
-            if (model.DealRate > model.Rate)
+            if (model.DealRate > model.InterestRate)
             {
                 ModelState.AddModelError("Rate", "Вы превысили маскимальнодопустимую процентную ставку.");
             }
@@ -115,8 +116,8 @@ namespace TrueMoney.Web.Controllers
             {
                 try
                 {
-                    var deal = await _dealService.CreateOffer(model, await CurrentUserId());
-                    return View("Details", deal);
+                    await _dealService.CreateOffer(model, await CurrentUserId()); 
+                    return RedirectToAction("Details", new { id = model.DealId });// во, редирект, а не создание той же модели и отрисовка той же вьюшки!
                 }
                 catch (Exception)
                 {
