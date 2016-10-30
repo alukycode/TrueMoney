@@ -20,7 +20,7 @@ namespace TrueMoney.Services.Interfaces
 
         Task<DealModel> FinishDealStartLoan(int userId, int offerId, int dealId);
 
-        Task<IList<DealIndexViewModel>> GetAll(int userId);
+        Task<DealIndexViewModel> GetAll(int userId);
 
         Task<IList<DealModel>> GetByUser(int userId);
 

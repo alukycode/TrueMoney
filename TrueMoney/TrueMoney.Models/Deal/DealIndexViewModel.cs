@@ -6,7 +6,7 @@
 
     public class DealIndexViewModel
     {
-        public List<DealModel> Deals { get; set; }
+        public IList<DealModel> Deals { get; set; }
 
         public int CurrentUserId { get; set; }
     }

@@ -103,35 +103,36 @@ namespace TrueMoney.Services.Services
 
         public async Task<DealIndexViewModel> GetAllOpen(int currentUserId) //Пример адекватного метода
         {
-            var openDeals = await _context.Deals.Where(x => x.DealStatus == DealStatus.Open).ToListAsync();
-            var result = new DealIndexViewModel()
+            return new DealIndexViewModel()
             {
                 CurrentUserId = currentUserId,
-                Deals = Mapper.Map<List<DealModel>>(openDeals)
+                Deals = Mapper.Map<List<DealModel>>(await _context.Deals.Where(x => x.DealStatus == DealStatus.Open).ToListAsync())
             };
-
-            return result;
         }
 
-        public async Task<YourActivityViewModel> GetYourActivityViewModel(int currentUserId) // проверять, что текущий юзер вообще может вызвать этот метод надо бы на контроллере
+        public async Task<YourActivityViewModel> GetYourActivityViewModel(int currentUserId)
         {
-            var deals = await GetByUser(currentUserId); 
+            var deals = await GetByUser(currentUserId);
             var offers = await _offerService.GetByUser(currentUserId);
             var model = new YourActivityViewModel
             {
-                Deals = deals, 
-                Offers = offers 
+                Deals = deals,
+                Offers = offers
             };
 
             return model;
         }
 
-        public async Task<IList<DealIndexViewModel>> GetAll(int userId)
+        public async Task<DealIndexViewModel> GetAll(int userId)
         {
-            return Mapper.Map<IList<DealIndexViewModel>>(data, opt => opt.Items["currentUserId"] = userId);
+            return new DealIndexViewModel
+                       {
+                           Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
+                           CurrentUserId = userId
+                       };
         }
 
-        public async Task<IList<DealModel>> GetByUser(int userId) // еще один пример нормального метода
+        public async Task<IList<DealModel>> GetByUser(int userId)
         {
             var deals = await _context.Deals.Where(x => x.OwnerId == userId).ToListAsync();
             return Mapper.Map<List<DealModel>>(deals);
@@ -139,9 +140,19 @@ namespace TrueMoney.Services.Services
 
         public async Task<DealDetailsViewModel> GetById(int id, int userId)
         {
-            var deal = data.FirstOrDefault(x => x.Id == id);
+            var result = new DealDetailsViewModel
+                             {
+                                 CurrentUserId = userId,
+                                 Offers = Mapper.Map<IList<OfferModel>>(_context.Offers.Where(x => x.DealId == id).ToList()),
+                                 Deal = Mapper.Map<DealModel>(await _context.Deals.FirstOrDefaultAsync(x=>x.Id == id)),
+                                 PaymentPlanModel = Mapper.Map<PaymentPlanModel>(_context.PaymentPlans.FirstOrDefault(x => x.DealId == id))
+                             };
+            if (result.PaymentPlanModel != null)
+            {
+                result.Payments = Mapper.Map<IList<PaymentModel>>(_context.Payments.Where(x => x.PaymentPlanId == result.PaymentPlanModel.Id));
+            }
 
-            return Mapper.Map<DealDetailsViewModel>(deal, opt => opt.Items["currentUserId"] = userId);
+            return result;
         }
 
         public async Task<Deal> GetByOfferId(int offerId)
