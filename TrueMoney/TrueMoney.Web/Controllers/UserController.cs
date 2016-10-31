@@ -26,5 +26,19 @@ namespace TrueMoney.Web.Controllers
 
             return View(userModel);
         }
+
+        //[Authorize(Roles = "Administrator")]
+        public async Task<ActionResult> AdminList()
+        {
+            return View(await _userService.GetAdminListModel());
+        }
+
+        //[Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public async Task<ActionResult> Activate(int userId)
+        {
+            await _userService.ActivateUser(userId);
+            return RedirectToAction("AdminList");
+        }
     }
 }

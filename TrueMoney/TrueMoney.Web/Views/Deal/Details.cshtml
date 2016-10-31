@@ -182,10 +182,11 @@
         <p>@offer.OffererFullName предлагает бабало под @offer.InterestRate %</p>
         <div class="row">
             <div class="col-md-8">
-                @using (Ajax.BeginForm("ApproveOffer", "Deal", null, null, new { @class = "form-horizontal", role = "form" }))
+                @using (Html.BeginForm("ApproveOffer", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.Hidden("offerId", offer.Id)
+                    @Html.Hidden("dealId", offer.DealId)
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
                             <input type="submit" value="Подтвердить предложение" class="btn btn-default"/>

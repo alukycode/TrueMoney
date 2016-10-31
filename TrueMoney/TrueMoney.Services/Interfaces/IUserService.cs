@@ -7,6 +7,8 @@ using TrueMoney.Models.Basic;
 
 namespace TrueMoney.Services.Interfaces
 {
+    using TrueMoney.Models.User;
+
     public interface IUserService
     {
         Task<UserDetailsViewModel> GetDetails(int currentUserId, int userId);
@@ -22,5 +24,9 @@ namespace TrueMoney.Services.Interfaces
         Task<UserModel> GetById(int id);
 
         Task<UserModel> GetUserByName(string name);
+
+        Task<AdminListViewModel> GetAdminListModel();
+
+        Task ActivateUser(int userId);
     }
 }

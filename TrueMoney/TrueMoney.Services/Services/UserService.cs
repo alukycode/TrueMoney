@@ -13,6 +13,8 @@ using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Services.Services
 {
+    using TrueMoney.Models.User;
+
     public class UserService : IUserService
     {
         private readonly ITrueMoneyContext _context;
@@ -82,6 +84,36 @@ namespace TrueMoney.Services.Services
         {
             //return await this._userRepository.GetUserByName(name);
             throw new NotImplementedException();
+        }
+
+        public async Task<AdminListViewModel> GetAdminListModel()
+        {
+            var users = Mapper.Map<IList<UserModel>>(await _context.Users.ToListAsync());
+            var passports = Mapper.Map<IList<PassportModel>>(await _context.Passports.ToListAsync());
+
+            return new AdminListViewModel
+                       {
+                           Users =
+                               users.Where(x => x.PassportId.HasValue)
+                               .Select(
+                                   x =>
+                                   new UserAndPassportViewModel
+                                       {
+                                           User = x,
+                                           Passport =
+                                               passports.FirstOrDefault(
+                                                   y =>
+                                                   y.Id == x.PassportId.Value)
+                                       })
+                               .ToList()
+                       };
+        }
+
+        public async Task ActivateUser(int userId)
+        {
+            var user = await _context.Users.FirstAsync(x => x.Id == userId);
+            user.IsActive = true;
+            await _context.SaveChangesAsync();
         }
     }
 }

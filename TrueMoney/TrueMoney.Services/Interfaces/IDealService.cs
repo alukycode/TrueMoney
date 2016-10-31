@@ -6,6 +6,7 @@ using TrueMoney.Models.Basic;
 namespace TrueMoney.Services.Interfaces
 {
     using TrueMoney.Models;
+    using TrueMoney.Models.User;
     using TrueMoney.Models.ViewModels;
 
     public interface IDealService

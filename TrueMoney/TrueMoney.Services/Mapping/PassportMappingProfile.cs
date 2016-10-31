@@ -9,11 +9,14 @@ using TrueMoney.Models.Account;
 
 namespace TrueMoney.Services.Mapping
 {
+    using TrueMoney.Models.Basic;
+
     public class PassportMappingProfile : Profile
     {
         public PassportMappingProfile()
         {
             CreateMap<PassportViewModel, Passport>();
+            CreateMap<Passport, PassportModel>();
         }
     }
 }

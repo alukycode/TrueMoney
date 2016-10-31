@@ -1,7 +1,9 @@
-﻿namespace TrueMoney.Models.ViewModels
+﻿namespace TrueMoney.Models.User
 {
     using System.Collections.Generic;
+    using System.Linq;
 
+    using TrueMoney.Common.Enums;
     using TrueMoney.Models.Basic;
 
     public class YourActivityViewModel
@@ -11,5 +13,13 @@
         public IList<OfferModel> Offers { get; set; } = new List<OfferModel>();
 
         public bool IsCurrentUserActive { get; set; }
+
+        public bool IsHaveOpenDealOrLoan
+        {
+            get
+            {
+                return Deals.Count > 0 && Deals.Any(x => x.DealStatus != DealStatus.Closed);
+            }
+        }
     }
 }

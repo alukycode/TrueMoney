@@ -14,6 +14,7 @@ namespace TrueMoney.Services.Services
     using Data;
     using Interfaces;
     using TrueMoney.Models;
+    using TrueMoney.Models.User;
     using TrueMoney.Models.ViewModels;
 
     public class DealService : IDealService
@@ -60,10 +61,12 @@ namespace TrueMoney.Services.Services
         {
             var deals = await GetByUser(currentUserId);
             var offers = await _offerService.GetByUser(currentUserId);
+            var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);
             var model = new YourActivityViewModel
             {
                 Deals = deals,
-                Offers = offers
+                Offers = offers,
+                IsCurrentUserActive = user.IsActive
             };
 
             return model;

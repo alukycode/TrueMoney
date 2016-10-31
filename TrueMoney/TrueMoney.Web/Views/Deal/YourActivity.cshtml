@@ -1,6 +1,6 @@
 ﻿@using TrueMoney.Models.Basic
 @using TrueMoney.Common.Enums
-@model TrueMoney.Models.ViewModels.YourActivityViewModel
+@model TrueMoney.Models.User.YourActivityViewModel
 
 <div>
     <h4>Личный кабинет</h4>
@@ -23,7 +23,7 @@
 
     @if (Model.IsCurrentUserActive)
     {
-        if (!ViewBag.IsHaveOpenDealOrLoan)
+        if (!Model.IsHaveOpenDealOrLoan)
         {
             @Html.ActionLink("Создать заявку", "Create", "Deal", routeValues: null, htmlAttributes: null)<br/>
         }
@@ -39,7 +39,7 @@
 
     ---------------------------<br />
     <h5>Ваши активные предложения:</h5>
-    @foreach (var item in Model.Offers.Where(x => !x.IsClosed))
+    @*@foreach (var item in Model.Offers.Where(x => !x.IsClosed))
     {
         @RenderOffer(item)
     }
@@ -47,7 +47,7 @@
     @foreach (var item in Model.Offers.Where(x => x.IsClosed))
     {
         @RenderOffer(item)
-    }
+    }*@
 
     ---------------------------<br />
     @Html.ActionLink("Список всех заявок", "Index", "Deal", routeValues: null, htmlAttributes: null)<br />
