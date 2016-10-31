@@ -55,25 +55,9 @@
     <Compile Include="Entities\Payment.cs" />
     <Compile Include="Entities\PaymentPlan.cs" />
     <Compile Include="ITrueMoneyContext.cs" />
-    <Compile Include="Migrations\201610221318573_Init.cs" />
-    <Compile Include="Migrations\201610221318573_Init.Designer.cs">
-      <DependentUpon>201610221318573_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610231929213_ChangedDealPeriod.cs" />
-    <Compile Include="Migrations\201610231929213_ChangedDealPeriod.Designer.cs">
-      <DependentUpon>201610231929213_ChangedDealPeriod.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610232200250_ChangedDealPeriodToDays.cs" />
-    <Compile Include="Migrations\201610232200250_ChangedDealPeriodToDays.Designer.cs">
-      <DependentUpon>201610232200250_ChangedDealPeriodToDays.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610251318425_AddedPaidDate.cs" />
-    <Compile Include="Migrations\201610251318425_AddedPaidDate.Designer.cs">
-      <DependentUpon>201610251318425_AddedPaidDate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610302057009_AddedResultOffer.cs" />
-    <Compile Include="Migrations\201610302057009_AddedResultOffer.Designer.cs">
-      <DependentUpon>201610302057009_AddedResultOffer.cs</DependentUpon>
+    <Compile Include="Migrations\201610311251329_init.cs" />
+    <Compile Include="Migrations\201610311251329_init.Designer.cs">
+      <DependentUpon>201610311251329_init.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrueMoneyDbInitializer.cs" />
@@ -97,20 +81,8 @@
     <Content Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201610221318573_Init.resx">
-      <DependentUpon>201610221318573_Init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610231929213_ChangedDealPeriod.resx">
-      <DependentUpon>201610231929213_ChangedDealPeriod.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610232200250_ChangedDealPeriodToDays.resx">
-      <DependentUpon>201610232200250_ChangedDealPeriodToDays.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610251318425_AddedPaidDate.resx">
-      <DependentUpon>201610251318425_AddedPaidDate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610302057009_AddedResultOffer.resx">
-      <DependentUpon>201610302057009_AddedResultOffer.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610311251329_init.resx">
+      <DependentUpon>201610311251329_init.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

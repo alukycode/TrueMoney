@@ -4,7 +4,6 @@
 
 @{
     ViewBag.Title = "Информация о заявлении " + Model.Deal.Id;
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -17,7 +16,7 @@
         @switch (Model.Deal.DealStatus)
         {
             case DealStatus.Open:
-                if (Model.IsCurrentUserBorrower)
+                if (Model.CurrentUserId == Model.Deal.OwnerId)
                 {
                     @ShowOffers()
                     @ShowDeleteDealForm()
@@ -35,7 +34,7 @@
 
                 break;
             case DealStatus.WaitForApprove:
-                if (Model.IsCurrentUserBorrower)
+                if (Model.CurrentUserId == Model.Deal.OwnerId)
                 {
                     @ShowDeleteDealForm()
                 }
@@ -65,14 +64,14 @@
                 {
                     @ShowLoanMoneyForm()
                 }
-                else if (Model.IsCurrentUserBorrower)
+                else if (Model.CurrentUserId == Model.Deal.OwnerId)
                 {
                     <p>Ожидаем перевод средств от @Model.Offers.FirstOrDefault(x => x.IsApproved).OffererFullName</p>
                 }
 
                 break;
             case DealStatus.InProgress:
-                if (Model.IsCurrentUserBorrower)
+                if (Model.CurrentUserId == Model.Deal.OwnerId)
                 {
                     var number = 1;
                     <p>Deal started @Model.PaymentPlanModel.CreateTime.ToString("D")</p>
@@ -117,7 +116,7 @@
                 var paidCount = Model.Payments.Sum(x => x.Amount);
                 var extraPaidCount = Model.Payments.Sum(x => x.Liability);
                 var actualPeriod = (Model.PaymentPlanModel.CreateTime - Model.Payments.Last().PaidDate).Value.Days;
-                if (Model.IsCurrentUserBorrower)
+                if (Model.CurrentUserId == Model.Deal.OwnerId)
                 {
                     <p>ВЫ успешно завершили заем</p>
                     <p>Отдолжив @Model.Deal.Amount рублей под @Model.Deal.InterestRate на @Model.Deal.DealPeriod день.</p>

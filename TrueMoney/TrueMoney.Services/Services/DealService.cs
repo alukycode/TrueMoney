@@ -114,8 +114,10 @@ namespace TrueMoney.Services.Services
         public async Task ApproveOffer(int offerId)
         {
             var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
-            offer.Deal.DealStatus = DealStatus.WaitForApprove;
             offer.IsApproved = true;
+            await _context.SaveChangesAsync();
+            var deal = _context.Deals.First(x => x.Id == offer.DealId);
+            deal.DealStatus = DealStatus.WaitForApprove;
             await _context.SaveChangesAsync();
         }
 
