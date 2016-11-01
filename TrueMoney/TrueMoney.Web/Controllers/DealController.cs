@@ -93,7 +93,7 @@ namespace TrueMoney.Web.Controllers
             var formModel = await _dealService.GetCreateOfferForm(dealId, await CurrentUserId());
             if (formModel.IsUserCanCreateOffer)
             {
-                return View("CreateOfferForm", formModel);
+                return View(formModel);
             }
 
             return GoHome();

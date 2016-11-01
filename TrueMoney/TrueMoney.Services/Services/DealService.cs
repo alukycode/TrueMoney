@@ -7,6 +7,7 @@ namespace TrueMoney.Services.Services
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Data.Entity.Validation;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -114,12 +115,23 @@ namespace TrueMoney.Services.Services
         //    return Mapper.Map(deals); // а че за метод? он же вообще не юзается, пока коменчу
         //}
 
-        public async Task ApproveOffer(int offerId)
+        public async Task ApproveOffer(int offerId) // не трогайте этот метода, я сейчас с ним разбираюсь! тут странное поведение.
         {
-            var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
-            offer.Deal.DealStatus = DealStatus.WaitForApprove;
-            offer.IsApproved = true;
-            await _context.SaveChangesAsync();
+            try
+            {
+                var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
+                offer.IsApproved = true;
+                await _context.SaveChangesAsync();
+                //var deal = _context.Deals.First(x => x.Id == offer.DealId);
+                var deal = offer.Deal;
+                deal.DealStatus = DealStatus.WaitForApprove;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                var x = ex;
+                throw;
+            }
         }
 
         public async Task RevertOffer(int offerId)

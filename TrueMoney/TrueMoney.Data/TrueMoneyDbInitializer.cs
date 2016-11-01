@@ -18,16 +18,70 @@ namespace TrueMoney.Data
         public static void InitializeData(TrueMoneyContext context)
         {
             List<User> users = GenerateUsers();
-
-            var user = users.First();
-            user.Deals = GenerateDeals(users.Skip(1).ToList());
-
             foreach (var item in users)
             {
                 context.Users.Add(item);
             }
-
             context.SaveChanges();
+
+            var user = users.First();
+            user.Deals = GenerateDeals();
+            context.SaveChanges();
+
+            GenerateOffers(context.Deals.ToList(), users.Skip(1).ToList());
+            context.SaveChanges();
+        }
+
+        private static void GenerateOffers(List<Deal> deals, List<User> offerers)
+        {
+            var offer = new Offer()
+            {
+                CreateTime = DateTime.Now,
+                InterestRate = 10,
+                IsApproved = true,
+                Offerer = offerers[0],
+            };
+            var deal = deals.First();
+            deal.Offers = new List<Offer>
+            {
+                offer,
+                new Offer
+                {
+                    CreateTime = DateTime.Now,
+                    InterestRate = 20,
+                    IsApproved = true,
+                    Offerer = offerers[0],
+                }
+            };
+            deal.ResultOffer = offer;
+            deal.DealStatus = DealStatus.InProgress;
+
+            deals[1].Offers = new List<Offer>()
+            {
+                new Offer
+                {
+                    CreateTime = DateTime.Now,
+                    InterestRate = 20,
+                    IsApproved = true,
+                    Offerer = offerers[0],
+                }
+            };
+
+            deals[2].Offers = new List<Offer>
+            {
+                new Offer
+                {
+                    Offerer = offerers[1],
+                    CreateTime = new DateTime(2016,10,09),
+                    InterestRate = 20
+                },
+                new Offer
+                {
+                    Offerer = offerers[0],
+                    CreateTime = new DateTime(2016,10,09),
+                    InterestRate = 21
+                }
+            };
         }
 
         private static List<User> GenerateUsers()
@@ -91,16 +145,8 @@ namespace TrueMoney.Data
             };
         }
 
-        private static List<Deal> GenerateDeals(List<User> offerers)
+        private static List<Deal> GenerateDeals()
         {
-            var offer = new Offer()
-            {
-                CreateTime = DateTime.Now,
-                InterestRate = 10,
-                IsApproved = true,
-                Offerer = offerers[0],
-            };
-
             var result = new List<Deal>()
             {
                 new Deal()
@@ -109,12 +155,6 @@ namespace TrueMoney.Data
                     CreateDate = DateTime.Now,
                     DealPeriod = 5000,
                     InterestRate = 12,
-                    DealStatus = DealStatus.InProgress,
-                    Offers = new List<Offer>()
-                    {
-                        offer,
-                    },
-                    ResultOffer = offer,
                     PaymentPlan = GeneratePlan()
                 },
                 new Deal()
@@ -123,16 +163,6 @@ namespace TrueMoney.Data
                     CreateDate = DateTime.Now,
                     DealPeriod = 60,
                     InterestRate = 2,
-                    Offers = new List<Offer>()
-                    {
-                        new Offer()
-                        {
-                            CreateTime = DateTime.Now,
-                            InterestRate = 20,
-                            IsApproved = true,
-                            Offerer = offerers[0],
-                        }
-                    },
                 },
                 new Deal
                 {
@@ -146,22 +176,7 @@ namespace TrueMoney.Data
                     Amount = 200,
                     CreateDate = new DateTime(2016, 10, 09),
                     InterestRate = 25,
-                    Description = "to buy keyboard",
-                    Offers = new List<Offer>
-                    {
-                        new Offer
-                        {
-                            Offerer = offerers[1],
-                            CreateTime = new DateTime(2016,10,09),
-                            InterestRate = 20
-                        },
-                        new Offer
-                        {
-                            Offerer = offerers[0],
-                            CreateTime = new DateTime(2016,10,09),
-                            InterestRate = 21
-                        }
-                    },
+                    Description = "to buy keyboard",                    
                 },
                 new Deal
                 {
