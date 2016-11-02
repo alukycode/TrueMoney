@@ -5,6 +5,7 @@ using TrueMoney.Models.Basic;
 namespace TrueMoney.Services.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -35,6 +36,12 @@ namespace TrueMoney.Services.Services
             _bankApi = bankApi;
             _context = context;
         }
+
+        public PaymentService(ITrueMoneyContext context)
+        {
+            _context = context;
+        }
+
         public async Task<PaymentResult> LendMoney(VisaPaymentViewModel visaPaymentViewModel, int currentUserId)
         {
             var deal = await _context.Deals
@@ -56,7 +63,12 @@ namespace TrueMoney.Services.Services
             {
                 case BankResponse.Success:
                     deal.DealStatus = DealStatus.InProgress;
-                    var paymentPlan = new PaymentPlan { CreateTime = DateTime.Now, DealId = deal.Id, Deal = deal };
+                    var paymentPlan = new PaymentPlan
+                                          {
+                                              CreateTime = DateTime.Now, DealId = deal.Id, Deal = deal,
+                                              Payments = CalculatePayments(deal)
+                                          };
+                    deal.PaymentPlan = paymentPlan;
                     _context.PaymentPlans.Add(paymentPlan);
                     await _context.SaveChangesAsync();
                     
@@ -68,6 +80,38 @@ namespace TrueMoney.Services.Services
                 default:
                     return PaymentResult.Error;
             }
+        }
+
+        public List<Payment> CalculatePayments(Deal deal)
+        {
+            var paymentList = new List<Payment>();
+            var periodAmount = deal.Amount / deal.PaymentCount;
+            var extraAmount = deal.Amount % deal.PaymentCount;
+            var period = deal.DealPeriod / deal.PaymentCount;
+            var extraTime = deal.DealPeriod % deal.PaymentCount;
+            var currentDate = DateTime.Now.AddDays(period + extraTime);
+            paymentList.Add(new Payment
+                                {
+                                    Amount = periodAmount+extraAmount,
+                                    DueDate = currentDate,
+                                    Liability = 0,
+                                    PaymentPlan = deal.PaymentPlan,
+                                    PaymentPlanId = deal.PaymentPlanId.Value
+            });
+            var number = 1;
+            while (number < deal.PaymentCount)
+            {
+                paymentList.Add(new Payment
+                {
+                    Amount = periodAmount,
+                    DueDate = currentDate.AddDays(period * number++),
+                    Liability = 0,
+                    PaymentPlan = deal.PaymentPlan,
+                    PaymentPlanId = deal.PaymentPlanId.Value
+                });
+            }
+
+            return paymentList;
         }
     }
 }
