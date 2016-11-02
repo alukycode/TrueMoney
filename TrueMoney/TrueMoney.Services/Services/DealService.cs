@@ -155,17 +155,17 @@ namespace TrueMoney.Services.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<CreateDealForm> GetCreateDealForm(int userId)
-        {
-            var res = new CreateDealForm();
-            var dealsByUser = await GetByUser(userId);
-            if (dealsByUser.All(x => x.DealStatus == DealStatus.Closed))
-            {
-                res.IsUserCanCreateDeal = true;
-            }
+        //public async Task<CreateDealForm> GetCreateDealForm(int userId) не юзается нигде
+        //{
+        //    var res = new CreateDealForm();
+        //    var dealsByUser = await GetByUser(userId);
+        //    if (dealsByUser.All(x => x.DealStatus == DealStatus.Closed))
+        //    {
+        //        res.IsUserCanCreateDeal = true;
+        //    }
 
-            return res;
-        }
+        //    return res;
+        //}
 
         public async Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId)
         {
@@ -207,19 +207,8 @@ namespace TrueMoney.Services.Services
 
         public async Task<int> CreateDeal(CreateDealForm model, int userId)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            var deal = new Deal
-            {
-                OwnerId = model.OwnerId,
-                CreateDate = DateTime.Now,
-                Amount = model.Amount,
-                Description = model.Description,
-                InterestRate = model.Rate,
-                PaymentCount = model.PaymentCount,
-                DealStatus = DealStatus.Open,
-                DealPeriod = model.DayCount,
-                Owner = user
-            };
+            var deal = Mapper.Map<Deal>(model);
+            deal.OwnerId = userId;
             _context.Deals.Add(deal);
             await _context.SaveChangesAsync();
             return deal.Id;

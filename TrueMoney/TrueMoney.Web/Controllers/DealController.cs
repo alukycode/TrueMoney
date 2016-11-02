@@ -58,7 +58,7 @@ namespace TrueMoney.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RevertOffer(int offerId, int dealId) // надо тоже в аджакс хуйнуть
+        public async Task<ActionResult> RevertOffer(int offerId, int dealId) 
         {
             await _dealService.RevertOffer(offerId);
 
@@ -76,13 +76,13 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Create()
         {
-            return View(new CreateDealForm());
+            return View(new CreateDealForm()); //???
         }
 
         [HttpPost]
         public async Task<ActionResult> Create(CreateDealForm model)
         {
-            if (model.PaymentCount < 1 && model.PaymentCount > model.DayCount)
+            if (model.PaymentCount < 1 && model.PaymentCount > model.DealPeriod)
             {
                 ModelState.AddModelError("PaymentCount", "Неверное количество платежей.");
             }

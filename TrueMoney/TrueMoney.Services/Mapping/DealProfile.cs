@@ -1,5 +1,8 @@
-﻿namespace TrueMoney.Services.Mapping
+﻿using TrueMoney.Models;
+
+namespace TrueMoney.Services.Mapping
 {
+    using System;
     using AutoMapper;
 
     using TrueMoney.Data.Entities;
@@ -19,6 +22,13 @@
                             x => $"{x.Owner.FirstName} {x.Owner.LastName}"
                         ));
             CreateMap<Deal, DealDetailsViewModel>();
+            CreateMap<CreateDealForm, Deal>()
+                .ForMember(
+                    destination => destination.CreateDate,
+                    member => member
+                        .ResolveUsing(
+                            x => DateTime.Now
+                        ));
         }
     }
 }

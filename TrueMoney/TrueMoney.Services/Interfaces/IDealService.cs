@@ -38,7 +38,7 @@ namespace TrueMoney.Services.Interfaces
 
         Task RevertOffer(int offerId);
 
-        Task<CreateDealForm> GetCreateDealForm(int userId);
+        //Task<CreateDealForm> GetCreateDealForm(int userId); почему не юзается?
 
         Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId);
 
