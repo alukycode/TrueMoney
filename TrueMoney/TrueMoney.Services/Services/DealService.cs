@@ -155,19 +155,19 @@ namespace TrueMoney.Services.Services
             await _context.SaveChangesAsync();
         }
 
-        //public async Task<CreateDealForm> GetCreateDealForm(int userId) не юзается нигде
-        //{
-        //    var res = new CreateDealForm();
-        //    var dealsByUser = await GetByUser(userId);
-        //    if (dealsByUser.All(x => x.DealStatus == DealStatus.Closed))
-        //    {
-        //        res.IsUserCanCreateDeal = true;
-        //    }
+        public async Task<CreateDealForm> GetCreateDealForm(int userId)
+        {
+            var res = new CreateDealForm();
+            var dealsByUser = await GetByUser(userId);
+            if (dealsByUser.All(x => x.DealStatus == DealStatus.Closed))
+            {
+                res.IsUserCanCreateDeal = true;
+            }
 
-        //    return res;
-        //}
+            return res;
+        }
 
-        public async Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId)
+public async Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId)
         {
             var deal = await _context.Deals.FirstAsync(x => x.Id == dealId);
             return new CreateOfferForm

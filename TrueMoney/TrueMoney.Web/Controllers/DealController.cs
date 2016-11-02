@@ -76,10 +76,17 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Create()
         {
-            return View(new CreateDealForm()); //???
+            var viewModel = await _dealService.GetCreateDealForm(await CurrentUserId());
+            if (viewModel.IsUserCanCreateDeal)
+            {
+                return View(new CreateDealForm());
+            }
+
+            return GoHome();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateDealForm model)
         {
             if (model.PaymentCount < 1 && model.PaymentCount > model.DealPeriod)
