@@ -214,7 +214,9 @@ namespace TrueMoney.Services.Services
 
         public async Task DeleteDeal(int dealId, int userId)//TODO: отрефакторить по аналогии с предыдущими
         {
-            //тут будет просто await _dealRepository.Delete(dealId);
+            var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
+            _context.Deals.Remove(deal);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<DealModel> PaymentFinished(DealModel deal)
