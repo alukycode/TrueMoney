@@ -76,10 +76,10 @@ namespace TrueMoney.Services.Services
         public async Task<DealIndexViewModel> GetAll(int userId)
         {
             return new DealIndexViewModel
-                       {
-                           Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
-                           CurrentUserId = userId
-                       };
+            {
+                Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
+                CurrentUserId = userId
+            };
         }
 
         public async Task<IList<DealModel>> GetByUser(int userId)
@@ -92,12 +92,12 @@ namespace TrueMoney.Services.Services
         {
             var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == id);
             var result = new DealDetailsViewModel
-                             {
-                                 CurrentUserId = userId,
-                                 Offers = Mapper.Map<IList<OfferModel>>(deal.Offers),
-                                 Deal = Mapper.Map<DealModel>(deal),
-                                 PaymentPlanModel = Mapper.Map<PaymentPlanModel>(deal.PaymentPlan)
-                             };
+            {
+                CurrentUserId = userId,
+                Offers = Mapper.Map<IList<OfferModel>>(deal.Offers),
+                Deal = Mapper.Map<DealModel>(deal),
+                PaymentPlanModel = Mapper.Map<PaymentPlanModel>(deal.PaymentPlan)
+            };
             if (deal.PaymentPlan != null)
             {
                 result.Payments = Mapper.Map<IList<PaymentModel>>(deal.PaymentPlan.Payments);
@@ -115,28 +115,23 @@ namespace TrueMoney.Services.Services
         //    return Mapper.Map(deals); // а че за метод? он же вообще не юзается, пока коменчу
         //}
 
-        public async Task ApproveOffer(int offerId) // не трогайте этот метода, я сейчас с ним разбираюсь! тут странное поведение.
+        public async Task ApproveOffer(int offerId) 
         {
-            try
-            {
-                var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
-                offer.IsApproved = true;
-                await _context.SaveChangesAsync();
-                //var deal = _context.Deals.First(x => x.Id == offer.DealId);
-                var deal = offer.Deal;
-                deal.DealStatus = DealStatus.WaitForApprove;
-                await _context.SaveChangesAsync();
-            }
-            catch (DbEntityValidationException ex)
-            {
-                var x = ex;
-                throw;
-            }
+            var offer = await _context.Offers
+                .Include(x => x.Deal)
+                .Include(x => x.Deal.Owner)
+                .FirstAsync(x => x.Id == offerId);
+            offer.IsApproved = true;
+            var deal = offer.Deal;
+            deal.DealStatus = DealStatus.WaitForApprove;
+            await _context.SaveChangesAsync();
         }
 
         public async Task RevertOffer(int offerId)
         {
-            var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
+            var offer = await _context.Offers
+                .Include(x => x.Deal)
+                .FirstAsync(x => x.Id == offerId);
             offer.Deal.DealStatus = DealStatus.Open;
             offer.IsApproved = false;
             await _context.SaveChangesAsync();
@@ -148,8 +143,8 @@ namespace TrueMoney.Services.Services
             var dealsByUser = await GetByUser(userId);
             if (dealsByUser.All(x => x.DealStatus == DealStatus.Closed))
             {
-                res.IsUserCanCreateDeal = true; 
-            }                                   
+                res.IsUserCanCreateDeal = true;
+            }
 
             return res;
         }

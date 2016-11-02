@@ -1,16 +1,16 @@
 ﻿@using TrueMoney.Common.Enums
 @using TrueMoney.Models
 @model TrueMoney.Models.ViewModels.DealDetailsViewModel
-
 @{
     ViewBag.Title = "Информация о заявлении " + Model.Deal.Id;
 }
 
-<h2>@ViewBag.Title</h2>
+@Scripts.Render("~/bundles/DealFunctions");
 
+<h2>@ViewBag.Title</h2>
 <div>
     <h4>@Model.Deal.Id</h4>
-    <hr/>
+    <hr />
     <dl class="dl-horizontal">
         @ShowInfo()
         @switch (Model.Deal.DealStatus)
@@ -31,7 +31,6 @@
                     @Html.ActionLink("Сделать предложение", "CreateOffer", new { dealId = Model.Deal.Id })
                 }
 
-
                 break;
             case DealStatus.WaitForApprove:
                 if (Model.CurrentUserId == Model.Deal.OwnerId)
@@ -49,7 +48,7 @@
                                 @Html.Hidden("dealId", Model.Deal.Id)
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-10">
-                                        <input type="submit" value="Дать взаймы" class="btn btn-default"/>
+                                        <input type="submit" value="Дать взаймы" class="btn btn-default" />
                                     </div>
                                 </div>
                             }
@@ -126,9 +125,11 @@
                     }
                     else
                     {
-                        <p>Не успели выплатить вовремя и заплатили @paidCount, 
-        из них @(paidCount - Model.Deal.Amount * (100 + Model.Deal.InterestRate)) было потрачено
-        на возмещение задержек выплат</p>
+                        <p>
+                            Не успели выплатить вовремя и заплатили @paidCount,
+                            из них @(paidCount - Model.Deal.Amount * (100 + Model.Deal.InterestRate)) было потрачено
+                            на возмещение задержек выплат
+                        </p>
                     }
                     <p>Вы потратили @(paidCount - Model.Deal.Amount) рублей.</p>
                 }
@@ -140,7 +141,6 @@
         }
     </dl>
 </div>
-
 @helper ShowPayoutForm()
 {
     <h4>перевиди бабло челу</h4>
@@ -154,7 +154,6 @@
              }), htmlAttributes: null)
     </p>
 }
-
 @helper ShowRevertOfferForm()
 {
     <div class="row">
@@ -173,30 +172,67 @@
         </div>
     </div>
 }
-
 @helper ShowOffers()
 {
-    foreach (var offer in Model.Offers)
-    {
-        <p>@offer.OffererFullName предлагает бабало под @offer.InterestRate %</p>
-        <div class="row">
-            <div class="col-md-8">
-                @using (Html.BeginForm("ApproveOffer", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+foreach (var offer in Model.Offers)
+{
+    <p>@offer.OffererFullName предлагает бабало под @offer.InterestRate %</p>
+    <div class="row">
+        <div class="col-md-8">
+            @using (Ajax.BeginForm(
+                "ApproveOffer",
+                "Deal",
+                null,
+                new AjaxOptions()
                 {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("offerId", offer.Id)
-                    @Html.Hidden("dealId", offer.DealId)
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Подтвердить предложение" class="btn btn-default"/>
-                        </div>
+                    OnBegin = "handleApproveClick",
+                    OnSuccess = "handleApproveSuccess"
+                },
+                new
+                {
+                    @class = "form-horizontal",
+                    role = "form",
+                    style = string.Format("display: {0};", offer.IsApproved ? "none" : "inline")
+                }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("offerId", offer.Id)
+                @Html.Hidden("dealId", offer.DealId)
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input id="approveButtonId" type="submit" value="Подтвердить предложение" class="btn btn-default" />
                     </div>
-                }
-            </div>
+                </div>
+            }
+            @using (Ajax.BeginForm(
+                "CanselOfferApprove",
+                "Deal",
+                null,
+                new AjaxOptions()
+                {
+                    OnBegin = "handleCanselApproveClick",
+                    OnSuccess = "handleCanselApproveSuccess"
+                },
+                new
+                {
+                    @class = "form-horizontal",
+                    role = "form",
+                    style = string.Format("display: {0};", offer.IsApproved ? "inline" : "none")
+                }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("offerId", offer.Id)
+                @Html.Hidden("dealId", offer.DealId)
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input id="сanselApproveButtonId" type="submit" value="Отменить предложение" class="btn btn-default" />
+                    </div>
+                </div>
+            }
         </div>
-    }
+    </div>
 }
-
+}
 @helper ShowDeleteDealForm()
 {
     <div class="row">
@@ -214,7 +250,6 @@
         </div>
     </div>
 }
-
 @helper ShowLoanMoneyForm()
 {
     <h4>перевиди бабло челу</h4>
@@ -229,7 +264,6 @@
              }), htmlAttributes: null)
     </p>
 }
-
 @helper ShowInfo()
 {
     <dt>
