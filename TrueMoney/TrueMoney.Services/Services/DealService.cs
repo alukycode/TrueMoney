@@ -144,8 +144,9 @@ namespace TrueMoney.Services.Services
         public async Task RevertOffer(int offerId)
         {
             var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
-            offer.Deal.DealStatus = DealStatus.Open;
-            offer.IsApproved = false;
+            var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == offer.DealId);
+            deal.DealStatus = DealStatus.Open;
+            _context.Offers.Remove(offer);
             await _context.SaveChangesAsync();
         }
 
@@ -199,7 +200,7 @@ namespace TrueMoney.Services.Services
             return (await GetById(deal.Id, userId)).Deal;//todo - return deal model from db
         }
 
-        public async Task<int> CreateDeal(CreateDealForm model, int userId)//TODO: отрефакторить по аналогии с предыдущими
+        public async Task<int> CreateDeal(CreateDealForm model, int userId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             var deal = new Deal
@@ -215,15 +216,19 @@ namespace TrueMoney.Services.Services
                 Owner = user
             };
             _context.Deals.Add(deal);
-            // todo: commented after changing project structure -- user.IsHaveOpenDealOrLoan = true;
             await _context.SaveChangesAsync();
-            return deal.Id; // надо поверить, что работает
+            return deal.Id;
         }
 
         public async Task DeleteDeal(int dealId, int userId)
         {
             var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
             _context.Deals.Remove(deal);
+            var offers = await _context.Offers.Where(x => x.DealId == dealId).ToListAsync();
+            foreach (var offer in offers)
+            {
+                _context.Offers.Remove(offer);
+            }
             await _context.SaveChangesAsync();
         }
 
