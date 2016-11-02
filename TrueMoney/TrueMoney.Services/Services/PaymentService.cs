@@ -56,21 +56,10 @@ namespace TrueMoney.Services.Services
             {
                 case BankResponse.Success:
                     deal.DealStatus = DealStatus.InProgress;
-                    var paymentPlan = new PaymentPlan
-                                          {
-                                              CreateTime = DateTime.Now, DealId = deal.Id,
-                                              Deal = deal
-                                          };
+                    var paymentPlan = new PaymentPlan { CreateTime = DateTime.Now, DealId = deal.Id, Deal = deal };
                     _context.PaymentPlans.Add(paymentPlan);
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        var t = ex;
-                        throw;
-                    }
+                    await _context.SaveChangesAsync();
+                    
                     return PaymentResult.Success;
 
                 case BankResponse.NotEnoughtMoney:
