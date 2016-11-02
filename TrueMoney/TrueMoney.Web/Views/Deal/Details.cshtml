@@ -2,7 +2,7 @@
 @using TrueMoney.Models
 @model TrueMoney.Models.Deal.DealDetailsViewModel
 @{
-    ViewBag.Title = "Информация о заявлении " + Model.Deal.Id;
+    ViewBag.Title = "Информация о займе " + Model.Deal.Id;
 }
 
 @Scripts.Render("~/bundles/DealFunctions")
@@ -16,6 +16,7 @@
         @switch (Model.Deal.DealStatus)
         {
             case DealStatus.Open:
+                ViewBag.Title = "Информация о заявке " + Model.Deal.Id;
                 if (Model.IsCurrentUserOwner)
                 {
                     @ShowOffers()
@@ -81,11 +82,11 @@
                         {
                             if (payment.IsPaid)
                             {
-                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate</p>
+                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.Date</p>
                             }
                             else
                             {
-                                <p>@(number++) - pay @payment.Amount + @payment.Liability before @payment.DueDate</p>
+                                <p>@(number++) - pay @payment.Amount + @payment.Liability before @payment.DueDate.Date</p>
                             }
                         }
                         @ShowPayoutForm()
@@ -101,11 +102,11 @@
                         {
                             if (payment.IsPaid)
                             {
-                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate</p>
+                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.Date</p>
                             }
                             else
                             {
-                                <p>@(number++) - will pay @payment.Amount + @payment.Liability before @payment.DueDate</p>
+                                <p>@(number++) - will pay @payment.Amount + @payment.Liability before @payment.DueDate.Date</p>
                             }
                         }
                     </dd>
@@ -145,7 +146,7 @@
 @helper ShowPayoutForm()
 {
     var nearByPayment = Model.Payments.First(x => !x.IsPaid);
-    var description = $"Надо выплатить { nearByPayment.Amount} + {nearByPayment.Liability} before {nearByPayment.DueDate}";
+    var description = $"Надо выплатить { nearByPayment.Amount} + {nearByPayment.Liability} before {nearByPayment.DueDate.Date}";
     <h4>перевиди бабло челу</h4>
     <p>@description</p>
     <p>
