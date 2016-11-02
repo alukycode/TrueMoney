@@ -16,7 +16,7 @@
         @switch (Model.Deal.DealStatus)
         {
             case DealStatus.Open:
-                if (Model.CurrentUserId == Model.Deal.OwnerId)
+                if (Model.IsCurrentUserBorrower)
                 {
                     @ShowOffers()
                     @ShowDeleteDealForm()
@@ -34,7 +34,7 @@
 
                 break;
             case DealStatus.WaitForApprove:
-                if (Model.CurrentUserId == Model.Deal.OwnerId)
+                if (Model.IsCurrentUserBorrower)
                 {
                     @ShowDeleteDealForm()
                 }
@@ -64,14 +64,14 @@
                 {
                     @ShowLoanMoneyForm()
                 }
-                else if (Model.CurrentUserId == Model.Deal.OwnerId)
+                else if (Model.IsCurrentUserBorrower)
                 {
                     <p>Ожидаем перевод средств от @Model.Offers.FirstOrDefault(x => x.IsApproved).OffererFullName</p>
                 }
 
                 break;
             case DealStatus.InProgress:
-                if (Model.CurrentUserId == Model.Deal.OwnerId)
+                if (Model.IsCurrentUserBorrower)
                 {
                     var number = 1;
                     <p>Deal started @Model.PaymentPlanModel.CreateTime.ToString("D")</p>
@@ -116,7 +116,7 @@
                 var paidCount = Model.Payments.Sum(x => x.Amount);
                 var extraPaidCount = Model.Payments.Sum(x => x.Liability);
                 var actualPeriod = (Model.PaymentPlanModel.CreateTime - Model.Payments.Last().PaidDate).Value.Days;
-                if (Model.CurrentUserId == Model.Deal.OwnerId)
+                if (Model.IsCurrentUserBorrower)
                 {
                     <p>ВЫ успешно завершили заем</p>
                     <p>Отдолжив @Model.Deal.Amount рублей под @Model.Deal.InterestRate на @Model.Deal.DealPeriod день.</p>

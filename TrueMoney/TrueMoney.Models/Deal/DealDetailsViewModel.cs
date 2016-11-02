@@ -11,9 +11,13 @@
     {
         public DealModel Deal { get; set; }
 
+        public bool IsCurrentUserBorrower { get; set; }
+
         public int CurrentUserId { get; set; }
 
         public bool IsCurrentUserLender { get; set; }
+
+        public bool ShowOffers => IsCurrentUserBorrower;
 
         public OfferModel CurrentUserOffer
         {
