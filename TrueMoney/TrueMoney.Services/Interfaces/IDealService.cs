@@ -33,9 +33,7 @@ namespace TrueMoney.Services.Interfaces
         Task<DealDetailsViewModel> GetById(int id, int userId);
 
         //Task<Deal> GetByOfferId(int offerId); пока не используется, ну и сервисы не должны возвращать сущности базы
-
-        Task<DealModel> PaymentFinished(DealModel deal);
-
+        
         Task RevertOffer(int offerId);
 
         Task<CreateDealForm> GetCreateDealForm(int userId);

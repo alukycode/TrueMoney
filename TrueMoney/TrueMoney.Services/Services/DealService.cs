@@ -225,15 +225,6 @@ namespace TrueMoney.Services.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<DealModel> PaymentFinished(DealModel deal)
-        {
-            //deal.DealStatus = DealStatus.InProgress;
-            //deal.PaymentPlan = CalculatePayments(deal);
-            deal.DealStatus = DealStatus.InProgress;
-
-            return deal;
-        }
-
         private PaymentPlan CalculatePayments(Deal deal)
         {
             return new PaymentPlan { Deal = deal, CreateTime = DateTime.Now };
