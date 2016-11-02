@@ -65,12 +65,25 @@ namespace TrueMoney.Services.Services
                     deal.DealStatus = DealStatus.InProgress;
                     var paymentPlan = new PaymentPlan
                                           {
-                                              CreateTime = DateTime.Now, DealId = deal.Id, Deal = deal,
-                                              Payments = CalculatePayments(deal)
+                                              CreateTime = DateTime.Now,
+                                              DealId = deal.Id,
+                                              Deal = deal
                                           };
                     deal.PaymentPlan = paymentPlan;
-                    _context.PaymentPlans.Add(paymentPlan);
+
                     await _context.SaveChangesAsync();
+
+                    paymentPlan = await _context.PaymentPlans.FirstOrDefaultAsync(x => x.DealId == deal.Id);
+                    paymentPlan.Payments = CalculatePayments(deal);
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        var t = ex;
+                        throw;
+                    }
                     
                     return PaymentResult.Success;
 
@@ -96,7 +109,7 @@ namespace TrueMoney.Services.Services
                                     DueDate = currentDate,
                                     Liability = 0,
                                     PaymentPlan = deal.PaymentPlan,
-                                    PaymentPlanId = deal.PaymentPlanId.Value
+                                    PaymentPlanId = deal.PaymentPlan.Id
             });
             var number = 1;
             while (number < deal.PaymentCount)
@@ -107,7 +120,7 @@ namespace TrueMoney.Services.Services
                     DueDate = currentDate.AddDays(period * number++),
                     Liability = 0,
                     PaymentPlan = deal.PaymentPlan,
-                    PaymentPlanId = deal.PaymentPlanId.Value
+                    PaymentPlanId = deal.PaymentPlan.Id
                 });
             }
 

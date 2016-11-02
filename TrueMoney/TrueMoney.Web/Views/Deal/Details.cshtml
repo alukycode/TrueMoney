@@ -81,11 +81,11 @@
                         {
                             if (payment.IsPaid)
                             {
-                                <p>@number++ - paid @payment.Amount + @payment.Liability on @payment.PaidDate</p>
+                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate</p>
                             }
                             else
                             {
-                                <p>@number++ - pay @payment.Amount + @payment.Liability before @payment.DueDate</p>
+                                <p>@(number++) - pay @payment.Amount + @payment.Liability before @payment.DueDate</p>
                             }
                         }
                         @ShowPayoutForm()
@@ -101,11 +101,11 @@
                         {
                             if (payment.IsPaid)
                             {
-                                <p>@number++ - paid @payment.Amount + @payment.Liability on @payment.PaidDate</p>
+                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate</p>
                             }
                             else
                             {
-                                <p>@number++ - will pay @payment.Amount + @payment.Liability before @payment.DueDate</p>
+                                <p>@(number++) - will pay @payment.Amount + @payment.Liability before @payment.DueDate</p>
                             }
                         }
                     </dd>
@@ -144,12 +144,15 @@
 </div>
 @helper ShowPayoutForm()
 {
+    var nearByPayment = Model.Payments.First(x => !x.IsPaid);
+    var description = $"Надо выплатить { nearByPayment.Amount} + {nearByPayment.Liability} before {nearByPayment.DueDate}";
     <h4>перевиди бабло челу</h4>
+    <p>@description</p>
     <p>
-        Visa - @Html.ActionLink("Перечислить займ", "VisaPayout", "Payment", routeValues: new RouteValueDictionary(
+        Visa - @Html.ActionLink("Оплатить", "VisaPayout", "Payment", routeValues: new RouteValueDictionary(
              new
              {
-                 paymentName = $"Выплата по займу #{@Model.Deal.Id}.",
+                 paymentName = $"Выплата по займу #{Model.Deal.Id}." + description,
                  payForId = Model.CurrentUserId,
                  dealId = Model.Deal.Id
              }), htmlAttributes: null)

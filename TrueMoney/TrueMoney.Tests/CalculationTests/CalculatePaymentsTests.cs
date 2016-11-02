@@ -28,8 +28,7 @@
                                         Amount = amount,
                                         DealPeriod = period,
                                         PaymentCount = paymentCount,
-                                        PaymentPlan = new PaymentPlan { CreateTime = DateTime.Now },
-                                        PaymentPlanId = 1
+                                        PaymentPlan = new PaymentPlan { CreateTime = DateTime.Now, Id = 1}
             };
 
             // Create mock unit of work
