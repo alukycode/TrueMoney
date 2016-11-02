@@ -9,7 +9,7 @@
     {
         public DealModel Deal { get; set; }
 
-        public bool IsCurrentUserBorrower => CurrentUserId == Deal.OwnerId;
+        public bool IsCurrentUserOwner => CurrentUserId == Deal.OwnerId;
 
         public bool IsCurrentUserActive { get; set; }
 
@@ -23,7 +23,7 @@
             }
         }
 
-        public bool ShowOffers => IsCurrentUserBorrower;
+        public bool ShowOffers => IsCurrentUserOwner;
 
         public OfferModel CurrentUserOffer
         {

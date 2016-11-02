@@ -227,6 +227,9 @@
     <Compile Include="Auth_Identity_Startup\Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\Deal\DetailsFunctions.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Styles\bootstrap-theme.css" />
     <Content Include="Styles\bootstrap-theme.min.css" />
     <Content Include="Styles\bootstrap.css" />

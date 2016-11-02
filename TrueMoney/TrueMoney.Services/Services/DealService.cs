@@ -76,13 +76,13 @@ namespace TrueMoney.Services.Services
             return model;
         }
 
-        public async Task<DealIndexViewModel> GetAll(int userId)
+        public async Task<DealIndexViewModel> GetAll(int currentUserId)
         {
-            var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == currentUserId);
             return new DealIndexViewModel
             {
                 Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
-                CurrentUserId = userId,
+                CurrentUserId = currentUserId,
                 IsCurrentUserActive = currentUser.IsActive
             };
         }
@@ -122,23 +122,28 @@ namespace TrueMoney.Services.Services
         //    return Mapper.Map(deals); // а че за метод? он же вообще не юзается, пока коменчу
         //}
 
-        public async Task ApproveOffer(int offerId) // не трогайте этот метода, я сейчас с ним разбираюсь! тут странное поведение.
+        public async Task ApproveOffer(int offerId) 
         {
-            try
-            {
-                var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
-                offer.IsApproved = true;
-                await _context.SaveChangesAsync();
-                //var deal = _context.Deals.First(x => x.Id == offer.DealId);
-                var deal = offer.Deal;
-                deal.DealStatus = DealStatus.WaitForApprove;
-                await _context.SaveChangesAsync();
-            }
-            catch (DbEntityValidationException ex)
-            {
-                var x = ex;
-                throw;
-            }
+            var offer = await _context.Offers
+                .Include(x => x.Deal)
+                .Include(x => x.Deal.Owner)
+                .FirstAsync(x => x.Id == offerId);
+            offer.IsApproved = true;
+            var deal = offer.Deal;
+            deal.DealStatus = DealStatus.WaitForApprove;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CancelOfferApproval(int offerId)
+        {
+            var offer = await _context.Offers
+                .Include(x => x.Deal)
+                .Include(x => x.Deal.Owner)
+                .FirstAsync(x => x.Id == offerId);
+            offer.IsApproved = false;
+            var deal = offer.Deal;
+            deal.DealStatus = DealStatus.Open;
+            await _context.SaveChangesAsync();
         }
 
         public async Task RevertOffer(int offerId)
@@ -224,11 +229,7 @@ namespace TrueMoney.Services.Services
         {
             var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
             _context.Deals.Remove(deal);
-            var offers = await _context.Offers.Where(x => x.DealId == dealId).ToListAsync();
-            foreach (var offer in offers)
-            {
-                _context.Offers.Remove(offer);
-            }
+            
             await _context.SaveChangesAsync();
         }
 

@@ -1,22 +1,22 @@
 ﻿@using TrueMoney.Common.Enums
 @using TrueMoney.Models
 @model TrueMoney.Models.Deal.DealDetailsViewModel
-
 @{
     ViewBag.Title = "Информация о заявлении " + Model.Deal.Id;
 }
 
-<h2>@ViewBag.Title</h2>
+@Scripts.Render("~/bundles/DealFunctions")
 
+<h2>@ViewBag.Title</h2>
 <div>
     <h4>@Model.Deal.Id</h4>
-    <hr/>
+    <hr />
     <dl class="dl-horizontal">
         @ShowInfo()
         @switch (Model.Deal.DealStatus)
         {
             case DealStatus.Open:
-                if (Model.IsCurrentUserBorrower)
+                if (Model.IsCurrentUserOwner)
                 {
                     @ShowOffers()
                     @ShowDeleteDealForm()
@@ -31,11 +31,11 @@
                     @Html.ActionLink("Сделать предложение", "CreateOffer", new { dealId = Model.Deal.Id })
                 }
 
-
                 break;
             case DealStatus.WaitForApprove:
-                if (Model.IsCurrentUserBorrower)
+                if (Model.IsCurrentUserOwner)
                 {
+                    @ShowOffers()
                     @ShowDeleteDealForm()
                 }
                 else if (Model.IsCurrentUserLender)
@@ -49,7 +49,7 @@
                                 @Html.Hidden("dealId", Model.Deal.Id)
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-10">
-                                        <input type="submit" value="Дать взаймы" class="btn btn-default"/>
+                                        <input type="submit" value="Дать взаймы" class="btn btn-default" />
                                     </div>
                                 </div>
                             }
@@ -64,14 +64,14 @@
                 {
                     @ShowLoanMoneyForm()
                 }
-                else if (Model.IsCurrentUserBorrower)
+                else if (Model.IsCurrentUserOwner)
                 {
                     <p>Ожидаем перевод средств от @Model.Offers.FirstOrDefault(x => x.IsApproved).OffererFullName</p>
                 }
 
                 break;
             case DealStatus.InProgress:
-                if (Model.IsCurrentUserBorrower)
+                if (Model.IsCurrentUserOwner)
                 {
                     var number = 1;
                     <p>Deal started @Model.PaymentPlanModel.CreateTime.ToString("D")</p>
@@ -116,7 +116,7 @@
                 var paidCount = Model.Payments.Sum(x => x.Amount);
                 var extraPaidCount = Model.Payments.Sum(x => x.Liability);
                 var actualPeriod = (Model.PaymentPlanModel.CreateTime - Model.Payments.Last().PaidDate).Value.Days;
-                if (Model.IsCurrentUserBorrower)
+                if (Model.IsCurrentUserOwner)
                 {
                     <p>ВЫ успешно завершили заем</p>
                     <p>Отдолжив @Model.Deal.Amount рублей под @Model.Deal.InterestRate на @Model.Deal.DealPeriod день.</p>
@@ -126,9 +126,11 @@
                     }
                     else
                     {
-                        <p>Не успели выплатить вовремя и заплатили @paidCount, 
-        из них @(paidCount - Model.Deal.Amount * (100 + Model.Deal.InterestRate)) было потрачено
-        на возмещение задержек выплат</p>
+                        <p>
+                            Не успели выплатить вовремя и заплатили @paidCount,
+                            из них @(paidCount - Model.Deal.Amount * (100 + Model.Deal.InterestRate)) было потрачено
+                            на возмещение задержек выплат
+                        </p>
                     }
                     <p>Вы потратили @(paidCount - Model.Deal.Amount) рублей.</p>
                 }
@@ -140,7 +142,6 @@
         }
     </dl>
 </div>
-
 @helper ShowPayoutForm()
 {
     <h4>перевиди бабло челу</h4>
@@ -154,7 +155,6 @@
              }), htmlAttributes: null)
     </p>
 }
-
 @helper ShowRevertOfferForm()
 {
     <div class="row">
@@ -173,30 +173,67 @@
         </div>
     </div>
 }
-
 @helper ShowOffers()
 {
-    foreach (var offer in Model.Offers)
-    {
-        <p>@offer.OffererFullName предлагает бабало под @offer.InterestRate %</p>
-        <div class="row">
-            <div class="col-md-8">
-                @using (Html.BeginForm("ApproveOffer", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+foreach (var offer in Model.Offers)
+{
+    <p>@offer.OffererFullName предлагает бабало под @offer.InterestRate %</p>
+    <div class="row">
+        <div class="col-md-8">
+            @using (Ajax.BeginForm(
+                "ApproveOffer",
+                "Deal",
+                null,
+                new AjaxOptions()
                 {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("offerId", offer.Id)
-                    @Html.Hidden("dealId", offer.DealId)
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Подтвердить предложение" class="btn btn-default"/>
-                        </div>
+                    OnBegin = $"handleApproveClick({offer.Id})",
+                    OnSuccess = $"handleApproveSuccess({offer.Id})",
+                },
+                new
+                {
+                    @id = $"approveButtonId{offer.Id}",
+                    @class = "form-horizontal",
+                    role = "form",
+                    style = string.Format("display: {0};", offer.IsApproved ? "none" : "inline")
+                }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("offerId", offer.Id)
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Подтвердить предложение" class="btn btn-default" />
                     </div>
-                }
-            </div>
+                </div>
+            }
+            @using (Ajax.BeginForm(
+            "CancelOfferApproval",
+            "Deal",
+            null,
+            new AjaxOptions()
+            {
+                OnBegin = $"handleCancelApproveClick({offer.Id})",
+                OnSuccess = $"handleCancelApproveSuccess({offer.Id})",
+            },
+            new
+            {
+                @id = $"cancelApprovalButtonId{offer.Id}",
+                @class = "form-horizontal",
+                role = "form",
+                style = string.Format("display: {0};", !offer.IsApproved ? "none" : "inline")
+            }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("offerId", offer.Id)
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Отменить предложение" class="btn btn-default" />
+                    </div>
+                </div>
+            }
         </div>
-    }
+    </div>
 }
-
+}
 @helper ShowDeleteDealForm()
 {
     <div class="row">
@@ -214,7 +251,6 @@
         </div>
     </div>
 }
-
 @helper ShowLoanMoneyForm()
 {
     <h4>перевиди бабло челу</h4>
@@ -229,7 +265,6 @@
              }), htmlAttributes: null)
     </p>
 }
-
 @helper ShowInfo()
 {
     <dt>

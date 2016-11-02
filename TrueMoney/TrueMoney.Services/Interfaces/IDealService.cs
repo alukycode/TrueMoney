@@ -14,6 +14,8 @@ namespace TrueMoney.Services.Interfaces
     {
         Task ApproveOffer(int offerId);
 
+        Task CancelOfferApproval(int offerId);
+
         Task<int> CreateDeal(CreateDealForm createDealForm, int userId);
 
         Task CreateOffer(CreateOfferForm createOfferForm, int userId);
@@ -22,7 +24,7 @@ namespace TrueMoney.Services.Interfaces
 
         Task<DealModel> FinishDealStartLoan(int userId, int offerId, int dealId);
 
-        Task<DealIndexViewModel> GetAll(int userId);
+        Task<DealIndexViewModel> GetAll(int currentUserId);
 
         Task<IList<DealModel>> GetByUser(int userId);
 
