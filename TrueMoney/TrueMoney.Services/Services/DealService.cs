@@ -179,7 +179,9 @@ namespace TrueMoney.Services.Services
                 CreateTime = DateTime.Now,
                 OffererId = model.OffererId,
                 DealId = model.DealId,
-                InterestRate = model.InterestRate
+                InterestRate = model.InterestRate,
+                Offerer = await _context.Users.FirstOrDefaultAsync(x=>x.Id == userId),
+                Deal = await _context.Deals.FirstOrDefaultAsync(x=>x.Id == model.DealId)
             }); // тут нужен маппинг, но сейчас лень.
 
             await _context.SaveChangesAsync();
