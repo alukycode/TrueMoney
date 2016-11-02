@@ -1,4 +1,5 @@
-﻿@model TrueMoney.Models.Deal.DealIndexViewModel
+﻿@using TrueMoney.Common.Enums
+@model TrueMoney.Models.Deal.DealIndexViewModel
 @{
     ViewBag.Title = "Applications";
 }
@@ -22,7 +23,7 @@
             </th>
             <th></th>
         </tr>
-        @foreach (var item in Model.Deals)
+        @foreach (var item in Model.Deals.Where(x=>x.DealStatus == DealStatus.Open))
         {
             <tr>
                 <td>

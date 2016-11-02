@@ -8,7 +8,7 @@
     {
         public async Task<BankResponse> Do(BankTransaction bankTransaction)
         {
-            var bankData = new BankData().GetBankData();
+            //var bankData = new BankData().GetBankData();
             //todo - check and update bank date
             return BankResponse.Success;
         }

@@ -39,6 +39,7 @@ namespace TrueMoney.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> VisaLoan(VisaPaymentViewModel formModel)
         {
             if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)

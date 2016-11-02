@@ -8,6 +8,7 @@ namespace TrueMoney.Services.Services
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Xml;
 
     using Bank.BankApi;
     using Bank.BankEntities;
@@ -36,7 +37,9 @@ namespace TrueMoney.Services.Services
         }
         public async Task<PaymentResult> LendMoney(VisaPaymentViewModel visaPaymentViewModel, int currentUserId)
         {
-            var deal = await _context.Deals.FirstAsync(x => x.Id == visaPaymentViewModel.DealId); //тут еще, возможно, нужны какие-то проверки с текущим юзером, но если не нужны, то не добавляйте!!!
+            var deal = await _context.Deals
+                .Include(x=>x.Owner)
+                .FirstAsync(x => x.Id == visaPaymentViewModel.DealId); //тут еще, возможно, нужны какие-то проверки с текущим юзером, но если не нужны, то не добавляйте!!!
             var recipient = deal.Offers.First(x => x.IsApproved).Offerer;
             var sender = await _context.Users.FirstAsync(x => x.Id == currentUserId);
 

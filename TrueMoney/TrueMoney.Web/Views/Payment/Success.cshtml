@@ -4,5 +4,7 @@
 }
 
 <h2>Success</h2>
-<p> you paid @Model.PaymentCount to @Model.PayForId in context 
+<p> you paid @Model.PaymentCount to @Model.PayForId in context
     @Model.PaymentName</p>
+
+@Html.ActionLink("Детали займa", "Details", "Deal", routeValues: new { id = Model.DealId }, htmlAttributes: null)

@@ -23,7 +23,7 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var model = await _dealService.GetAllOpen(await CurrentUserId());
+            var model = await _dealService.GetAll(await CurrentUserId());
             return View(model);
         }
 
