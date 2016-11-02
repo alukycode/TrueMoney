@@ -9,6 +9,8 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(m => Model.DealId)
+        @Html.HiddenFor(m => Model.DealRate)
+        @Html.HiddenFor(m => Model.IsUserCanCreateOffer)
 
         <div class="form-group">
             @Html.LabelFor(model => model.InterestRate, htmlAttributes: new { @class = "control-label col-md-2" })

@@ -168,8 +168,7 @@ namespace TrueMoney.Services.Services
             {
                 DealRate = deal.InterestRate,
                 DealId = dealId,
-                IsUserCanCreateOffer =
-                               deal.OwnerId != userId && deal.Offers.All(x => x.OffererId != userId) //какая-то сомнительная штука, надо будет перепроверить
+                IsUserCanCreateOffer = !(deal.Offers != null && deal.Offers.Count > 0 && deal.Offers.All(x => x.OffererId != userId)) //какая-то сомнительная штука, надо будет перепроверить
             };
         }
 

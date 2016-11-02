@@ -102,14 +102,14 @@ namespace TrueMoney.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateOffer(CreateOfferForm model)
         {
-            if (model.DealRate > model.InterestRate)
+            if (model.DealRate < model.InterestRate)
             {
-                ModelState.AddModelError("Rate", "Вы превысили маскимальнодопустимую процентную ставку.");
+                ModelState.AddModelError("InterestRate", "Вы превысили маскимальнодопустимую процентную ставку.");
             }
 
             if (!model.IsUserCanCreateOffer)
             {
-                ModelState.AddModelError("", "Вы ещё не прошли подтверждение регистрации.");
+                ModelState.AddModelError("InterestRate", "Вы ещё не прошли подтверждение регистрации.");
             }
 
             if (ModelState.IsValid)
@@ -119,13 +119,13 @@ namespace TrueMoney.Web.Controllers
                     await _dealService.CreateOffer(model, await CurrentUserId()); 
                     return RedirectToAction("Details", new { id = model.DealId });// во, редирект, а не создание той же модели и отрисовка той же вьюшки!
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "Что-то пошло не так.");
+                    ModelState.AddModelError("InterestRate", "Что-то пошло не так.");
                 }
             }
 
-            return RedirectToAction("Details", new { id = model.DealId });
+            return View("CreateOffer", model);
         }
 
         [HttpPost]
