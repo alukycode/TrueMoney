@@ -4,6 +4,7 @@
 
     using TrueMoney.Data.Entities;
     using TrueMoney.Models.Basic;
+    using TrueMoney.Models.Deal;
     using TrueMoney.Models.ViewModels;
 
     public class DealProfile : Profile

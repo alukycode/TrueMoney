@@ -1,6 +1,6 @@
 ﻿@using TrueMoney.Common.Enums
 @using TrueMoney.Models
-@model TrueMoney.Models.ViewModels.DealDetailsViewModel
+@model TrueMoney.Models.Deal.DealDetailsViewModel
 
 @{
     ViewBag.Title = "Информация о заявлении " + Model.Deal.Id;
@@ -26,7 +26,7 @@
                     <p>Вы предложили свои деньги в размере @Model.Deal.Amount на @Model.Deal.DealPeriod дней под @Model.CurrentUserOffer.InterestRate %</p>
                     @ShowRevertOfferForm()
                 }
-                else
+                else if(Model.IsCurrentUserActive)
                 {
                     @Html.ActionLink("Сделать предложение", "CreateOffer", new { dealId = Model.Deal.Id })
                 }

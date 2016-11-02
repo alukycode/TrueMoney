@@ -1,6 +1,5 @@
-﻿namespace TrueMoney.Models.ViewModels
+﻿namespace TrueMoney.Models.Deal
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -11,6 +10,8 @@
         public IList<DealModel> Deals { get; set; }
 
         public int CurrentUserId { get; set; }
+
+        public bool IsCurrentUserActive { get; set; }
 
         public bool CurrentUserHasActiveDeals
         {

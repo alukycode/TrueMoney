@@ -1,4 +1,4 @@
-﻿@model TrueMoney.Models.ViewModels.DealIndexViewModel
+﻿@model TrueMoney.Models.Deal.DealIndexViewModel
 @{
     ViewBag.Title = "Applications";
 }
@@ -44,7 +44,7 @@
         }
     </table>
 
-    if (!Model.CurrentUserHasActiveDeals)
+    if (!Model.CurrentUserHasActiveDeals && Model.IsCurrentUserActive)
     {
         @Html.ActionLink("Создать заявку", "Create", "Deal", routeValues: null, htmlAttributes: null)
     }

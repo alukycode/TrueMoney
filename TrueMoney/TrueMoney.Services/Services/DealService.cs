@@ -15,6 +15,7 @@ namespace TrueMoney.Services.Services
     using Data;
     using Interfaces;
     using TrueMoney.Models;
+    using TrueMoney.Models.Deal;
     using TrueMoney.Models.User;
     using TrueMoney.Models.ViewModels;
 
@@ -51,10 +52,12 @@ namespace TrueMoney.Services.Services
 
         public async Task<DealIndexViewModel> GetAllOpen(int currentUserId) //Пример адекватного метода
         {
+            var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == currentUserId);
             return new DealIndexViewModel()
             {
                 CurrentUserId = currentUserId,
-                Deals = Mapper.Map<List<DealModel>>(await _context.Deals.Where(x => x.DealStatus == DealStatus.Open).ToListAsync())
+                Deals = Mapper.Map<List<DealModel>>(await _context.Deals.Where(x => x.DealStatus == DealStatus.Open).ToListAsync()),
+                IsCurrentUserActive = currentUser.IsActive
             };
         }
 
@@ -75,11 +78,13 @@ namespace TrueMoney.Services.Services
 
         public async Task<DealIndexViewModel> GetAll(int userId)
         {
+            var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             return new DealIndexViewModel
-                       {
-                           Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
-                           CurrentUserId = userId
-                       };
+            {
+                Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
+                CurrentUserId = userId,
+                IsCurrentUserActive = currentUser.IsActive
+            };
         }
 
         public async Task<IList<DealModel>> GetByUser(int userId)
@@ -90,14 +95,16 @@ namespace TrueMoney.Services.Services
 
         public async Task<DealDetailsViewModel> GetById(int id, int userId)
         {
+            var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == id);
             var result = new DealDetailsViewModel
-                             {
-                                 CurrentUserId = userId,
-                                 Offers = Mapper.Map<IList<OfferModel>>(deal.Offers),
-                                 Deal = Mapper.Map<DealModel>(deal),
-                                 PaymentPlanModel = Mapper.Map<PaymentPlanModel>(deal.PaymentPlan)
-                             };
+            {
+                CurrentUserId = userId,
+                IsCurrentUserActive = currentUser.IsActive,
+                Offers = Mapper.Map<IList<OfferModel>>(deal.Offers),
+                Deal = Mapper.Map<DealModel>(deal),
+                PaymentPlanModel = Mapper.Map<PaymentPlanModel>(deal.PaymentPlan)
+            };
             if (deal.PaymentPlan != null)
             {
                 result.Payments = Mapper.Map<IList<PaymentModel>>(deal.PaymentPlan.Payments);
@@ -148,8 +155,8 @@ namespace TrueMoney.Services.Services
             var dealsByUser = await GetByUser(userId);
             if (dealsByUser.All(x => x.DealStatus == DealStatus.Closed))
             {
-                res.IsUserCanCreateDeal = true; 
-            }                                   
+                res.IsUserCanCreateDeal = true;
+            }
 
             return res;
         }
@@ -193,7 +200,7 @@ namespace TrueMoney.Services.Services
 
         public async Task<int> CreateDeal(CreateDealForm model, int userId)//TODO: отрефакторить по аналогии с предыдущими
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x=> x.Id == userId);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             var deal = new Deal
             {
                 OwnerId = model.OwnerId,
@@ -212,7 +219,7 @@ namespace TrueMoney.Services.Services
             return deal.Id; // надо поверить, что работает
         }
 
-        public async Task DeleteDeal(int dealId, int userId)//TODO: отрефакторить по аналогии с предыдущими
+        public async Task DeleteDeal(int dealId, int userId)
         {
             var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
             _context.Deals.Remove(deal);
