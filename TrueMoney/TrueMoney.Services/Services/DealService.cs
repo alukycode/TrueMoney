@@ -193,6 +193,7 @@ namespace TrueMoney.Services.Services
 
         public async Task<int> CreateDeal(CreateDealForm model, int userId)//TODO: отрефакторить по аналогии с предыдущими
         {
+            var user = await _context.Users.FirstOrDefaultAsync(x=> x.Id == userId);
             var deal = new Deal
             {
                 OwnerId = model.OwnerId,
@@ -200,8 +201,10 @@ namespace TrueMoney.Services.Services
                 Amount = model.Amount,
                 Description = model.Description,
                 InterestRate = model.Rate,
-                PaymentCount = model.PaymentCount
-
+                PaymentCount = model.PaymentCount,
+                DealStatus = DealStatus.Open,
+                DealPeriod = model.DayCount,
+                Owner = user
             };
             _context.Deals.Add(deal);
             // todo: commented after changing project structure -- user.IsHaveOpenDealOrLoan = true;
