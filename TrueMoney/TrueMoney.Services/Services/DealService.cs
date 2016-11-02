@@ -127,6 +127,18 @@ namespace TrueMoney.Services.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task CancelOfferApproval(int offerId)
+        {
+            var offer = await _context.Offers
+                .Include(x => x.Deal)
+                .Include(x => x.Deal.Owner)
+                .FirstAsync(x => x.Id == offerId);
+            offer.IsApproved = false;
+            var deal = offer.Deal;
+            deal.DealStatus = DealStatus.Open;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task RevertOffer(int offerId)
         {
             var offer = await _context.Offers
@@ -188,6 +200,7 @@ namespace TrueMoney.Services.Services
 
         public async Task<int> CreateDeal(CreateDealForm model, int userId)//TODO: отрефакторить по аналогии с предыдущими
         {
+            var user = await _context.Users.FirstOrDefaultAsync(x=> x.Id == userId);
             var deal = new Deal
             {
                 OwnerId = model.OwnerId,
@@ -195,8 +208,10 @@ namespace TrueMoney.Services.Services
                 Amount = model.Amount,
                 Description = model.Description,
                 InterestRate = model.Rate,
-                PaymentCount = model.PaymentCount
-
+                PaymentCount = model.PaymentCount,
+                DealStatus = DealStatus.Open,
+                DealPeriod = model.DayCount,
+                Owner = user
             };
             _context.Deals.Add(deal);
             // todo: commented after changing project structure -- user.IsHaveOpenDealOrLoan = true;
@@ -206,7 +221,9 @@ namespace TrueMoney.Services.Services
 
         public async Task DeleteDeal(int dealId, int userId)//TODO: отрефакторить по аналогии с предыдущими
         {
-            //тут будет просто await _dealRepository.Delete(dealId);
+            var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
+            _context.Deals.Remove(deal);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<DealModel> PaymentFinished(DealModel deal)

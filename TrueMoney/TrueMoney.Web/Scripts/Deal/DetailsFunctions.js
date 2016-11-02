@@ -1,19 +1,19 @@
-﻿function handleApproveClick() {
-    $('#сapproveButtonId').prop('disabled', true);
+﻿function handleApproveClick(offerId) {
+    $('#approveButtonId' + offerId).prop('disabled', true);
 }
 
-function handleApproveSuccess() {
-    $('#сapproveButtonId').prop('disabled', false);
-    $('#сapproveButtonId').hide();
-    $('#anselApproveButtonId').show();
+function handleApproveSuccess(offerId) {
+    $('#approveButtonId' + offerId).prop('disabled', false);
+    $('#approveButtonId' + offerId).hide();
+    $('#cancelApprovalButtonId' + offerId).show();
 }
 
-function handleCanselApproveClick() {
-    $('#сanselApproveButtonId').prop('disabled', true);
+function handleCancelApproveClick(offerId) {
+    $('#cancelApprovalButtonId' + offerId).prop('disabled', true);
 }
 
-function handleCanselApproveSuccess() {
-    $('#сanselApproveButtonId').prop('disabled', false);
-    $('#сanselOfferApprove').hide();
-    $('#approveButtonId').show();
+function handleCancelApproveSuccess(offerId) {
+    $('#cancelApprovalButtonId' + offerId).prop('disabled', false);
+    $('#cancelApprovalButtonId' + offerId).hide();
+    $('#approveButtonId' + offerId).show();
 }

@@ -11,9 +11,19 @@
     {
         public DealModel Deal { get; set; }
 
+        public bool IsCurrentUserOwner => CurrentUserId == Deal.OwnerId;
+
         public int CurrentUserId { get; set; }
 
-        public bool IsCurrentUserLender { get; set; }
+        public bool IsCurrentUserLender
+        {
+            get
+            {
+                return Offers != null && Offers.Any() && Offers.Any(x => x.OffererId == CurrentUserId);
+            }
+        }
+
+        public bool ShowOffers => IsCurrentUserOwner;
 
         public OfferModel CurrentUserOffer
         {

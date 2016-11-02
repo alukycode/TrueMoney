@@ -13,6 +13,8 @@ namespace TrueMoney.Services.Interfaces
     {
         Task ApproveOffer(int offerId);
 
+        Task CancelOfferApproval(int offerId);
+
         Task<int> CreateDeal(CreateDealForm createDealForm, int userId);
 
         Task CreateOffer(CreateOfferForm createOfferForm, int userId);

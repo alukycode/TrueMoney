@@ -39,12 +39,21 @@ namespace TrueMoney.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken] //збс место для аджаксовых запросов
-        public async Task<ActionResult> ApproveOffer(int offerId, int dealId) 
+        [ValidateAntiForgeryToken] 
+        public async Task<ActionResult> ApproveOffer(int offerId) 
         {
             await _dealService.ApproveOffer(offerId);
 
-            return RedirectToAction("Details", new { id = dealId });
+            return null; // потом еще сделаем результат
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken] 
+        public async Task<ActionResult> CancelOfferApproval(int offerId)
+        {
+            await _dealService.CancelOfferApproval(offerId);
+
+            return null;
         }
 
         [HttpPost]

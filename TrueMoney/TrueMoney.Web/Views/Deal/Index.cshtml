@@ -4,7 +4,7 @@
 }
 
 <h2>@ViewBag.Title</h2>
-@if (Model.Deals.Any())
+@if (Model.Deals != null)
 {
     <table class="table">
         <tr>
@@ -43,4 +43,9 @@
             </tr>
         }
     </table>
+
+    if (!Model.CurrentUserHasActiveDeals)
+    {
+        @Html.ActionLink("Создать заявку", "Create", "Deal", routeValues: null, htmlAttributes: null)
+    }
 }
