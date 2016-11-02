@@ -122,7 +122,7 @@ namespace TrueMoney.Services.Services
         //    return Mapper.Map(deals); // а че за метод? он же вообще не юзается, пока коменчу
         //}
 
-        public async Task ApproveOffer(int offerId) 
+        public async Task ApproveOffer(int offerId)
         {
             var offer = await _context.Offers
                 .Include(x => x.Deal)
@@ -167,7 +167,7 @@ namespace TrueMoney.Services.Services
             return res;
         }
 
-public async Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId)
+        public async Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId)
         {
             var deal = await _context.Deals.FirstAsync(x => x.Id == dealId);
             return new CreateOfferForm
@@ -186,23 +186,26 @@ public async Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId)
                 OffererId = model.OffererId,
                 DealId = model.DealId,
                 InterestRate = model.InterestRate,
-                Offerer = await _context.Users.FirstOrDefaultAsync(x=>x.Id == userId),
-                Deal = await _context.Deals.FirstOrDefaultAsync(x=>x.Id == model.DealId)
+                Offerer = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId),
+                Deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == model.DealId)
             }); // тут нужен маппинг, но сейчас лень.
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<DealModel> FinishDealStartLoan(int userId, int offerId, int dealId) //TODO: отрефакторить по аналогии с предыдущими
+        public async Task FinishDealStartLoan(int userId, int offerId, int dealId) //TODO: отрефакторить по аналогии с предыдущими
         {
-            var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _context.Deals
+                .Include(x => x.Offers)
+                .Include(x => x.Owner)
+                .FirstOrDefaultAsync(x => x.Id == dealId);
             var finishOffer = deal.Offers.First(x => x.Id == offerId);
             deal.DealStatus = DealStatus.WaitForLoan;
             deal.InterestRate = finishOffer.InterestRate;
             //finish offer
             finishOffer.IsApproved = true;
 
-            return (await GetById(deal.Id, userId)).Deal;//todo - return deal model from db
+            await _context.SaveChangesAsync();
         }
 
         public async Task<int> CreateDeal(CreateDealForm model, int userId)
@@ -218,7 +221,7 @@ public async Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId)
         {
             var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
             _context.Deals.Remove(deal);
-            
+
             await _context.SaveChangesAsync();
         }
 

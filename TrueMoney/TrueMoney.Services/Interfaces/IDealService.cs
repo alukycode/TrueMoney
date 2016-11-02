@@ -22,7 +22,7 @@ namespace TrueMoney.Services.Interfaces
 
         Task DeleteDeal(int dealId, int userId);
 
-        Task<DealModel> FinishDealStartLoan(int userId, int offerId, int dealId);
+        Task FinishDealStartLoan(int userId, int offerId, int dealId);
 
         Task<DealIndexViewModel> GetAll(int currentUserId);
 
