@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using TrueMoney.Data;
-using TrueMoney.Data.Entities;
-using TrueMoney.Data.Repositories;
-using TrueMoney.Mapping;
+using TrueMoney.Services.Mapping;
 
 namespace ForTesting
 {
@@ -17,7 +16,7 @@ namespace ForTesting
         {
             using (var context = new TrueMoneyContext())
             {
-                var user = context.Users.First();
+                var temp = context.Users.FirstOrDefault();
             }
         }
     }

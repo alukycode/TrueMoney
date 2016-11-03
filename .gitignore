@@ -12,8 +12,15 @@ TrueMoney/TrueMoney.Services/obj/
 /TrueMoney/Bank/obj/
 /TrueMoney/Bank/bin/
 TrueMoney/TrueMoney.Mapping/bin/
-TrueMoney/TrueMoney.Mapping/obj/Debug/
+TrueMoney/TrueMoney.Mapping/obj/
 /TrueMoney/TrueMoney.DependencyInjection/obj
 /TrueMoney/TrueMoney.DependencyInjection/bin
 /TrueMoney/ForTesting/bin
 /TrueMoney/ForTesting/obj
+/TrueMoney/TrueMoney.Models/bin
+/TrueMoney/TrueMoney.Models/obj
+/TrueMoney/TrueMoney.Common/bin
+/TrueMoney/TrueMoney.Common/obj
+/TrueMoney/TrueMoney.Tests/bin
+/TrueMoney/TrueMoney.Tests/obj
+/TrueMoney/TrueMoney.Web/Logs

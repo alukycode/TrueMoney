@@ -1,0 +1,28 @@
+﻿@model TrueMoney.Models.UserDetailsViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.User.FirstName</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.FirstName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @if (@Model.CurrentUserId == Model.User.Id)
+    {
+        @Html.ActionLink("Создать заявку на займ", "Create", "Deal")
+    }
+</p>

@@ -1,15 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace TrueMoney.Data.Entities
 {
-    public class User
+    public class User : Entity
     {
-        public int Id { get; set; }
+        [Required]
+        public string FirstName { get; set; }
 
-        public string Name { get; set; }
+        [Required]
+        public string LastName { get; set; }
+
+        public string MiddleName { get; set; }
+
+        public int? PassportId { get; set; }
+
+        public virtual Passport Passport { get; set; }
+
+        [Required]
+        public string AspUserId { get; set; }
+
+        public bool IsActive { get; set; }
+
+        [Required]
+        public string BankAccountNumber { get; set; }
+
+        public int Rating { get; set; }
+
+        public virtual List<Deal> Deals { get; set; }
+
+        public virtual List<Offer> Offers { get; set; }
     }
 }

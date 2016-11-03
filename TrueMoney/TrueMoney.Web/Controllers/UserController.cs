@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using TrueMoney.Infrastructure.Services;
+using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Web.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         private readonly IUserService _userService;
 
@@ -17,10 +14,31 @@ namespace TrueMoney.Web.Controllers
             _userService = userService;
         }
 
-        public async Task<string> Index()
+        public async Task<ActionResult> Index()
         {
-            var res = await _userService.GetAll();
-            return "Controller " + res.First().Name;
+            return RedirectToAction("Details", new { id = await CurrentUserId() });
+        }
+
+        // нормальный метод
+        public async Task<ActionResult> Details(int id)
+        {
+            var userModel = await _userService.GetDetails(await CurrentUserId(), id);
+
+            return View(userModel);
+        }
+
+        //[Authorize(Roles = "Administrator")]
+        public async Task<ActionResult> AdminList()
+        {
+            return View(await _userService.GetAdminListModel());
+        }
+
+        //[Authorize(Roles = "Administrator")]
+        [HttpPost]
+        public async Task<ActionResult> Activate(int userId)
+        {
+            await _userService.ActivateUser(userId);
+            return RedirectToAction("AdminList");
         }
     }
 }

@@ -52,6 +52,10 @@
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -200,29 +204,42 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="Auth_Identity_Startup\ApplicationSignInManager.cs" />
+    <Compile Include="Auth_Identity_Startup\ApplicationUserManager.cs" />
+    <Compile Include="Auth_Identity_Startup\EmailService.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Auth_Identity_Startup\IdentityInstaller.cs" />
+    <Compile Include="Auth_Identity_Startup\SmsService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DealController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ErrorControler.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Auth_Identity_Startup\ApplicationDbContext.cs" />
+    <Compile Include="Auth_Identity_Startup\ApplicationUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup.cs" />
+    <Compile Include="Auth_Identity_Startup\Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="favicon.ico" />
+    <Content Include="Scripts\Deal\DetailsFunctions.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Styles\bootstrap-theme.css" />
+    <Content Include="Styles\bootstrap-theme.min.css" />
+    <Content Include="Styles\bootstrap.css" />
+    <Content Include="Styles\bootstrap.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Styles\bootstrap.lumen.css" />
+    <Content Include="Styles\bootstrap.lumen.min.css" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
+    <Content Include="Styles\Site.css" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -230,6 +247,15 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Styles\bootstrap.min.css.map" />
+    <Content Include="Styles\bootstrap.css.map" />
+    <Content Include="Styles\bootstrap-theme.min.css.map" />
+    <Content Include="Styles\bootstrap-theme.css.map" />
+    <None Include="Properties\PublishProfiles\TrueMoney.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -253,7 +279,8 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Error\666.cshtml" />
+    <Content Include="Views\Error\500.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
@@ -265,7 +292,7 @@
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\RegisterOld.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
@@ -276,32 +303,41 @@
     <Content Include="Views\Manage\ManageLogins.cshtml" />
     <Content Include="Views\Manage\SetPassword.cshtml" />
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
-    <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Deal\Index.cshtml" />
+    <Content Include="Views\Deal\Details.cshtml" />
+    <Content Include="Views\Deal\Create.cshtml" />
+    <Content Include="Views\User\Details.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Deal\CreateOffer.cshtml" />
+    <Content Include="Views\Payment\Success.cshtml" />
+    <Content Include="Views\Deal\YourActivity.cshtml" />
+    <Content Include="Views\Error\404.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Error\_ExceptionInfo.cshtml" />
+    <Content Include="Views\Payment\Visa.cshtml" />
+    <Content Include="Views\User\AdminList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Partials\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
-    <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TrueMoney.Common\TrueMoney.Common.csproj">
+      <Project>{edca40cd-bf8f-43c3-9320-6061379acf10}</Project>
+      <Name>TrueMoney.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrueMoney.DependencyInjection\TrueMoney.DependencyInjection.csproj">
       <Project>{8fee0685-7ed0-4c01-ad85-c1fcaaa30291}</Project>
       <Name>TrueMoney.DependencyInjection</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TrueMoney.Infrastructure\TrueMoney.Infrastructure.csproj">
-      <Project>{839f9578-e49f-4262-ba8f-4f90b443f7b2}</Project>
-      <Name>TrueMoney.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TrueMoney.Mapping\TrueMoney.Mapping.csproj">
-      <Project>{7127af3c-3562-4268-ac98-eb040eca175f}</Project>
-      <Name>TrueMoney.Mapping</Name>
+    <ProjectReference Include="..\TrueMoney.Models\TrueMoney.Models.csproj">
+      <Project>{c5891618-25ac-4f09-9ece-6cbadf2afcc6}</Project>
+      <Name>TrueMoney.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\TrueMoney.Services\TrueMoney.Services.csproj">
       <Project>{fa74b88c-e50c-49ae-9794-870cdf8274c7}</Project>

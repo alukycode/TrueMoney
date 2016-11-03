@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace TrueMoney.Web
 {
@@ -7,7 +6,7 @@ namespace TrueMoney.Web
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            //filters.Add(new HandleErrorAttribute()); // we don't use MVC customErrors
         }
     }
 }

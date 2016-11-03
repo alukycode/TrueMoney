@@ -38,11 +38,20 @@
       <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -81,22 +90,24 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindsorComponentInstaller.cs" />
     <Compile Include="WindsorControllerFactory.cs" />
+    <Compile Include="WindsorDependencyResolver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Bank\Bank.csproj">
+      <Project>{A64B1A72-DCEA-4709-BAE7-1C232225B127}</Project>
+      <Name>Bank</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ForTesting\ForTesting.csproj">
+      <Project>{9372e273-3434-4f05-b124-6e7cf795b062}</Project>
+      <Name>ForTesting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrueMoney.Data\TrueMoney.Data.csproj">
       <Project>{da385b71-a556-49e8-b871-f659d7640e8a}</Project>
       <Name>TrueMoney.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TrueMoney.Infrastructure\TrueMoney.Infrastructure.csproj">
-      <Project>{839f9578-e49f-4262-ba8f-4f90b443f7b2}</Project>
-      <Name>TrueMoney.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TrueMoney.Mapping\TrueMoney.Mapping.csproj">
-      <Project>{7127af3c-3562-4268-ac98-eb040eca175f}</Project>
-      <Name>TrueMoney.Mapping</Name>
     </ProjectReference>
     <ProjectReference Include="..\TrueMoney.Services\TrueMoney.Services.csproj">
       <Project>{fa74b88c-e50c-49ae-9794-870cdf8274c7}</Project>
