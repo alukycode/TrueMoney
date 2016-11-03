@@ -26,6 +26,8 @@ namespace TrueMoney.Services.Interfaces
 
         Task<DealIndexViewModel> GetAll(int currentUserId);
 
+        Task<DealIndexViewModel> GetAllForAnonymous();
+
         Task<IList<DealModel>> GetByUser(int userId);
 
         Task<DealIndexViewModel> GetAllOpen(int userId);

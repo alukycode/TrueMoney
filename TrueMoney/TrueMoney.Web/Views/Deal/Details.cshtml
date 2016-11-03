@@ -181,7 +181,7 @@
 {
 foreach (var offer in Model.Offers)
 {
-    <p>@offer.OffererFullName предлагает бабало под @offer.InterestRate %</p>
+    <p>@offer.OffererFullName предлагает зайем под @offer.InterestRate %</p>
     <div class="row">
         <div class="col-md-8">
             @using (Ajax.BeginForm(
@@ -257,7 +257,7 @@ foreach (var offer in Model.Offers)
 }
 @helper ShowLoanMoneyForm()
 {
-    <h4>перевиди бабло челу</h4>
+    <h4>перевиди деньги пользователю</h4>
     <p>
         Visa - @Html.ActionLink("Перечислить займ", "VisaLoan", "Payment", routeValues: new RouteValueDictionary(
              new

@@ -9,6 +9,8 @@ namespace TrueMoney.Web.Controllers
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Services.Interfaces;
+
+    using TrueMoney.Models.Deal;
     using TrueMoney.Models.ViewModels;
 
     [Authorize]
@@ -21,9 +23,20 @@ namespace TrueMoney.Web.Controllers
             _dealService = dealService;
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
-            var model = await _dealService.GetAll(await CurrentUserId());
+            DealIndexViewModel model;
+            try
+            {
+                var currentUserId = await CurrentUserId();
+                model = await _dealService.GetAll(currentUserId);
+            }
+            catch (Exception)
+            {
+                model = await _dealService.GetAllForAnonymous();
+            }
+
             return View(model);
         }
 
