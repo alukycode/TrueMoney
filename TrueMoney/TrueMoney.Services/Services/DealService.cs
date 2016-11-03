@@ -76,6 +76,16 @@ namespace TrueMoney.Services.Services
             return model;
         }
 
+        public async Task<DealIndexViewModel> GetAllForAnonymous()
+        {
+            return new DealIndexViewModel
+            {
+                Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
+                CurrentUserId = -1,
+                IsCurrentUserActive = false
+            };
+        }
+
         public async Task<DealIndexViewModel> GetAll(int currentUserId)
         {
             var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == currentUserId);
