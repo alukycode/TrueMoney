@@ -7,5 +7,7 @@
     public interface IBankApi
     {
         Task<BankResponse> Do(BankTransaction bankTransaction);
+
+        Task<BankResponse> DoWithVisa(BankVisaTransaction bankTransaction);
     }
 }

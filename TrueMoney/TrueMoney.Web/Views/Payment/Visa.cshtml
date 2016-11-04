@@ -2,14 +2,14 @@
 
 <h4>@Model.PaymentName</h4>
 <h5>@Model.PaymentCount</h5>
-@using (Html.BeginForm("VisaLoan", "Payment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm(Model.FormAction, "Payment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
         
         <hr />
-        @Html.ValidationSummary(true, "Server error", new { @class = "text-danger" })
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(m=>m.PayForId)
         @Html.HiddenFor(m=>m.DealId)
         @Html.HiddenFor(m=>m.PaymentName)

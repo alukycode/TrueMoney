@@ -47,8 +47,17 @@ namespace TrueMoney.Services.Services
             var deal = await _context.Deals
                 .Include(x=>x.Owner)
                 .FirstAsync(x => x.Id == visaPaymentViewModel.DealId); //тут еще, возможно, нужны какие-то проверки с текущим юзером, но если не нужны, то не добавляйте!!!
-            var recipient = deal.Offers.First(x => x.IsApproved).Offerer;
+            var recipient = deal.Owner;
             var sender = await _context.Users.FirstAsync(x => x.Id == currentUserId);
+
+            if (deal.Amount != visaPaymentViewModel.PaymentCount)
+            {
+                return PaymentResult.Error;
+            }
+            if (recipient.Id != visaPaymentViewModel.PayForId)
+            {
+                return PaymentResult.PermissionError;
+            }
 
             var result = await
                 _bankApi.Do(
@@ -75,16 +84,84 @@ namespace TrueMoney.Services.Services
 
                     paymentPlan = await _context.PaymentPlans.FirstOrDefaultAsync(x => x.DealId == deal.Id);
                     paymentPlan.Payments = CalculatePayments(deal);
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        var t = ex;
-                        throw;
-                    }
+
+                    await _context.SaveChangesAsync();
                     
+                    return PaymentResult.Success;
+
+                case BankResponse.NotEnoughtMoney:
+                    return PaymentResult.NotEnoughtMoney;
+
+                default:
+                    return PaymentResult.Error;
+            }
+        }
+
+        public async Task<PaymentResult> Payout(VisaPaymentViewModel visaPaymentViewModel, int currentUserId)
+        {
+            var deal = await _context.Deals
+                .Include(x => x.Owner)
+                .Include(x=> x.Offers)
+                .FirstAsync(x => x.Id == visaPaymentViewModel.DealId);
+            var recipient = deal.Offers.First(x => x.IsApproved).Offerer;
+
+            if (recipient.Id != visaPaymentViewModel.PayForId)
+            {
+                return PaymentResult.PermissionError;
+            }
+
+            var result =
+                await
+                _bankApi.DoWithVisa(
+                    new BankVisaTransaction
+                        {
+                            Amount = visaPaymentViewModel.PaymentCount,
+                            RecipientAccountNumber = recipient.BankAccountNumber,
+                            SenderCardNumber = visaPaymentViewModel.CardNumber,
+                            SenderCvvCode = visaPaymentViewModel.CvvCode,
+                            SenderName = visaPaymentViewModel.Name,
+                            SenderValidBefore = visaPaymentViewModel.ValidBefore
+                        });
+
+            switch (result)
+            {
+                case BankResponse.Success:
+                    //todo - check and calculate liability if need
+                    var paymentPlan = await _context.PaymentPlans
+                        .Include(x=>x.Payments).FirstOrDefaultAsync(x => x.DealId == deal.Id);
+                    var allPaidBefore =
+                        paymentPlan.Payments.Where(x => x.IsPaid).Select(x => x.Amount + x.Liability).Sum();
+                    //some extra money before previous payment
+                    var extraMoney = paymentPlan.BankTransactions.Select(x => x.Amount).Sum() - allPaidBefore;
+                    //new money will used to close calculated payments
+                    var newMoney = visaPaymentViewModel.PaymentCount + extraMoney;
+                    var nearByPayment = paymentPlan.Payments.Where(x => !x.IsPaid).OrderBy(x => x.DueDate).ToList();
+                    foreach (var payment in nearByPayment)
+                    {
+                        var currentPaymentMoney = payment.Amount + payment.Liability;
+                        if (currentPaymentMoney <= newMoney)
+                        {
+                            payment.IsPaid = true;
+                            payment.PaidDate = DateTime.Now;
+                            newMoney -= currentPaymentMoney;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    paymentPlan.BankTransactions.Add(
+                        new Data.Entities.BankTransaction
+                            {
+                                Amount = visaPaymentViewModel.PaymentCount,
+                                DateOfPayment = DateTime.Now,
+                                PaymentPlan = paymentPlan,
+                                PaymentPlanId = paymentPlan.Id
+                            });
+
+                    await _context.SaveChangesAsync();
+
                     return PaymentResult.Success;
 
                 case BankResponse.NotEnoughtMoney:

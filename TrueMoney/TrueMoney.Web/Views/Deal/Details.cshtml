@@ -83,11 +83,11 @@
                         {
                             if (payment.IsPaid)
                             {
-                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.ToString("D")</p>
+                                <p style="background-color: greenyellow">@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.ToString("D")</p>
                             }
                             else
                             {
-                                <p>@(number++) - pay @payment.Amount + @payment.Liability before @payment.DueDate.ToString("D")</p>
+                                <p style="background-color: lightcoral">@(number++) - pay @payment.Amount + @payment.Liability before @payment.DueDate.ToString("D")</p>
                             }
                         }
                         @ShowPayoutForm()
@@ -103,11 +103,11 @@
                         {
                             if (payment.IsPaid)
                             {
-                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.ToString("D")</p>
+                                <p style="background-color: greenyellow">@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.ToString("D")</p>
                             }
                             else
                             {
-                                <p>@(number++) - will pay @payment.Amount + @payment.Liability before @payment.DueDate.ToString("D")</p>
+                                <p style="background-color: lightcoral">@(number++) - will pay @payment.Amount + @payment.Liability before @payment.DueDate.ToString("D")</p>
                             }
                         }
                     </dd>
@@ -147,16 +147,17 @@
 @helper ShowPayoutForm()
 {
     var nearByPayment = Model.Payments.First(x => !x.IsPaid);
-    var description = $"Надо выплатить { nearByPayment.Amount} + {nearByPayment.Liability} before {nearByPayment.DueDate.ToString("D")}";
-    <h4>перевиди бабло челу</h4>
+    var description = $"Надо выплатить {nearByPayment.Amount} + {nearByPayment.Liability} before {nearByPayment.DueDate.ToString("D")}";
+    <h4>Надо выплачивать бабло челу</h4>
     <p>@description</p>
     <p>
         Visa - @Html.ActionLink("Оплатить", "VisaPayout", "Payment", routeValues: new RouteValueDictionary(
              new
              {
                  paymentName = $"Выплата по займу #{Model.Deal.Id}." + description,
-                 payForId = Model.CurrentUserId,
-                 dealId = Model.Deal.Id
+                 payForId = Model.Offers.First(x=>x.IsApproved).OffererId,
+                 dealId = Model.Deal.Id,
+                 paymentCount = nearByPayment.Amount + nearByPayment.Liability
              }), htmlAttributes: null)
     </p>
 }

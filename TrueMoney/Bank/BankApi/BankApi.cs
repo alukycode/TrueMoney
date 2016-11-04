@@ -12,5 +12,10 @@
             //todo - check and update bank date
             return BankResponse.Success;
         }
+
+        public async Task<BankResponse> DoWithVisa(BankVisaTransaction bankTransaction)
+        {
+            return BankResponse.Success;
+        }
     }
 }

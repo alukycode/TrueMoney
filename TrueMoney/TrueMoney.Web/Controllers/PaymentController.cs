@@ -31,7 +31,8 @@ namespace TrueMoney.Web.Controllers
                             PaymentCount = paymentCount,
                             PaymentName = paymentName,
                             PayForId = payForId,
-                            DealId = dealId
+                            DealId = dealId,
+                            FormAction = "VisaLoan"
                         });
             }
 
@@ -68,7 +69,7 @@ namespace TrueMoney.Web.Controllers
             return View("Visa", formModel);
         }
 
-        public async Task<ActionResult> VisaPayout(string paymentName, int payForId, int dealId)
+        public async Task<ActionResult> VisaPayout(string paymentName, int payForId, int dealId, decimal paymentCount = 0)
         {
             if (!string.IsNullOrEmpty(paymentName))
             {
@@ -77,11 +78,12 @@ namespace TrueMoney.Web.Controllers
                     View("Visa",
                         new VisaPaymentViewModel
                         {
-                            PaymentCount = 0,
+                            PaymentCount = paymentCount,
                             PaymentName = paymentName,
                             PayForId = payForId,
                             DealId = dealId,
-                            CanSetPaymentCount = true
+                            CanSetPaymentCount = true,
+                            FormAction = "VisaPayout"
                         });
             }
 
@@ -94,7 +96,7 @@ namespace TrueMoney.Web.Controllers
             if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)
                 && formModel.PaymentCount > 0)
             {
-                var payRes =PaymentResult.Error;// await _paymentService.LendMoney(formModel, await CurrentUserId());
+                var payRes = await _paymentService.Payout(formModel, await CurrentUserId());
                 switch (payRes)
                 {
                     case PaymentResult.Success:
