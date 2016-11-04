@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
-namespace TrueMoney.Models
+namespace TrueMoney.Models.Deal
 {
     public class CreateDealForm
     {

@@ -9,6 +9,7 @@ using Castle.Windsor;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
+using TrueMoney.Data;
 
 namespace TrueMoney.Web.Auth_Identity_Startup
 {
@@ -20,7 +21,6 @@ namespace TrueMoney.Web.Auth_Identity_Startup
             // http://tech.trailmax.info/2014/09/aspnet-identity-and-ioc-container-registration/
             // not sure about transient lifestyle
             container.Register(
-                Component.For<ApplicationDbContext>().LifestyleTransient(),
                 Component.For<ApplicationSignInManager>().LifestyleTransient(),
                 Component.For<ApplicationUserManager>().LifestyleTransient(),
                 //Component.For<EmailService>().LifestyleTransient(),
@@ -28,9 +28,9 @@ namespace TrueMoney.Web.Auth_Identity_Startup
                     .UsingFactoryMethod(kernel => HttpContext.Current.GetOwinContext().Authentication)
                     .LifestyleTransient(),
                 Component
-                    .For<IUserStore<ApplicationUser>>()
-                    .ImplementedBy<UserStore<ApplicationUser>>()
-                    .DependsOn(Dependency.OnComponent<DbContext, ApplicationDbContext>())
+                    .For<IUserStore<ApplicationIdentityUser>>()
+                    .ImplementedBy<UserStore<ApplicationIdentityUser>>()
+                    .DependsOn(Dependency.OnComponent<DbContext, TrueMoneyContext>())
                     .LifestyleTransient());
         }
     }

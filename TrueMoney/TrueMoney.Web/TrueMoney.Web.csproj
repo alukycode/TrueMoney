@@ -204,12 +204,10 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Auth_Identity_Startup\ApplicationSignInManager.cs" />
     <Compile Include="Auth_Identity_Startup\ApplicationUserManager.cs" />
-    <Compile Include="Auth_Identity_Startup\EmailService.cs" />
-    <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Auth_Identity_Startup\IdentityInstaller.cs" />
-    <Compile Include="Auth_Identity_Startup\SmsService.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DealController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -221,8 +219,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Auth_Identity_Startup\ApplicationDbContext.cs" />
-    <Compile Include="Auth_Identity_Startup\ApplicationUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Auth_Identity_Startup\Startup.cs" />
   </ItemGroup>
@@ -330,6 +326,10 @@
     <ProjectReference Include="..\TrueMoney.Common\TrueMoney.Common.csproj">
       <Project>{edca40cd-bf8f-43c3-9320-6061379acf10}</Project>
       <Name>TrueMoney.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TrueMoney.Data\TrueMoney.Data.csproj">
+      <Project>{da385b71-a556-49e8-b871-f659d7640e8a}</Project>
+      <Name>TrueMoney.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\TrueMoney.DependencyInjection\TrueMoney.DependencyInjection.csproj">
       <Project>{8fee0685-7ed0-4c01-ad85-c1fcaaa30291}</Project>

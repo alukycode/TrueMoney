@@ -1,6 +1,6 @@
 ﻿using TrueMoney.Models.Basic;
 
-namespace TrueMoney.Models
+namespace TrueMoney.Models.User
 {
     public class UserDetailsViewModel
     {

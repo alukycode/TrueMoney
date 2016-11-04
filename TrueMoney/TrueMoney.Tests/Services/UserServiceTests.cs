@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Moq;
 using NUnit.Framework;
 using TrueMoney.Data;
 using TrueMoney.Data.Entities;
 using TrueMoney.Services.Services;
 
-namespace TrueMoney.Tests
+namespace TrueMoney.Tests.Services
 {
     [TestFixture]
     public class UserServiceTests

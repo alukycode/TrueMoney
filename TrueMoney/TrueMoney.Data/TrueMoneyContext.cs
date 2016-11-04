@@ -4,18 +4,21 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity.EntityFramework;
 using TrueMoney.Data.Entities;
 
 namespace TrueMoney.Data
 {
-    public class TrueMoneyContext : DbContext, ITrueMoneyContext
+    public class TrueMoneyContext : IdentityDbContext<ApplicationIdentityUser>, ITrueMoneyContext
     {
         public TrueMoneyContext() : base("DefaultConnection")
         {
+            Database.CommandTimeout = 300;
+
             Database.SetInitializer(new TrueMoneyDbInitializer());
         }
 
-        public IDbSet<User> Users{ get; set; }
+        public new IDbSet<User> Users { get; set; }
 
         public IDbSet<Passport> Passports { get; set; }
 

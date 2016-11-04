@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using TrueMoney.Data;
 using TrueMoney.Models.Account;
 using TrueMoney.Services;
 using TrueMoney.Services.Interfaces;
@@ -131,7 +132,7 @@ namespace TrueMoney.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var applicationUser = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var applicationUser = new ApplicationIdentityUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(applicationUser, model.Password);
                 if (result.Succeeded)
                 {
@@ -343,7 +344,7 @@ namespace TrueMoney.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationIdentityUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

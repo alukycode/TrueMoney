@@ -1,24 +1,18 @@
+using System.Data.Entity.Migrations;
+
 namespace TrueMoney.Data.Migrations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-    using Entities;
-
-    internal sealed class Configuration : DbMigrationsConfiguration<TrueMoney.Data.TrueMoneyContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<TrueMoneyContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            CommandTimeout = 300;
         }
 
         protected override void Seed(TrueMoneyContext context)
         {
-            if (!context.Users.Any())
-            {
-                TrueMoneyDbInitializer.InitializeData(context);
-            }
+            TrueMoneyDbInitializer.InitializeData(context);
         }
     }
 }
