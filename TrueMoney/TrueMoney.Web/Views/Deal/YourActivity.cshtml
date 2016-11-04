@@ -5,7 +5,7 @@
 <div>
     <h4>Личный кабинет</h4>
     <h5>Ваш активный займ:</h5>
-    @foreach (var item in Model.Deals.Where(x => x.DealStatus == DealStatus.InProgress))
+    @foreach (var item in Model.Deals.Where(x => x.DealStatus != DealStatus.Closed && x.DealStatus != DealStatus.Open))
     {
         @RenderDeal(item)
     }
@@ -16,7 +16,7 @@
     }
     ---------------------------<br/>
     <h5>Ваша активная заявка:</h5>
-    @foreach (var item in Model.Deals.Where(x => x.DealStatus == DealStatus.Open || x.DealStatus == DealStatus.WaitForLoan))
+    @foreach (var item in Model.Deals.Where(x => x.DealStatus == DealStatus.Open))
     {
         @RenderDeal(item)
     }
@@ -38,23 +38,18 @@
     }
 
     ---------------------------<br />
-    <h5>Ваши активные предложения:</h5>
-    @*@foreach (var item in Model.Offers.Where(x => !x.IsClosed))
+    <h5>Ваши предложения:</h5>
+    @foreach (var item in Model.Offers)
     {
         @RenderOffer(item)
     }
-    <h5>Ваши закрытые предложения:</h5>
-    @foreach (var item in Model.Offers.Where(x => x.IsClosed))
-    {
-        @RenderOffer(item)
-    }*@
 
     ---------------------------<br />
     @Html.ActionLink("Список всех заявок", "Index", "Deal", routeValues: null, htmlAttributes: null)<br />
 </div>
 
 @helper RenderOffer(OfferModel offer)
-{
+{ 
     <p>
         <strong>@offer.Id</strong> - @offer.InterestRate
         @Html.ActionLink("Просмотреть заявку", "Details", "Deal", routeValues: new { id = offer.DealId }, htmlAttributes: null)<br />

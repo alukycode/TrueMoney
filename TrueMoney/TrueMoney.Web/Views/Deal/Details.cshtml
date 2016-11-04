@@ -10,6 +10,7 @@
 <h2>@ViewBag.Title</h2>
 <div>
     <h4>@Model.Deal.Id</h4>
+    <h6>Заёмщик - @Model.Deal.OwnerFullName</h6>
     <hr />
     <dl class="dl-horizontal">
         @ShowInfo()
@@ -82,11 +83,11 @@
                         {
                             if (payment.IsPaid)
                             {
-                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.Date</p>
+                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.ToString("D")</p>
                             }
                             else
                             {
-                                <p>@(number++) - pay @payment.Amount + @payment.Liability before @payment.DueDate.Date</p>
+                                <p>@(number++) - pay @payment.Amount + @payment.Liability before @payment.DueDate.ToString("D")</p>
                             }
                         }
                         @ShowPayoutForm()
@@ -102,11 +103,11 @@
                         {
                             if (payment.IsPaid)
                             {
-                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.Date</p>
+                                <p>@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.ToString("D")</p>
                             }
                             else
                             {
-                                <p>@(number++) - will pay @payment.Amount + @payment.Liability before @payment.DueDate.Date</p>
+                                <p>@(number++) - will pay @payment.Amount + @payment.Liability before @payment.DueDate.ToString("D")</p>
                             }
                         }
                     </dd>
@@ -146,7 +147,7 @@
 @helper ShowPayoutForm()
 {
     var nearByPayment = Model.Payments.First(x => !x.IsPaid);
-    var description = $"Надо выплатить { nearByPayment.Amount} + {nearByPayment.Liability} before {nearByPayment.DueDate.Date}";
+    var description = $"Надо выплатить { nearByPayment.Amount} + {nearByPayment.Liability} before {nearByPayment.DueDate.ToString("D")}";
     <h4>перевиди бабло челу</h4>
     <p>@description</p>
     <p>
