@@ -17,10 +17,6 @@ namespace TrueMoney.Services.Interfaces
 
         Task<IEnumerable<UserModel>> GetAll();
 
-        Task<UserModel> GetByAspId(string id);
-
-        Task<int> GetUserIdByAspId(string id);
-
         Task<UserModel> GetById(int id);
 
         Task<UserModel> GetUserByName(string name);

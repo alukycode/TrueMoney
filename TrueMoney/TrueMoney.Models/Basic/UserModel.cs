@@ -16,8 +16,6 @@ namespace TrueMoney.Models.Basic
 
         public string MiddleName { get; set; }
 
-        public string AspUserId { get; set; }
-
         public bool IsActive { get; set; }
 
         public string BankAccountNumber { get; set; }

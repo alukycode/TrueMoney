@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using TrueMoney.Data;
+using TrueMoney.Data.Entities;
 using TrueMoney.Models.Account;
 using TrueMoney.Services;
 using TrueMoney.Services.Interfaces;
@@ -132,13 +133,14 @@ namespace TrueMoney.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var applicationUser = new ApplicationIdentityUser { UserName = model.Email, Email = model.Email };
+                var applicationUser = new User { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(applicationUser, model.Password);
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(applicationUser, isPersistent: false, rememberBrowser: false);
-                    model.AspUserId = _userManager.FindByEmail(model.Email).Id;
-                    await _userService.Add(model);
+
+                    ////model.AspUserId = _userManager.FindByEmail(model.Email).Id;
+                    ////await _userService.Add(model);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -152,9 +154,9 @@ namespace TrueMoney.Web.Controllers
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        public async Task<ActionResult> ConfirmEmail(int userId, string code)
         {
-            if (userId == null || code == null)
+            if (userId == default(int) || code == null)
             {
                 return View("Error");
             }
@@ -265,7 +267,7 @@ namespace TrueMoney.Web.Controllers
         public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
         {
             var userId = await _signInManager.GetVerifiedUserIdAsync();
-            if (userId == null)
+            if (userId == default(int))
             {
                 return View("Error");
             }
@@ -312,7 +314,7 @@ namespace TrueMoney.Web.Controllers
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
-                    return View("Lockout");
+                    return View("Lockout"); // todo: вернуть на место вьюшку, она была в еррорс
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
                 case SignInStatus.Failure:
@@ -344,7 +346,7 @@ namespace TrueMoney.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationIdentityUser { UserName = model.Email, Email = model.Email };
+                var user = new User { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

@@ -9,7 +9,7 @@ using TrueMoney.Data.Entities;
 
 namespace TrueMoney.Data
 {
-    public class TrueMoneyContext : IdentityDbContext<ApplicationIdentityUser>, ITrueMoneyContext
+    public class TrueMoneyContext : IdentityDbContext<User, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>, ITrueMoneyContext
     {
         public TrueMoneyContext() : base("DefaultConnection")
         {
@@ -17,8 +17,6 @@ namespace TrueMoney.Data
 
             Database.SetInitializer(new TrueMoneyDbInitializer());
         }
-
-        public new IDbSet<User> Users { get; set; }
 
         public IDbSet<Passport> Passports { get; set; }
 
@@ -31,5 +29,12 @@ namespace TrueMoney.Data
         public IDbSet<Payment> Payments { get; set; }
 
         public IDbSet<BankTransaction> BankTransactions { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<IdentityUser>().ToTable("Users", "dbo");
+            //modelBuilder.Entity<User>        ().ToTable("Users", "dbo");
+        }
     }
 }

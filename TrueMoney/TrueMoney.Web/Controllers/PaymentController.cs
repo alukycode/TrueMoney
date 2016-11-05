@@ -46,7 +46,7 @@ namespace TrueMoney.Web.Controllers
             if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)
                 && formModel.PaymentCount > 0)
             {
-                var payRes = await _paymentService.LendMoney(formModel, await CurrentUserId());
+                var payRes = await _paymentService.LendMoney(formModel, CurrentUserId);
                 switch (payRes)
                 {
                     case PaymentResult.Success:
@@ -96,7 +96,7 @@ namespace TrueMoney.Web.Controllers
             if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)
                 && formModel.PaymentCount > 0)
             {
-                var payRes = await _paymentService.Payout(formModel, await CurrentUserId());
+                var payRes = await _paymentService.Payout(formModel, CurrentUserId);
                 switch (payRes)
                 {
                     case PaymentResult.Success:

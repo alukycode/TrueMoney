@@ -7,6 +7,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataProtection;
 using Owin;
 using TrueMoney.Data;
+using TrueMoney.Data.Entities;
 using TrueMoney.Web.Auth_Identity_Startup;
 
 [assembly: OwinStartup(typeof(Startup))]
@@ -40,9 +41,11 @@ namespace TrueMoney.Web.Auth_Identity_Startup
                 {
                     // Enables the application to validate the security stamp when the user logs in.
                     // This is a security feature which is used when you change a password or add an external login to your account.  
-                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationIdentityUser>(
-                        validateInterval: TimeSpan.FromMinutes(30),
-                        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                    OnValidateIdentity = SecurityStampValidator
+                        .OnValidateIdentity<ApplicationUserManager, User, int>(
+                            validateInterval: TimeSpan.FromMinutes(30),
+                            regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager),
+                            getUserIdCallback: (id) => id.GetUserId<int>())
                 }
             });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);

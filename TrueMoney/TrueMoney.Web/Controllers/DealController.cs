@@ -29,7 +29,7 @@ namespace TrueMoney.Web.Controllers
             DealIndexViewModel model;
             try
             {
-                var currentUserId = await CurrentUserId();
+                var currentUserId = CurrentUserId;
                 model = await _dealService.GetAll(currentUserId);
             }
             catch (Exception)
@@ -42,7 +42,7 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Details(int id)
         {
-            var model = await _dealService.GetById(id, await CurrentUserId());
+            var model = await _dealService.GetById(id, CurrentUserId);
             if (model != null)
             {
                 return View(model);
@@ -82,14 +82,14 @@ namespace TrueMoney.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> FinishDeal(int offerId, int dealId)
         {
-            await _dealService.FinishDealStartLoan(await CurrentUserId(), offerId, dealId);
+            await _dealService.FinishDealStartLoan(CurrentUserId, offerId, dealId);
 
             return RedirectToAction("Details", "Deal", new { id = dealId });
         }
 
         public async Task<ActionResult> Create()
         {
-            var viewModel = await _dealService.GetCreateDealForm(await CurrentUserId());
+            var viewModel = await _dealService.GetCreateDealForm(CurrentUserId);
             if (viewModel.IsUserCanCreateDeal)
             {
                 return View(new CreateDealForm());
@@ -109,7 +109,7 @@ namespace TrueMoney.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var id = await _dealService.CreateDeal(model, await CurrentUserId());
+                var id = await _dealService.CreateDeal(model, CurrentUserId);
 
                 return RedirectToAction("Details", new { id = id });
             }
@@ -119,7 +119,7 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> CreateOffer(int dealId)
         {
-            var formModel = await _dealService.GetCreateOfferForm(dealId, await CurrentUserId());
+            var formModel = await _dealService.GetCreateOfferForm(dealId, CurrentUserId);
             if (formModel.IsUserCanCreateOffer)
             {
                 return View(formModel);
@@ -145,7 +145,7 @@ namespace TrueMoney.Web.Controllers
             {
                 try
                 {
-                    await _dealService.CreateOffer(model, await CurrentUserId()); 
+                    await _dealService.CreateOffer(model, CurrentUserId); 
                     return RedirectToAction("Details", new { id = model.DealId });// во, редирект, а не создание той же модели и отрисовка той же вьюшки!
                 }
                 catch (Exception ex)
@@ -161,14 +161,14 @@ namespace TrueMoney.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int dealId)
         {
-            await _dealService.DeleteDeal(dealId, await CurrentUserId());
+            await _dealService.DeleteDeal(dealId, CurrentUserId);
 
             return GoHome();
         }
 
         public async Task<ActionResult> YourActivity() // для меня загадка, почему активностью юзера занимается контроллер сделок
         {
-            var viewModel = await _dealService.GetYourActivityViewModel(await CurrentUserId());
+            var viewModel = await _dealService.GetYourActivityViewModel(CurrentUserId);
 
             return View(viewModel);
         }

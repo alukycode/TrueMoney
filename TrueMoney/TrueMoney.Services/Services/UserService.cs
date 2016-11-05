@@ -59,26 +59,26 @@ namespace TrueMoney.Services.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<int> GetUserIdByAspId(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+        ////public async Task<int> GetUserIdByAspId(string id)
+        ////{
+        ////    if (string.IsNullOrEmpty(id))
+        ////    {
+        ////        throw new ArgumentNullException(nameof(id));
+        ////    }
 
-            return (await _context.Users.FirstAsync(x => x.AspUserId == id)).Id;
-        }
+        ////    return (await _context.Users.FirstAsync(x => x.AspUserId == id)).Id;
+        ////}
 
-        public async Task<UserModel> GetByAspId(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-            var dbUser = await _context.Users.FirstAsync(x => x.AspUserId == id);
+        ////public async Task<UserModel> GetByAspId(string id)
+        ////{
+        ////    if (string.IsNullOrEmpty(id))
+        ////    {
+        ////        throw new ArgumentNullException(nameof(id));
+        ////    }
+        ////    var dbUser = await _context.Users.FirstAsync(x => x.AspUserId == id);
 
-            return Mapper.Map<UserModel>(dbUser);
-        }
+        ////    return Mapper.Map<UserModel>(dbUser);
+        ////}
 
         public async Task<UserModel> GetUserByName(string name)
         {

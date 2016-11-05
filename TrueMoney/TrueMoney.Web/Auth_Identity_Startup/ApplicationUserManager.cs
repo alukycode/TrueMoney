@@ -2,17 +2,18 @@ using System;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using TrueMoney.Data;
+using TrueMoney.Data.Entities;
 using TrueMoney.Services.Services;
 
 namespace TrueMoney.Web.Auth_Identity_Startup
 {
-    public class ApplicationUserManager : UserManager<ApplicationIdentityUser>
+    public class ApplicationUserManager : UserManager<User, int>
     {
-        public ApplicationUserManager(IUserStore<ApplicationIdentityUser> store)
+        public ApplicationUserManager(IUserStore<User, int> store)
             : base(store)
         {
             // Configure validation logic for usernames
-            this.UserValidator = new UserValidator<ApplicationIdentityUser>(this)
+            this.UserValidator = new UserValidator<User, int>(this)
             {
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
@@ -35,11 +36,11 @@ namespace TrueMoney.Web.Auth_Identity_Startup
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
-            this.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<ApplicationIdentityUser>
+            this.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<User, int>
             {
                 MessageFormat = "Your security code is {0}"
             });
-            this.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<ApplicationIdentityUser>
+            this.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<User, int>
             {
                 Subject = "Security Code",
                 BodyFormat = "Your security code is {0}"
@@ -51,7 +52,7 @@ namespace TrueMoney.Web.Auth_Identity_Startup
             if (dataProtectionProvider != null)
             {
                 this.UserTokenProvider =
-                    new DataProtectorTokenProvider<ApplicationIdentityUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+                    new DataProtectorTokenProvider<User, int>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
         }
     }

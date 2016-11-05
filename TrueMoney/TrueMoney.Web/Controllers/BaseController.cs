@@ -11,22 +11,25 @@ namespace TrueMoney.Web.Controllers
 {
     public class BaseController : Controller
     {
-        private readonly IUserService _userService;
+        ////private readonly IUserService _userService;
 
         public BaseController()
         {
-            _userService = DependencyResolver.Current.GetService<IUserService>();
+            ////_userService = DependencyResolver.Current.GetService<IUserService>();
         }
 
-        public async Task<int> CurrentUserId()
+        public int CurrentUserId
         {
-            var currentUserIdentityId = User.Identity.GetUserId();
-            if (currentUserIdentityId == null)
+            get
             {
-                throw new UnauthorizedAccessException("user should be authorized to perform this action");
-            }
+                var currentUserIdentityId = User.Identity.GetUserId<int>();
+                if (currentUserIdentityId == default(int))
+                {
+                    throw new UnauthorizedAccessException("user should be authorized to perform this action");
+                }
 
-            return await _userService.GetUserIdByAspId(currentUserIdentityId);
+                return currentUserIdentityId;
+            }
         }
 
         protected ActionResult GoHome() // Сомнительный метод, удалять его я, конечно же, не буду.

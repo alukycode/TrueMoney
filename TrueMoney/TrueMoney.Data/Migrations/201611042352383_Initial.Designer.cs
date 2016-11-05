@@ -7,13 +7,13 @@ namespace TrueMoney.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class MergeBothDbContextsIntoOne : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(MergeBothDbContextsIntoOne));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201611041956570_MergeBothDbContextsIntoOne"; }
+            get { return "201611042352383_Initial"; }
         }
         
         string IMigrationMetadata.Source

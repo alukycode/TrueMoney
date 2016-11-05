@@ -59,18 +59,15 @@
   <ItemGroup>
     <Compile Include="Entities\BankTransaction.cs" />
     <Compile Include="Entities\Deal.cs" />
+    <Compile Include="Entities\IdentityShit.cs" />
     <Compile Include="Entities\Offer.cs" />
     <Compile Include="Entities\Payment.cs" />
     <Compile Include="Entities\PaymentPlan.cs" />
-    <Compile Include="Migrations\201611041956570_MergeBothDbContextsIntoOne.cs" />
-    <Compile Include="Migrations\201611041956570_MergeBothDbContextsIntoOne.Designer.cs">
-      <DependentUpon>201611041956570_MergeBothDbContextsIntoOne.cs</DependentUpon>
-    </Compile>
     <Compile Include="ApplicationIdentityUser.cs" />
     <Compile Include="ITrueMoneyContext.cs" />
-    <Compile Include="Migrations\201610311251329_init.cs" />
-    <Compile Include="Migrations\201610311251329_init.Designer.cs">
-      <DependentUpon>201610311251329_init.cs</DependentUpon>
+    <Compile Include="Migrations\201611042352383_Initial.cs" />
+    <Compile Include="Migrations\201611042352383_Initial.Designer.cs">
+      <DependentUpon>201611042352383_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrueMoneyDbInitializer.cs" />
@@ -94,14 +91,10 @@
     <Content Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201610311251329_init.resx">
-      <DependentUpon>201610311251329_init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201611041956570_MergeBothDbContextsIntoOne.resx">
-      <DependentUpon>201611041956570_MergeBothDbContextsIntoOne.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201611042352383_Initial.resx">
+      <DependentUpon>201611042352383_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

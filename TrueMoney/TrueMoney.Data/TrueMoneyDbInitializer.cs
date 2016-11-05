@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Microsoft.AspNet.Identity;
 using TrueMoney.Common.Enums;
 using TrueMoney.Data.Entities;
 
@@ -86,15 +87,20 @@ namespace TrueMoney.Data
 
         private static List<User> GenerateUsers()
         {
+            var defaultPasswordHash = new PasswordHasher().HashPassword("123123");
+
             return new List<User>
             {
                 new User
                 {
+                    Email    = "facepalm@money.dev",
+                    UserName = "facepalm@money.dev",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Саша",
                     LastName = "Черногребель",
-                    AspUserId = "change it!",
                     BankAccountNumber = "test",
-                    Passport = new Passport()
+                    Passport = new Passport
                     {
                         DateOfIssuing = DateTime.Now,
                         Number = "test",
@@ -103,11 +109,14 @@ namespace TrueMoney.Data
                 },
                 new User
                 {
+                    Email    = "anton@money.dev",
+                    UserName = "anton@money.dev",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Антон",
                     LastName = "Лукьянов",
-                    AspUserId = "change it!",
                     BankAccountNumber = "test",
-                    Passport = new Passport()
+                    Passport = new Passport
                     {
                         DateOfIssuing = DateTime.Now,
                         Number = "test",
@@ -116,11 +125,34 @@ namespace TrueMoney.Data
                 },
                 new User
                 {
+                    Email    = "dimon@money.dev",
+                    UserName = "dimon@money.dev",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Дима",
                     LastName = "Артюх",
-                    AspUserId = "change it!",
                     BankAccountNumber = "test",
-                }
+                },
+                new User
+                {
+                    Email    = "test@example.com",
+                    UserName = "test@example.com",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    FirstName = "Test",
+                    LastName = "Example",
+                    BankAccountNumber = "100500",
+                },
+                new User
+                {
+                    Email    = "qwe@asd.zxc",
+                    UserName = "qwe@asd.zxc",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    FirstName = "Qwe",
+                    LastName = "Asd",
+                    BankAccountNumber = "100500",
+                },
             };
         }
 

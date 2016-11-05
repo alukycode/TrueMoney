@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
 using TrueMoney.Data;
+using TrueMoney.Data.Entities;
 
 namespace TrueMoney.Web.Auth_Identity_Startup
 {
@@ -28,10 +29,16 @@ namespace TrueMoney.Web.Auth_Identity_Startup
                     .UsingFactoryMethod(kernel => HttpContext.Current.GetOwinContext().Authentication)
                     .LifestyleTransient(),
                 Component
-                    .For<IUserStore<ApplicationIdentityUser>>()
-                    .ImplementedBy<UserStore<ApplicationIdentityUser>>()
+                    .For<IUserStore<User, int>>()
+                    .ImplementedBy<CustomUserStore>()
                     .DependsOn(Dependency.OnComponent<DbContext, TrueMoneyContext>())
-                    .LifestyleTransient());
+                    .LifestyleTransient()
+                ////,Component
+                ////        .For<IRoleStore<User, int>>()
+                ////        .ImplementedBy<CustomRoleStore>()
+                ////        .DependsOn(Dependency.OnComponent<DbContext, TrueMoneyContext>())
+                ////        .LifestyleTransient()
+                );
         }
     }
 }
