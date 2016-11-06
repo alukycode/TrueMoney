@@ -63,7 +63,6 @@
     <Compile Include="Entities\Offer.cs" />
     <Compile Include="Entities\Payment.cs" />
     <Compile Include="Entities\PaymentPlan.cs" />
-    <Compile Include="ApplicationIdentityUser.cs" />
     <Compile Include="ITrueMoneyContext.cs" />
     <Compile Include="Migrations\201611042352383_Initial.cs" />
     <Compile Include="Migrations\201611042352383_Initial.Designer.cs">
