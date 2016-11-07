@@ -211,6 +211,7 @@
     <Compile Include="Controllers\ErrorControler.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\OfferController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -302,7 +303,7 @@
     <Content Include="Views\Deal\Create.cshtml" />
     <Content Include="Views\User\Details.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Deal\CreateOffer.cshtml" />
+    <Content Include="Views\Offer\CreateOffer.cshtml" />
     <Content Include="Views\Payment\Success.cshtml" />
     <Content Include="Views\Deal\YourActivity.cshtml" />
     <Content Include="Views\Error\404.cshtml" />

@@ -22,13 +22,7 @@ namespace TrueMoney.Web.Controllers
         {
             get
             {
-                var currentUserIdentityId = User.Identity.GetUserId<int>();
-                if (currentUserIdentityId == default(int))
-                {
-                    throw new UnauthorizedAccessException("user should be authorized to perform this action");
-                }
-
-                return currentUserIdentityId;
+                return User.Identity.GetUserId<int>(); 
             }
         }
 

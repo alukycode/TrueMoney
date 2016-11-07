@@ -45,7 +45,7 @@
         }
     </table>
 
-    if (!Model.CurrentUserHasActiveDeals && Model.IsCurrentUserActive)
+    if (Model.UserCanCreateDeal)
     {
         @Html.ActionLink("Создать заявку", "Create", "Deal", routeValues: null, htmlAttributes: null)
     }

@@ -1,6 +1,6 @@
-﻿@model TrueMoney.Models.CreateOfferForm
+﻿@model TrueMoney.Models.Offer.CreateOfferForm
 
-@using (Html.BeginForm("CreateOffer", "Deal", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("CreateOffer", "Offer", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     
@@ -9,9 +9,8 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(m => Model.DealId)
+        @Html.HiddenFor(m => Model.OffererId)
         @Html.HiddenFor(m => Model.DealRate)
-        @Html.HiddenFor(m => Model.IsUserCanCreateOffer)
-
         <div class="form-group">
             @Html.LabelFor(model => model.InterestRate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

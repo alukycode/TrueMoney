@@ -1,13 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TrueMoney.Models
+namespace TrueMoney.Models.Offer
 {
     using System.Web.Mvc;
 
     public class CreateOfferForm
     {
-        public int DealId { get; set; }
-
         [Required]
         //[RegularExpression("^[0-9]{1,2}[.][0-9]{1,2}$", ErrorMessage = "Используйте формат XX.XX")]
         [Display(Name = "Процентная ставка", Description = "Должна быть меньше максимальнодопустимой.")]
@@ -17,10 +15,9 @@ namespace TrueMoney.Models
         public decimal DealRate { get; set; }
 
         [HiddenInput]
-        public bool IsUserCanCreateOffer { get; set; }
+        public int OffererId { get; set; }
 
         [HiddenInput]
-        [Required]
-        public int OffererId { get; set; }
+        public int DealId { get; set; }
     }
 }
