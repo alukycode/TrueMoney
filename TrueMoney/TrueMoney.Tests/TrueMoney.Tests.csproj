@@ -107,6 +107,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BankTests\WriteReadTest.cs" />
     <Compile Include="CalculationTests\CalculatePaymentsTests.cs" />
     <Compile Include="FakeDbSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -117,6 +118,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Bank\Bank.csproj">
+      <Project>{A64B1A72-DCEA-4709-BAE7-1C232225B127}</Project>
+      <Name>Bank</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrueMoney.Common\TrueMoney.Common.csproj">
       <Project>{edca40cd-bf8f-43c3-9320-6061379acf10}</Project>
       <Name>TrueMoney.Common</Name>
