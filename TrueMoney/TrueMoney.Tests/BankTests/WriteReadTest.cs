@@ -13,9 +13,10 @@
     public class WriteReadTest
     {
         [Test]
-        [TestCase(1)]
-        [TestCase(2)]
         [TestCase(10)]
+        [TestCase(1)]
+        [TestCase(5)]
+        [TestCase(2)]
         public void WriteRead(int count)
         {
             var accounts = new List<BankAccount>();

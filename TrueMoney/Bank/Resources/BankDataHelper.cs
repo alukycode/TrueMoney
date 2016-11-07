@@ -52,7 +52,7 @@
         {
             XmlSerializer formatter = new XmlSerializer(typeof(List<BankAccount>));
 
-            using (FileStream fs = new FileStream("BankData.xml", FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream("BankData.xml", FileMode.Truncate))
             {
                 formatter.Serialize(fs, accounts);
             }
