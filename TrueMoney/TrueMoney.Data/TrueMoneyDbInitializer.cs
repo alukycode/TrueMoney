@@ -84,7 +84,7 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Саша",
                     LastName = "Черногребель",
-                    BankAccountNumber = "test",
+                    BankAccountNumber = "408.17.810.0.9991.000000",
                     Passport = new Passport
                     {
                         DateOfIssuing = DateTime.Now,
@@ -100,7 +100,7 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Антон",
                     LastName = "Лукьянов",
-                    BankAccountNumber = "test",
+                    BankAccountNumber = "408.17.810.0.9991.000001",
                     Passport = new Passport
                     {
                         DateOfIssuing = DateTime.Now,
@@ -116,7 +116,7 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Дима",
                     LastName = "Артюх",
-                    BankAccountNumber = "test",
+                    BankAccountNumber = "408.17.810.0.9991.000002",
                 },
                 new User
                 {
@@ -126,7 +126,7 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Test",
                     LastName = "Example",
-                    BankAccountNumber = "100500",
+                    BankAccountNumber = "408.17.810.0.9991.000003",
                 },
                 new User
                 {
@@ -136,7 +136,7 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Qwe",
                     LastName = "Asd",
-                    BankAccountNumber = "100500",
+                    BankAccountNumber = "408.17.810.0.9991.000004",
                 },
             };
         }
