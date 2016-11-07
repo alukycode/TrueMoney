@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using TrueMoney.Common;
 using TrueMoney.Common.Enums;
 using TrueMoney.Data.Entities;
 
@@ -18,71 +20,54 @@ namespace TrueMoney.Data
 
         public static void InitializeData(TrueMoneyContext context)
         {
-            List<User> users = GenerateUsers();
-            foreach (var item in users)
+            // seed users and roles
+            // http://stackoverflow.com/questions/19280527/mvc5-seed-users-and-roles
+            var roleStore = new CustomRoleStore(context);
+            var roleManager = new RoleManager<CustomRole, int>(roleStore);
+
+            roleManager.Create(new CustomRole { Name = RoleNames.Admin });
+            roleManager.Create(new CustomRole { Name = RoleNames.User });
+
+            var userStore = new CustomUserStore(context);
+            var userManager = new UserManager<User, int>(userStore);
+
+            var users = GenerateUsers();
+            foreach (var user in users)
             {
-                context.Users.Add(item);
+                userManager.Create(user);
+                userManager.AddToRole(user.Id, RoleNames.User);
             }
+
+            var admin = new User
+            {
+                Email = "admin@money.dev",
+                UserName = "admin@money.dev",
+                PasswordHash = new PasswordHasher().HashPassword("123123"),
+                SecurityStamp = Guid.NewGuid().ToString(),
+                FirstName = "Admin",
+                LastName = "Администратор",
+                BankAccountNumber = "-",
+                Passport = new Passport
+                {
+                    DateOfIssuing = DateTime.Now,
+                    Number = "=",
+                    Series = "-",
+                }
+            };
+
+            userManager.Create(admin);
+            userManager.AddToRole(admin.Id, RoleNames.Admin);
+
             context.SaveChanges();
 
-            var user = users.First();
-            user.Deals = GenerateDeals();
+            // seed other stuff
+
+            var firsUser = users.First();
+            firsUser.Deals = GenerateDeals();
             context.SaveChanges();
 
             GenerateOffers(context.Deals.ToList(), users.Skip(1).ToList());
             context.SaveChanges();
-        }
-
-        private static void GenerateOffers(List<Deal> deals, List<User> offerers)
-        {
-            var offer = new Offer()
-            {
-                CreateTime = DateTime.Now,
-                InterestRate = 10,
-                IsApproved = true,
-                Offerer = offerers[0],
-            };
-            var deal = deals.First();
-            deal.Offers = new List<Offer>
-            {
-                offer,
-                new Offer
-                {
-                    CreateTime = DateTime.Now,
-                    InterestRate = 20,
-                    IsApproved = true,
-                    Offerer = offerers[0],
-                }
-            };
-            deal.ResultOffer = offer;
-            deal.DealStatus = DealStatus.InProgress;
-
-            deals[1].Offers = new List<Offer>()
-            {
-                new Offer
-                {
-                    CreateTime = DateTime.Now,
-                    InterestRate = 20,
-                    IsApproved = true,
-                    Offerer = offerers[0],
-                }
-            };
-
-            deals[2].Offers = new List<Offer>
-            {
-                new Offer
-                {
-                    Offerer = offerers[1],
-                    CreateTime = new DateTime(2016,10,09),
-                    InterestRate = 20
-                },
-                new Offer
-                {
-                    Offerer = offerers[0],
-                    CreateTime = new DateTime(2016,10,09),
-                    InterestRate = 21
-                }
-            };
         }
 
         private static List<User> GenerateUsers()
@@ -156,19 +141,71 @@ namespace TrueMoney.Data
             };
         }
 
-        private static PaymentPlan GeneratePlan()
+        private static void GenerateOffers(List<Deal> deals, List<User> offerers)
         {
-            return new PaymentPlan()
+            var offer = new Offer
             {
                 CreateTime = DateTime.Now,
-                Payments = new List<Payment>()
+                InterestRate = 10,
+                IsApproved = true,
+                Offerer = offerers[0],
+            };
+            var deal = deals.First();
+            deal.Offers = new List<Offer>
+            {
+                offer,
+                new Offer
                 {
-                    new Payment()
+                    CreateTime = DateTime.Now,
+                    InterestRate = 20,
+                    IsApproved = true,
+                    Offerer = offerers[0],
+                }
+            };
+            deal.ResultOffer = offer;
+            deal.DealStatus = DealStatus.InProgress;
+
+            deals[1].Offers = new List<Offer>
+            {
+                new Offer
+                {
+                    CreateTime = DateTime.Now,
+                    InterestRate = 20,
+                    IsApproved = true,
+                    Offerer = offerers[0],
+                }
+            };
+
+            deals[2].Offers = new List<Offer>
+            {
+                new Offer
+                {
+                    Offerer = offerers[1],
+                    CreateTime = new DateTime(2016,10,09),
+                    InterestRate = 20
+                },
+                new Offer
+                {
+                    Offerer = offerers[0],
+                    CreateTime = new DateTime(2016,10,09),
+                    InterestRate = 21
+                }
+            };
+        }
+
+        private static PaymentPlan GeneratePlan()
+        {
+            return new PaymentPlan
+            {
+                CreateTime = DateTime.Now,
+                Payments = new List<Payment>
+                {
+                    new Payment
                     {
                         Amount = 10,
                         DueDate = DateTime.Now,
                     },
-                    new Payment()
+                    new Payment
                     {
                         Amount = 20,
                         DueDate = DateTime.Now,
@@ -179,9 +216,9 @@ namespace TrueMoney.Data
 
         private static List<Deal> GenerateDeals()
         {
-            var result = new List<Deal>()
+            var result = new List<Deal>
             {
-                new Deal()
+                new Deal
                 {
                     Amount = 13,
                     CreateDate = DateTime.Now,
@@ -189,7 +226,7 @@ namespace TrueMoney.Data
                     InterestRate = 12,
                     PaymentPlan = GeneratePlan()
                 },
-                new Deal()
+                new Deal
                 {
                     Amount = 123,
                     CreateDate = DateTime.Now,
@@ -208,7 +245,7 @@ namespace TrueMoney.Data
                     Amount = 200,
                     CreateDate = new DateTime(2016, 10, 09),
                     InterestRate = 25,
-                    Description = "to buy keyboard",                    
+                    Description = "to buy keyboard",
                 },
                 new Deal
                 {
