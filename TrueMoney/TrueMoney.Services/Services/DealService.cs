@@ -50,43 +50,6 @@ namespace TrueMoney.Services.Services
             _offerService = offerService;
         }
 
-<<<<<<< HEAD
-        public async Task<DealIndexViewModel> GetAllOpen(int currentUserId) //Пример адекватного метода
-        {
-            var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == currentUserId);
-            return new DealIndexViewModel()
-            {
-                CurrentUserId = currentUserId,
-                Deals = Mapper.Map<List<DealModel>>(await _context.Deals.Where(x => x.DealStatus == DealStatus.Open).ToListAsync()),
-                IsCurrentUserActive = currentUser.IsActive
-            };
-        }
-
-        public async Task<DealIndexViewModel> GetAllForAnonymous()
-        {
-            return new DealIndexViewModel
-            {
-                Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
-                CurrentUserId = -1,
-                IsCurrentUserActive = false
-            };
-=======
-        public async Task<YourActivityViewModel> GetYourActivityViewModel(int currentUserId)
-        {
-            var deals = await GetByUser(currentUserId);
-            var offers = await _offerService.GetByUser(currentUserId);
-            var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);
-            var model = new YourActivityViewModel
-            {
-                Deals = deals,
-                Offers = offers,
-                IsCurrentUserActive = user.IsActive
-            };
-
-            return model;
->>>>>>> bd2e144a1035e78195aa3de57cd1003ee4c25aa9
-        }
-
         public async Task<DealIndexViewModel> GetAll(int currentUserId)
         {
             var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == currentUserId);
