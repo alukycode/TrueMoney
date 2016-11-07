@@ -22,38 +22,6 @@ namespace TrueMoney.Web
 {
     public class MvcApplication : HttpApplication
     {
-        protected void Application_Start()
-        {
-            AreaRegistration.RegisterAllAreas();
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-            MapperInitializer.Initialize();
-            InitializeWindsorContainer();
-        }
-
-        private void InitializeWindsorContainer()
-        {
-            IWindsorContainer container = new WindsorContainer();
-
-            container.Install(
-                FromAssembly.Instance(typeof (WindsorComponentInstaller).Assembly),
-                FromAssembly.Instance(typeof (IdentityInstaller).Assembly));
-
-            //container.Register(
-            //    Component.For<ILog>()
-            //        .Instance(LogManager.GetLogger("TrueMoney.Logger"))
-            //        .LifestyleSingleton());
-
-            // controllers
-            container.Register(Classes.FromThisAssembly().BasedOn<IController>().LifestyleTransient());
-            var controllerFactory = new WindsorControllerFactory(container.Kernel);
-            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
-
-            // custom resolver
-            DependencyResolver.SetResolver(new WindsorDependencyResolver(container));
-        }
-
         protected void Application_Error(object sender, EventArgs e)
         {
             var exception = Server.GetLastError();

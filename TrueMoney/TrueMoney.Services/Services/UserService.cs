@@ -52,11 +52,20 @@ namespace TrueMoney.Services.Services
             //return await _userRepository.GetAll();
         }
 
-        public async Task Add(RegisterViewModel entity)
+        ////public async Task Add(RegisterViewModel entity)
+        ////{
+        ////    var user = Mapper.Map<User>(entity);
+        ////    _context.Users.Add(user);
+        ////    await _context.SaveChangesAsync();
+        ////}
+
+        public User GetMappedUserEnity(RegisterViewModel model)
         {
-            var user = Mapper.Map<User>(entity);
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            var user = Mapper.Map<User>(model);
+
+            user.UserName = model.Email;
+
+            return user;
         }
 
         ////public async Task<int> GetUserIdByAspId(string id)

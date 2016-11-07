@@ -133,15 +133,11 @@ namespace TrueMoney.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var applicationUser = new User { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(applicationUser, model.Password);
+                var user = _userService.GetMappedUserEnity(model);
+                var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(applicationUser, isPersistent: false, rememberBrowser: false);
-
-                    ////model.AspUserId = _userManager.FindByEmail(model.Email).Id;
-                    ////await _userService.Add(model);
-
+                    await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
@@ -314,7 +310,7 @@ namespace TrueMoney.Web.Controllers
                 case SignInStatus.Success:
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
-                    return View("Lockout"); // todo: вернуть на место вьюшку, она была в еррорс
+                    return View("Lockout");
                 case SignInStatus.RequiresVerification:
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
                 case SignInStatus.Failure:
@@ -347,7 +343,7 @@ namespace TrueMoney.Web.Controllers
                     return View("ExternalLoginFailure");
                 }
                 var user = new User { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user);
+                var result = await _userManager.CreateAsync(user); // todo: it won't work because user don't have [required] fields with passport etc
                 if (result.Succeeded)
                 {
                     result = await _userManager.AddLoginAsync(user.Id, info.Login);

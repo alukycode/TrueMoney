@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security.DataProtection;
 using TrueMoney.Data;
 using TrueMoney.Data.Entities;
 using TrueMoney.Services.Services;
@@ -9,7 +10,7 @@ namespace TrueMoney.Web.Auth_Identity_Startup
 {
     public class ApplicationUserManager : UserManager<User, int>
     {
-        public ApplicationUserManager(IUserStore<User, int> store)
+        public ApplicationUserManager(IUserStore<User, int> store, IDataProtectionProvider dataProtectionProvider)
             : base(store)
         {
             // Configure validation logic for usernames
@@ -48,7 +49,6 @@ namespace TrueMoney.Web.Auth_Identity_Startup
             this.EmailService = new EmailService();
             this.SmsService = new SmsService();
 
-            var dataProtectionProvider = Startup.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
                 this.UserTokenProvider =

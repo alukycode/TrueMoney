@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TrueMoney.Data.Entities;
 using TrueMoney.Models;
 using TrueMoney.Models.Account;
 using TrueMoney.Models.Basic;
@@ -13,7 +14,7 @@ namespace TrueMoney.Services.Interfaces
     {
         Task<UserDetailsViewModel> GetDetails(int currentUserId, int userId);
 
-        Task Add(RegisterViewModel entity);
+        User GetMappedUserEnity(RegisterViewModel model);
 
         Task<IEnumerable<UserModel>> GetAll();
 
