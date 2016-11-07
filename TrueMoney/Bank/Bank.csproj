@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BankApi\BankApi.cs" />
+    <Compile Include="BankEntities\BankAccount.cs" />
     <Compile Include="BankEntities\BankAction.cs" />
     <Compile Include="BankEntities\BankData.cs" />
     <Compile Include="BankEntities\BankResponse.cs" />
