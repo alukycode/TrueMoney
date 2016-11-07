@@ -107,6 +107,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BankTests\OperationsTest.cs" />
     <Compile Include="BankTests\WriteReadTest.cs" />
     <Compile Include="CalculationTests\CalculatePaymentsTests.cs" />
     <Compile Include="FakeDbSet.cs" />
