@@ -16,7 +16,6 @@ namespace TrueMoney.Data.Entities
 
         public int DealId { get; set; }
 
-        [Required]
         [ForeignKey("DealId")]
         [InverseProperty("Offers")]
         public virtual Deal Deal { get; set; }

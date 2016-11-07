@@ -13,7 +13,7 @@ namespace TrueMoney.Services.Interfaces
 
     public interface IUserService
     {
-        Task<UserDetailsViewModel> GetDetails(int currentUserId, int userId);
+        Task<UserDetailsViewModel> GetDetails(int userId);
 
         User GetMappedUserEnity(RegisterViewModel model);
 

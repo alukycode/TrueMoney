@@ -1,4 +1,6 @@
-﻿@model TrueMoney.Models.User.UserDetailsViewModel
+﻿@using Microsoft.AspNet.Identity;
+@model TrueMoney.Models.User.UserDetailsViewModel
+
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -21,7 +23,7 @@
     </dl>
 </div>
 <p>
-    @if (@Model.CurrentUserId == Model.User.Id)
+    @if (User.Identity.GetUserId<int>() == Model.User.Id)
     {
         @Html.ActionLink("Создать заявку на займ", "Create", "Deal")
     }

@@ -30,7 +30,7 @@
                 }
                 else if(Model.IsCurrentUserActive)
                 {
-                    @Html.ActionLink("Сделать предложение", "CreateOffer", new { dealId = Model.Deal.Id })
+                    @Html.ActionLink("Сделать предложение", "CreateOffer", "Offer", new { dealId = Model.Deal.Id }, null)
                 }
 
                 break;
@@ -165,7 +165,7 @@
 {
     <div class="row">
         <div class="col-md-8">
-            @using (Html.BeginForm("RevertOffer", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            @using (Html.BeginForm("RevertOffer", "Offer", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.Hidden("offerId", Model.CurrentUserOffer.Id)
@@ -188,7 +188,7 @@ foreach (var offer in Model.Offers)
         <div class="col-md-8">
             @using (Ajax.BeginForm(
                 "ApproveOffer",
-                "Deal",
+                "Offer",
                 null,
                 new AjaxOptions()
                 {
@@ -213,7 +213,7 @@ foreach (var offer in Model.Offers)
             }
             @using (Ajax.BeginForm(
             "CancelOfferApproval",
-            "Deal",
+            "Offer",
             null,
             new AjaxOptions()
             {

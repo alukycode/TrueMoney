@@ -25,15 +25,13 @@ namespace TrueMoney.Services.Services
             _context = context;
         }
 
-        // нормальный метод
-        public async Task<UserDetailsViewModel> GetDetails(int currentUserId, int userId)
+        public async Task<UserDetailsViewModel> GetDetails(int userId)
         {
             var dbUser = await _context.Users.FirstAsync(x => x.Id == userId);
 
             var result = new UserDetailsViewModel
             {
                 User = Mapper.Map<UserModel>(dbUser),
-                CurrentUserId = currentUserId
             };
 
             return result;

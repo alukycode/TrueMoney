@@ -1,39 +1,61 @@
 ﻿namespace Bank.Resources
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
     using System.Xml.Linq;
+    using System.Xml.Serialization;
+
+    using Bank.BankEntities;
 
     /// <summary>
     /// Generate default test data.
     /// </summary>
     public static class BankDataHelper
     {
-        public static string AccountKey = "account";
-        public static string IdAttrKey = "id";
-        public static string SecretAttrKey = "secret";
-        public static string AmountAttrKey = "amount";
-
         public static void UpdateDataFile()
         {
-            var xDoc = new XDocument();
-            xDoc.Add(CreateAccount("1", "1111-0000-3333", 1000f));
-            xDoc.Add(CreateAccount("2", "2222-0000-3333", 2000f));
-            xDoc.Add(CreateAccount("3", "3333-0000-3333", 3000f));
-            xDoc.Add(CreateAccount("4", "4444-0000-3333", 4000f));
-            xDoc.Add(CreateAccount("5", "5555-0000-3333", 5000f));
-            xDoc.Add(CreateAccount("6", "6666-0000-3333", 6000f));
-            xDoc.Add(CreateAccount("7", "7777-0000-3333", 7000f));
+            //https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D1%87%D1%91%D1%82%D0%BD%D1%8B%D0%B9_%D1%81%D1%87%D1%91%D1%82
+            var accounts = new List<BankAccount>();
+            for (int i = 0; i < 10; i++)
+            {
+                accounts.Add(
+                    new BankAccount
+                        {
+                            Id = i,
+                            BankAccountNumber = $"408.17.810.0.9991.{i.ToString("D6")}",
+                            Amount = Convert.ToDecimal(i * 1000),
+                            VisaNumber = i.ToString("D16"),
+                            VisaName = $"Test User{i}",
+                            VisaCcv = i.ToString("D3"),
+                            VisaDate = "01/18"
+                        });
+            }
 
-            xDoc.Save("BankData.xml");
+            SaveAccounts(accounts);
         }
 
-        public static XElement CreateAccount(string id, string secret, float amount)
+        public static List<BankAccount> GetAccounts()
         {
-            var xElement = new XElement(AccountKey);
-            xElement.Add(new XAttribute(IdAttrKey, id));
-            xElement.Add(new XAttribute(SecretAttrKey, secret));
-            xElement.Add(new XAttribute(AmountAttrKey, amount));
+            List<BankAccount> accounts;
+            XmlSerializer formatter = new XmlSerializer(typeof(List<BankAccount>));
+            using (FileStream fs = new FileStream("BankData.xml", FileMode.OpenOrCreate))
+            {
+                accounts = (List<BankAccount>)formatter.Deserialize(fs);
+            }
 
-            return xElement;
+            return accounts;
+        }
+
+        public static void SaveAccounts(List<BankAccount> accounts)
+        {
+            XmlSerializer formatter = new XmlSerializer(typeof(List<BankAccount>));
+
+            using (FileStream fs = new FileStream("BankData.xml", FileMode.Truncate))
+            {
+                formatter.Serialize(fs, accounts);
+            }
         }
     }
 }

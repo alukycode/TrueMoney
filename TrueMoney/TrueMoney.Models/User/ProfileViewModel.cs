@@ -18,7 +18,7 @@
         {
             get
             {
-                return Deals.Count > 0 && Deals.Any(x => x.DealStatus != DealStatus.Closed);
+                return Deals.Any(x => x.DealStatus != DealStatus.Closed);
             }
         }
     }

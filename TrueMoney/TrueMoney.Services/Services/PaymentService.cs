@@ -118,9 +118,9 @@ namespace TrueMoney.Services.Services
                             Amount = visaPaymentViewModel.PaymentCount,
                             RecipientAccountNumber = recipient.BankAccountNumber,
                             SenderCardNumber = visaPaymentViewModel.CardNumber,
-                            SenderCvvCode = visaPaymentViewModel.CvvCode,
+                            SenderCcvCode = visaPaymentViewModel.CvvCode,
                             SenderName = visaPaymentViewModel.Name,
-                            SenderValidBefore = visaPaymentViewModel.ValidBefore
+                            SenderValidBefore = visaPaymentViewModel.ValidBefore.ToString("MM/yy")
                         });
 
             switch (result)
@@ -175,8 +175,8 @@ namespace TrueMoney.Services.Services
         public List<Payment> CalculatePayments(Deal deal)
         {
             var paymentList = new List<Payment>();
-            var periodAmount = deal.Amount / deal.PaymentCount;
             var extraAmount = deal.Amount % deal.PaymentCount;
+            var periodAmount = (deal.Amount - extraAmount) / deal.PaymentCount;
             var period = deal.DealPeriod / deal.PaymentCount;
             var extraTime = deal.DealPeriod % deal.PaymentCount;
             var currentDate = DateTime.Now.AddDays(period + extraTime);
