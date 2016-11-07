@@ -118,9 +118,9 @@ namespace TrueMoney.Services.Services
                             Amount = visaPaymentViewModel.PaymentCount,
                             RecipientAccountNumber = recipient.BankAccountNumber,
                             SenderCardNumber = visaPaymentViewModel.CardNumber,
-                            SenderCvvCode = visaPaymentViewModel.CvvCode,
+                            SenderCcvCode = visaPaymentViewModel.CvvCode,
                             SenderName = visaPaymentViewModel.Name,
-                            SenderValidBefore = visaPaymentViewModel.ValidBefore
+                            SenderValidBefore = visaPaymentViewModel.ValidBefore.ToString("MM/yy")
                         });
 
             switch (result)

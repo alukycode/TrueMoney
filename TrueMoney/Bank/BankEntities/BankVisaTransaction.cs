@@ -13,11 +13,11 @@
 
         public string SenderCardNumber { get; set; }
 
-        public DateTime SenderValidBefore { get; set; }
+        public string SenderValidBefore { get; set; }
 
         public string SenderName { get; set; }
 
-        public string SenderCvvCode { get; set; }
+        public string SenderCcvCode { get; set; }
 
         public string RecipientAccountNumber { get; set; }
 
