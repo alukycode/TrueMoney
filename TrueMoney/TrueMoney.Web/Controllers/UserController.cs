@@ -15,14 +15,15 @@ namespace TrueMoney.Web.Controllers
             _userService = userService;
         }
 
+        [Authorize]
         public ActionResult Index()
         {
-            return RedirectToAction("Details", new { id = CurrentUserId });
+            return RedirectToAction("Details", new { id = CurrentUserId }); 
         }
 
         public async Task<ActionResult> Details(int id)
         {
-            var userModel = await _userService.GetDetails(CurrentUserId, id);
+            var userModel = await _userService.GetDetails(id);
 
             return View(userModel);
         }

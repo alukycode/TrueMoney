@@ -9,16 +9,6 @@
     {
         public IList<DealModel> Deals { get; set; }
 
-        public int CurrentUserId { get; set; }
-
-        public bool IsCurrentUserActive { get; set; }
-
-        public bool CurrentUserHasActiveDeals
-        {
-            get
-            {
-                return Deals.Count > 0 && Deals.Any(x => x.OwnerId == CurrentUserId);
-            }
-        }
+        public bool UserCanCreateDeal { get; set; }
     }
 }

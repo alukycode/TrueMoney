@@ -13,7 +13,6 @@ namespace TrueMoney.Data.Entities
     {
         public int OwnerId { get; set; }
 
-        [Required]
         public virtual User Owner { get; set; }
 
         [InverseProperty("Deal")]

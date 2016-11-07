@@ -23,8 +23,6 @@
             }
         }
 
-        public bool ShowOffers => IsCurrentUserOwner;
-
         public OfferModel CurrentUserOffer
         {
             get
