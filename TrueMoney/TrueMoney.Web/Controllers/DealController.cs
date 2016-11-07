@@ -165,12 +165,5 @@ namespace TrueMoney.Web.Controllers
 
             return GoHome();
         }
-
-        public async Task<ActionResult> YourActivity() // для меня загадка, почему активностью юзера занимается контроллер сделок
-        {
-            var viewModel = await _dealService.GetYourActivityViewModel(CurrentUserId);
-
-            return View(viewModel);
-        }
     }
 }

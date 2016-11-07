@@ -27,18 +27,11 @@ namespace TrueMoney.Web.Controllers
             return View(userModel);
         }
 
-        [Authorize(Roles = RoleNames.Admin)]
-        public async Task<ActionResult> AdminList()
+        public async Task<ActionResult> UserProfile() // имя Profile уже занято в контроллере :(
         {
-            return View(await _userService.GetAdminListModel());
-        }
+            var viewModel = await _userService.GetProfileViewModel(CurrentUserId);
 
-        [Authorize(Roles = RoleNames.Admin)]
-        [HttpPost]
-        public async Task<ActionResult> Activate(int userId)
-        {
-            await _userService.ActivateUser(userId);
-            return RedirectToAction("AdminList");
+            return View(viewModel);
         }
     }
 }

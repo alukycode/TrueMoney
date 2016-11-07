@@ -206,6 +206,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\DealController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorControler.cs" />
@@ -304,12 +305,12 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Deal\CreateOffer.cshtml" />
     <Content Include="Views\Payment\Success.cshtml" />
-    <Content Include="Views\Deal\YourActivity.cshtml" />
+    <Content Include="Views\User\UserProfile.cshtml" />
     <Content Include="Views\Error\404.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Error\_ExceptionInfo.cshtml" />
     <Content Include="Views\Payment\Visa.cshtml" />
-    <Content Include="Views\User\AdminList.cshtml" />
+    <Content Include="Views\Admin\InactiveUsers.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
   </ItemGroup>
   <ItemGroup>

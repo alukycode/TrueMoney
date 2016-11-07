@@ -61,21 +61,6 @@ namespace TrueMoney.Services.Services
             };
         }
 
-        public async Task<YourActivityViewModel> GetYourActivityViewModel(int currentUserId)
-        {
-            var deals = await GetByUser(currentUserId);
-            var offers = await _offerService.GetByUser(currentUserId);
-            var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);
-            var model = new YourActivityViewModel
-            {
-                Deals = deals,
-                Offers = offers,
-                IsCurrentUserActive = user.IsActive
-            };
-
-            return model;
-        }
-
         public async Task<DealIndexViewModel> GetAllForAnonymous()
         {
             return new DealIndexViewModel

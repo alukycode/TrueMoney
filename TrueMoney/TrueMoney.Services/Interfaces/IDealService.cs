@@ -41,7 +41,5 @@ namespace TrueMoney.Services.Interfaces
         Task<CreateDealForm> GetCreateDealForm(int userId);
 
         Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId);
-
-        Task<YourActivityViewModel> GetYourActivityViewModel(int currentUserId);
     }
 }

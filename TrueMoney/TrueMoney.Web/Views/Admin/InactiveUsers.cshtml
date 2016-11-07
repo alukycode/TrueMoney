@@ -1,7 +1,7 @@
-﻿@model TrueMoney.Models.User.AdminListViewModel
+﻿@model TrueMoney.Models.Admin.InactiveUsersViewModel
 
 @{
-    ViewBag.Title = "AdminList";
+    ViewBag.Title = "Неактивные пользователи";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -9,7 +9,7 @@
 @if (Model.Users != null && Model.Users.Any())
 {
     <div>
-        <h4>AdminListViewModel</h4>
+        <h4>Список неактивны</h4>
         <hr/>
         <dl class="dl-horizontal"></dl>
     </div>
@@ -23,7 +23,7 @@
             {
                 <div class="row">
                     <div class="col-md-8">
-                        @using (Html.BeginForm("Activate", "User", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        @using (Html.BeginForm("Activate", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.Hidden("userId", user.User.Id)

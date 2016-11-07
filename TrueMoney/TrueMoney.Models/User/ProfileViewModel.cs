@@ -6,7 +6,7 @@
     using TrueMoney.Common.Enums;
     using TrueMoney.Models.Basic;
 
-    public class YourActivityViewModel
+    public class ProfileViewModel
     {
         public IList<DealModel> Deals { get; set; } = new List<DealModel>();
 
