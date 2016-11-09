@@ -12,8 +12,6 @@ namespace TrueMoney.Models
 
         public bool CanSetPaymentCount { get; set; }
 
-        public int PayForId { get; set; }
-
         public int DealId { get; set; }
 
         [Required]

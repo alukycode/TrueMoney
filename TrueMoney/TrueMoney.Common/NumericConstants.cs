@@ -8,5 +8,6 @@ namespace TrueMoney.Common
 {
     public static class NumericConstants
     {
+        public static decimal Eps = 0.000001M;
     }
 }
