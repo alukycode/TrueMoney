@@ -15,30 +15,24 @@ namespace TrueMoney.Web.Controllers
             _userService = userService;
         }
 
+        [Authorize]
         public ActionResult Index()
         {
-            return RedirectToAction("Details", new { id = CurrentUserId });
+            return RedirectToAction("Details", new { id = CurrentUserId }); 
         }
 
         public async Task<ActionResult> Details(int id)
         {
-            var userModel = await _userService.GetDetails(CurrentUserId, id);
+            var userModel = await _userService.GetDetails(id);
 
             return View(userModel);
         }
 
-        [Authorize(Roles = RoleNames.Admin)]
-        public async Task<ActionResult> AdminList()
+        public async Task<ActionResult> UserProfile() // имя Profile уже занято в контроллере :(
         {
-            return View(await _userService.GetAdminListModel());
-        }
+            var viewModel = await _userService.GetProfileViewModel(CurrentUserId);
 
-        [Authorize(Roles = RoleNames.Admin)]
-        [HttpPost]
-        public async Task<ActionResult> Activate(int userId)
-        {
-            await _userService.ActivateUser(userId);
-            return RedirectToAction("AdminList");
+            return View(viewModel);
         }
     }
 }

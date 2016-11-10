@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TrueMoney.Data.Entities;
 using TrueMoney.Models;
 using TrueMoney.Models.Account;
+using TrueMoney.Models.Admin;
 using TrueMoney.Models.Basic;
 
 namespace TrueMoney.Services.Interfaces
@@ -12,7 +13,7 @@ namespace TrueMoney.Services.Interfaces
 
     public interface IUserService
     {
-        Task<UserDetailsViewModel> GetDetails(int currentUserId, int userId);
+        Task<UserDetailsViewModel> GetDetails(int userId);
 
         User GetMappedUserEnity(RegisterViewModel model);
 
@@ -20,9 +21,9 @@ namespace TrueMoney.Services.Interfaces
 
         Task<UserModel> GetById(int id);
 
-        Task<UserModel> GetUserByName(string name);
+        Task<InactiveUsersViewModel> GetInactiveUsersViewModel();
 
-        Task<AdminListViewModel> GetAdminListModel();
+        Task<ProfileViewModel> GetProfileViewModel(int currentUserId);
 
         Task ActivateUser(int userId);
     }

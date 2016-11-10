@@ -1,10 +1,11 @@
 ﻿@using TrueMoney.Models.Basic
 @using TrueMoney.Common.Enums
-@model TrueMoney.Models.User.YourActivityViewModel
+@model TrueMoney.Models.User.ProfileViewModel
 
 <div>
     <h4>Личный кабинет</h4>
     <h5>Ваш активный займ:</h5>
+    @* todo: сделать в модели поля ActiveDeals, ClosedDeals, OpenDeals *@
     @foreach (var item in Model.Deals.Where(x => x.DealStatus != DealStatus.Closed && x.DealStatus != DealStatus.Open))
     {
         @RenderDeal(item)
@@ -15,6 +16,7 @@
         @RenderDeal(item)
     }
     ---------------------------<br/>
+    @* todo: у юзера может быть только одна активная заявка? если да, то зачем цикл? *@
     <h5>Ваша активная заявка:</h5>
     @foreach (var item in Model.Deals.Where(x => x.DealStatus == DealStatus.Open))
     {

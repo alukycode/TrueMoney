@@ -14,10 +14,10 @@ namespace TrueMoney.Services.Services
     using AutoMapper;
     using Data;
     using Interfaces;
+    using Models.Offer;
     using TrueMoney.Models;
     using TrueMoney.Models.Deal;
     using TrueMoney.Models.User;
-    using TrueMoney.Models.ViewModels;
 
     public class DealService : IDealService
     {
@@ -50,50 +50,16 @@ namespace TrueMoney.Services.Services
             _offerService = offerService;
         }
 
-        public async Task<DealIndexViewModel> GetAllOpen(int currentUserId) //Пример адекватного метода
-        {
-            var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == currentUserId);
-            return new DealIndexViewModel()
-            {
-                CurrentUserId = currentUserId,
-                Deals = Mapper.Map<List<DealModel>>(await _context.Deals.Where(x => x.DealStatus == DealStatus.Open).ToListAsync()),
-                IsCurrentUserActive = currentUser.IsActive
-            };
-        }
-
-        public async Task<YourActivityViewModel> GetYourActivityViewModel(int currentUserId)
-        {
-            var deals = await GetByUser(currentUserId);
-            var offers = await _offerService.GetByUser(currentUserId);
-            var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);
-            var model = new YourActivityViewModel
-            {
-                Deals = deals,
-                Offers = offers,
-                IsCurrentUserActive = user.IsActive
-            };
-
-            return model;
-        }
-
-        public async Task<DealIndexViewModel> GetAllForAnonymous()
-        {
-            return new DealIndexViewModel
-            {
-                Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
-                CurrentUserId = -1,
-                IsCurrentUserActive = false
-            };
-        }
-
         public async Task<DealIndexViewModel> GetAll(int currentUserId)
         {
             var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == currentUserId);
             return new DealIndexViewModel
             {
                 Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
-                CurrentUserId = currentUserId,
-                IsCurrentUserActive = currentUser.IsActive
+                UserCanCreateDeal = 
+                    currentUser != null 
+                    && currentUser.IsActive 
+                    && currentUser.Deals.All(x => x.DealStatus == DealStatus.Closed)
             };
         }
 
@@ -130,40 +96,7 @@ namespace TrueMoney.Services.Services
         //        .ToListAsync();
 
         //    return Mapper.Map(deals); // а че за метод? он же вообще не юзается, пока коменчу
-        //}
-
-        public async Task ApproveOffer(int offerId)
-        {
-            var offer = await _context.Offers
-                .Include(x => x.Deal)
-                .Include(x => x.Deal.Owner)
-                .FirstAsync(x => x.Id == offerId);
-            offer.IsApproved = true;
-            var deal = offer.Deal;
-            deal.DealStatus = DealStatus.WaitForApprove;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task CancelOfferApproval(int offerId)
-        {
-            var offer = await _context.Offers
-                .Include(x => x.Deal)
-                .Include(x => x.Deal.Owner)
-                .FirstAsync(x => x.Id == offerId);
-            offer.IsApproved = false;
-            var deal = offer.Deal;
-            deal.DealStatus = DealStatus.Open;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task RevertOffer(int offerId)
-        {
-            var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
-            var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == offer.DealId);
-            deal.DealStatus = DealStatus.Open;
-            _context.Offers.Remove(offer);
-            await _context.SaveChangesAsync();
-        }
+        //}            
 
         public async Task<CreateDealForm> GetCreateDealForm(int userId)
         {
@@ -175,34 +108,7 @@ namespace TrueMoney.Services.Services
             }
 
             return res;
-        }
-
-        public async Task<CreateOfferForm> GetCreateOfferForm(int dealId, int userId)
-        {
-            var deal = await _context.Deals.FirstAsync(x => x.Id == dealId);
-            return new CreateOfferForm
-            {
-                DealRate = deal.InterestRate,
-                DealId = dealId,
-                IsUserCanCreateOffer = 
-                    deal.Offers != null || !deal.Offers.Any(x => x.OffererId == userId) //какая-то сомнительная штука, надо будет перепроверить
-            };
-        }
-
-        public async Task CreateOffer(CreateOfferForm model, int userId)
-        {
-            _context.Offers.Add(new Offer
-            {
-                CreateTime = DateTime.Now,
-                OffererId = model.OffererId,
-                DealId = model.DealId,
-                InterestRate = model.InterestRate,
-                Offerer = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId),
-                Deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == model.DealId)
-            }); // тут нужен маппинг, но сейчас лень.
-
-            await _context.SaveChangesAsync();
-        }
+        }        
 
         public async Task FinishDealStartLoan(int userId, int offerId, int dealId) //TODO: отрефакторить по аналогии с предыдущими
         {

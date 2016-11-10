@@ -116,7 +116,7 @@
     <Compile Include="Basic\PaymentPlanModel.cs" />
     <Compile Include="Basic\UserModel.cs" />
     <Compile Include="Deal\CreateDealForm.cs" />
-    <Compile Include="CreateOfferForm.cs" />
+    <Compile Include="Offer\CreateOfferForm.cs" />
     <Compile Include="Basic\DealModel.cs" />
     <Compile Include="Manage\AddPhoneNumberViewModel.cs" />
     <Compile Include="Manage\ChangePasswordViewModel.cs" />
@@ -128,14 +128,13 @@
     <Compile Include="Manage\VerifyPhoneNumberViewModel.cs" />
     <Compile Include="Basic\OfferModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User\AdminListViewModel.cs" />
+    <Compile Include="Admin\InactiveUsersViewModel.cs" />
     <Compile Include="User\UserAndPassportViewModel.cs" />
     <Compile Include="User\UserDetailsViewModel.cs" />
     <Compile Include="Deal\DealDetailsViewModel.cs" />
     <Compile Include="Deal\DealIndexViewModel.cs" />
-    <Compile Include="ViewModels\OfferDetailsViewModel.cs" />
     <Compile Include="VisaPaymentViewModel.cs" />
-    <Compile Include="User\YouActivityViewModel.cs" />
+    <Compile Include="User\ProfileViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -8,6 +8,7 @@ using TrueMoney.Data;
 using TrueMoney.Data.Entities;
 using TrueMoney.Models;
 using TrueMoney.Models.Account;
+using TrueMoney.Models.Admin;
 using TrueMoney.Models.Basic;
 using TrueMoney.Services.Interfaces;
 
@@ -24,15 +25,13 @@ namespace TrueMoney.Services.Services
             _context = context;
         }
 
-        // нормальный метод
-        public async Task<UserDetailsViewModel> GetDetails(int currentUserId, int userId)
+        public async Task<UserDetailsViewModel> GetDetails(int userId)
         {
             var dbUser = await _context.Users.FirstAsync(x => x.Id == userId);
 
             var result = new UserDetailsViewModel
             {
                 User = Mapper.Map<UserModel>(dbUser),
-                CurrentUserId = currentUserId
             };
 
             return result;
@@ -89,18 +88,12 @@ namespace TrueMoney.Services.Services
         ////    return Mapper.Map<UserModel>(dbUser);
         ////}
 
-        public async Task<UserModel> GetUserByName(string name)
-        {
-            //return await this._userRepository.GetUserByName(name);
-            throw new NotImplementedException();
-        }
-
-        public async Task<AdminListViewModel> GetAdminListModel()
+        public async Task<InactiveUsersViewModel> GetInactiveUsersViewModel()
         {
             var users = Mapper.Map<IList<UserModel>>(await _context.Users.ToListAsync());
             var passports = Mapper.Map<IList<PassportModel>>(await _context.Passports.ToListAsync());
 
-            return new AdminListViewModel
+            return new InactiveUsersViewModel
                        {
                            Users =
                                users.Where(x => x.PassportId.HasValue)
@@ -116,6 +109,20 @@ namespace TrueMoney.Services.Services
                                        })
                                .ToList()
                        };
+        }
+
+        public async Task<ProfileViewModel> GetProfileViewModel(int currentUserId)
+        {
+            var offers = await _context.Offers.Where(x => x.OffererId == currentUserId).ToListAsync();
+            var deals = await _context.Deals.Where(x => x.OwnerId == currentUserId).ToListAsync();
+            var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);
+
+            return new ProfileViewModel
+            {
+                Deals = Mapper.Map<List<DealModel>>(deals),
+                Offers = Mapper.Map<IList<OfferModel>>(offers),
+                IsCurrentUserActive = user.IsActive
+            };
         }
 
         public async Task ActivateUser(int userId)
