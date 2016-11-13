@@ -68,6 +68,18 @@
     <Compile Include="Migrations\201611042352383_Initial.Designer.cs">
       <DependentUpon>201611042352383_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611101808480_RemovedConflictField.cs" />
+    <Compile Include="Migrations\201611101808480_RemovedConflictField.Designer.cs">
+      <DependentUpon>201611101808480_RemovedConflictField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611101921224_test.cs" />
+    <Compile Include="Migrations\201611101921224_test.Designer.cs">
+      <DependentUpon>201611101921224_test.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611101939165_cascadeDeleteForPaymentPlan.cs" />
+    <Compile Include="Migrations\201611101939165_cascadeDeleteForPaymentPlan.Designer.cs">
+      <DependentUpon>201611101939165_cascadeDeleteForPaymentPlan.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrueMoneyDbInitializer.cs" />
     <Compile Include="Entities\Entity.cs" />
@@ -92,6 +104,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201611042352383_Initial.resx">
       <DependentUpon>201611042352383_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611101808480_RemovedConflictField.resx">
+      <DependentUpon>201611101808480_RemovedConflictField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611101921224_test.resx">
+      <DependentUpon>201611101921224_test.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611101939165_cascadeDeleteForPaymentPlan.resx">
+      <DependentUpon>201611101939165_cascadeDeleteForPaymentPlan.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

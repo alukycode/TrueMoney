@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using TrueMoney.Data;
+using TrueMoney.Data.Entities;
 using TrueMoney.Services.Mapping;
 
 namespace ForTesting
@@ -14,9 +15,33 @@ namespace ForTesting
     {
         static void Main(string[] args)
         {
-            using (var context = new TrueMoneyContext())
+            try
             {
-                var temp = context.Users.FirstOrDefault();
+                //using (var context = new TrueMoneyContext())
+                //{
+                //    var plan = context.PaymentPlans.Create();
+                //    plan.CreateTime = DateTime.Now;
+
+                //    var deal = context.Deals.Create();
+                //    deal.OwnerId = 1;
+                //    deal.CreateDate = DateTime.Now;
+
+                //    deal.PaymentPlan = plan;
+
+                //    context.Deals.Add(deal);
+                //    context.SaveChanges();
+                //}
+                using (var context = new TrueMoneyContext())
+                {
+                    var deal = context.Deals.First(x => x.Id == 10);
+                    context.Deals.Remove(deal);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
             }
         }
     }

@@ -65,7 +65,6 @@ namespace TrueMoney.Data
             var firsUser = users.First();
             firsUser.Deals = GenerateDeals();
             context.SaveChanges();
-
             GenerateOffers(context.Deals.ToList(), users.Skip(1).ToList());
             context.SaveChanges();
         }
@@ -90,7 +89,8 @@ namespace TrueMoney.Data
                         DateOfIssuing = DateTime.Now,
                         Number = "test",
                         Series = "test",
-                    }
+                    },
+                    IsActive = true,
                 },
                 new User
                 {
@@ -106,7 +106,8 @@ namespace TrueMoney.Data
                         DateOfIssuing = DateTime.Now,
                         Number = "test",
                         Series = "test",
-                    }
+                    },
+                    IsActive = true,
                 },
                 new User
                 {
@@ -182,7 +183,8 @@ namespace TrueMoney.Data
                 {
                     Offerer = offerers[1],
                     CreateTime = new DateTime(2016,10,09),
-                    InterestRate = 20
+                    InterestRate = 20,
+                    IsApproved = true,
                 },
                 new Offer
                 {
@@ -224,19 +226,23 @@ namespace TrueMoney.Data
                     CreateDate = DateTime.Now,
                     DealPeriod = 5000,
                     InterestRate = 12,
-                    PaymentPlan = GeneratePlan()
+                    PaymentPlan = GeneratePlan(),
+                    PaymentCount = 3,
                 },
                 new Deal
                 {
                     Amount = 123,
                     CreateDate = DateTime.Now,
                     DealPeriod = 60,
+                    PaymentCount = 3,
                     InterestRate = 2,
                 },
                 new Deal
                 {
                     CreateDate = new DateTime(2016, 10, 09),
                     InterestRate = 25,
+                    DealPeriod = 60,
+                    PaymentCount = 3,
                     Description = "for business",
                     Amount = 100
                 },
@@ -245,12 +251,16 @@ namespace TrueMoney.Data
                     Amount = 200,
                     CreateDate = new DateTime(2016, 10, 09),
                     InterestRate = 25,
+                    DealPeriod = 60,
+                    PaymentCount = 10,
                     Description = "to buy keyboard",
                 },
                 new Deal
                 {
                     CreateDate = new DateTime(2016, 10, 09),
                     InterestRate = 5,
+                    DealPeriod = 60,
+                    PaymentCount = 5,
                     Description = "to rent a bitches",
                     Amount = 300
                 }

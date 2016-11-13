@@ -30,10 +30,6 @@ namespace TrueMoney.Models
         [RegularExpression("^[0-9]{3}$")]
         public string CvvCode { get; set; }
 
-        [Required]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
-
         public string FormAction { get; set; }
     }
 }
