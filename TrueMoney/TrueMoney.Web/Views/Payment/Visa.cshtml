@@ -13,6 +13,7 @@
         @Html.HiddenFor(m=>m.PayForId)
         @Html.HiddenFor(m=>m.DealId)
         @Html.HiddenFor(m=>m.PaymentName)
+        @Html.HiddenFor(m=>m.CanSetPaymentCount)
         @if (Model.CanSetPaymentCount)
         {
             <div class="form-group">

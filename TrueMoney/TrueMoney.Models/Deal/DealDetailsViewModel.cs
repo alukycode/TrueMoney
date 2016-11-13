@@ -36,5 +36,7 @@
         public PaymentPlanModel PaymentPlanModel { get; set; }
 
         public IEnumerable<PaymentModel> Payments { get; set; }
+
+        public decimal ExtraMoney { get; set; }
     }
 }

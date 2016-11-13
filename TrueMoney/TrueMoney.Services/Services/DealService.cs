@@ -18,6 +18,7 @@ namespace TrueMoney.Services.Services
     using TrueMoney.Models;
     using TrueMoney.Models.Deal;
     using TrueMoney.Models.User;
+    using TrueMoney.Services.Extensions;
 
     public class DealService : IDealService
     {
@@ -56,9 +57,9 @@ namespace TrueMoney.Services.Services
             return new DealIndexViewModel
             {
                 Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
-                UserCanCreateDeal = 
-                    currentUser != null 
-                    && currentUser.IsActive 
+                UserCanCreateDeal =
+                    currentUser != null
+                    && currentUser.IsActive
                     && currentUser.Deals.All(x => x.DealStatus == DealStatus.Closed)
             };
         }
@@ -72,7 +73,9 @@ namespace TrueMoney.Services.Services
         public async Task<DealDetailsViewModel> GetById(int id, int userId)
         {
             var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == id);
+            var deal = await _context.Deals
+                .Include(x => x.PaymentPlan.Payments)
+                .Include(x => x.PaymentPlan.BankTransactions).FirstOrDefaultAsync(x => x.Id == id);
             var result = new DealDetailsViewModel
             {
                 CurrentUserId = userId,
@@ -83,8 +86,15 @@ namespace TrueMoney.Services.Services
             };
             if (deal.PaymentPlan != null)
             {
-                result.Payments = Mapper.Map<IList<PaymentModel>>(deal.PaymentPlan.Payments);
+                var allPaidBefore =
+                    deal.PaymentPlan.Payments.Where(x => x.IsPaid).Select(x => x.Amount + x.Liability).Sum();
+                //some extra money before previous payment
+                result.ExtraMoney = deal.PaymentPlan.BankTransactions.Select(x => x.Amount).Sum() - allPaidBefore;
+                result.Payments = Mapper.Map<IList<PaymentModel>>(deal.PaymentPlan.Payments.CalculateLiability(result.ExtraMoney, deal));
             }
+
+            //save calculatrd liability
+            await _context.SaveChangesAsync();
 
             return result;
         }
@@ -108,7 +118,7 @@ namespace TrueMoney.Services.Services
             }
 
             return res;
-        }        
+        }
 
         public async Task FinishDealStartLoan(int userId, int offerId, int dealId) //TODO: отрефакторить по аналогии с предыдущими
         {
@@ -140,11 +150,6 @@ namespace TrueMoney.Services.Services
             _context.Deals.Remove(deal);
 
             await _context.SaveChangesAsync();
-        }
-
-        private PaymentPlan CalculatePayments(Deal deal)
-        {
-            return new PaymentPlan { Deal = deal, CreateTime = DateTime.Now };
         }
     }
 }

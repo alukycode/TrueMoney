@@ -90,6 +90,10 @@
                                 <p style="background-color: lightcoral">@(number++) - pay @payment.Amount + @payment.Liability before @payment.DueDate.ToString("D")</p>
                             }
                         }
+                        @if (Model.ExtraMoney > 0)
+                        {
+                            <p>Остаток: @Model.ExtraMoney</p>
+                        }
                         @ShowPayoutForm()
                     </dd>
                 }
@@ -103,12 +107,16 @@
                         {
                             if (payment.IsPaid)
                             {
-                                <p style="background-color: greenyellow">@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.ToString("D")</p>
+                                <p style="background-color: greenyellow">@(number++) - paid @(payment.Amount + payment.Liability) on @payment.PaidDate.Value.ToString("D")</p>
                             }
                             else
                             {
-                                <p style="background-color: lightcoral">@(number++) - will pay @payment.Amount + @payment.Liability before @payment.DueDate.ToString("D")</p>
+                                <p style="background-color: lightcoral">@(number++) - will pay @(payment.Amount + payment.Liability) before @payment.DueDate.ToString("D")</p>
                             }
+                        }
+                        @if (Model.ExtraMoney > 0)
+                        {
+                            <p>Следующий платёж погашен частично: @Model.ExtraMoney</p>
                         }
                     </dd>
                 }
@@ -147,7 +155,7 @@
 @helper ShowPayoutForm()
 {
     var nearByPayment = Model.Payments.First(x => !x.IsPaid);
-    var description = $"Надо выплатить {nearByPayment.Amount} + {nearByPayment.Liability} before {nearByPayment.DueDate.ToString("D")}";
+    var description = $"Надо выплатить {nearByPayment.Amount - Model.ExtraMoney + nearByPayment.Liability} before {nearByPayment.DueDate.ToString("D")}";
     <h4>Надо выплачивать бабло челу</h4>
     <p>@description</p>
     <p>
@@ -157,7 +165,7 @@
                  paymentName = $"Выплата по займу #{Model.Deal.Id}." + description,
                  payForId = Model.Offers.First(x=>x.IsApproved).OffererId,
                  dealId = Model.Deal.Id,
-                 paymentCount = nearByPayment.Amount + nearByPayment.Liability
+                 paymentCount = nearByPayment.Amount + nearByPayment.Liability - Model.ExtraMoney
              }), htmlAttributes: null)
     </p>
 }

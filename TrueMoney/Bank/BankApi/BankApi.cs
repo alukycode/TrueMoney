@@ -12,7 +12,7 @@
         {
             //var bankData = new BankData().GetBankData();
             //todo - check and update bank date
-            return BankResponse.Success;
+            return BankResponse.Error;
         }
 
         public async Task<BankResponse> DoWithVisa(BankVisaTransaction bankTransaction)

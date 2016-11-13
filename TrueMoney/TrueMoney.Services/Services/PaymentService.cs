@@ -15,6 +15,7 @@ namespace TrueMoney.Services.Services
     using Bank.BankEntities;
     using Data;
     using TrueMoney.Models;
+    using TrueMoney.Services.Extensions;
     using TrueMoney.Services.Interfaces;
 
     public class PaymentService : IPaymentService
@@ -45,7 +46,7 @@ namespace TrueMoney.Services.Services
         public async Task<PaymentResult> LendMoney(VisaPaymentViewModel visaPaymentViewModel, int currentUserId)
         {
             var deal = await _context.Deals
-                .Include(x=>x.Owner)
+                .Include(x => x.Owner)
                 .FirstAsync(x => x.Id == visaPaymentViewModel.DealId); //тут еще, возможно, нужны какие-то проверки с текущим юзером, но если не нужны, то не добавляйте!!!
             var recipient = deal.Owner;
             var sender = await _context.Users.FirstAsync(x => x.Id == currentUserId);
@@ -60,12 +61,15 @@ namespace TrueMoney.Services.Services
             }
 
             var result = await
-                _bankApi.Do(
-                    new BankTransaction
+                _bankApi.DoWithVisa(
+                    new BankVisaTransaction
                     {
                         Amount = visaPaymentViewModel.PaymentCount,
-                        SenderAccountNumber = sender.BankAccountNumber,
                         RecipientAccountNumber = recipient.BankAccountNumber,
+                        SenderCardNumber = visaPaymentViewModel.CardNumber,
+                        SenderCcvCode = visaPaymentViewModel.CvvCode,
+                        SenderName = visaPaymentViewModel.Name,
+                        SenderValidBefore = visaPaymentViewModel.ValidBefore.ToString("MM/yy")
                     });
 
             switch (result)
@@ -73,11 +77,11 @@ namespace TrueMoney.Services.Services
                 case BankResponse.Success:
                     deal.DealStatus = DealStatus.InProgress;
                     var paymentPlan = new PaymentPlan
-                                          {
-                                              CreateTime = DateTime.Now,
-                                              DealId = deal.Id,
-                                              Deal = deal
-                                          };
+                    {
+                        CreateTime = DateTime.Now,
+                        DealId = deal.Id,
+                        Deal = deal
+                    };
                     deal.PaymentPlan = paymentPlan;
 
                     await _context.SaveChangesAsync();
@@ -86,7 +90,7 @@ namespace TrueMoney.Services.Services
                     paymentPlan.Payments = CalculatePayments(deal);
 
                     await _context.SaveChangesAsync();
-                    
+
                     return PaymentResult.Success;
 
                 case BankResponse.NotEnoughtMoney:
@@ -101,9 +105,23 @@ namespace TrueMoney.Services.Services
         {
             var deal = await _context.Deals
                 .Include(x => x.Owner)
-                .Include(x=> x.Offers)
+                .Include(x => x.Offers)
                 .FirstAsync(x => x.Id == visaPaymentViewModel.DealId);
             var recipient = deal.Offers.First(x => x.IsApproved).Offerer;
+
+            var paymentPlan = await _context.PaymentPlans
+                        .Include(x => x.Payments).FirstOrDefaultAsync(x => x.DealId == deal.Id);
+            var allPaidBefore =
+                paymentPlan.Payments.Where(x => x.IsPaid).Select(x => x.Amount + x.Liability).Sum();
+            //some extra money before previous payment
+            var extraMoney = paymentPlan.BankTransactions.Select(x => x.Amount).Sum() - allPaidBefore;
+            var nearByPayment = paymentPlan.Payments.Where(x => !x.IsPaid)
+                .CalculateLiability(extraMoney, deal).OrderBy(x => x.DueDate).ToList();
+
+            if (nearByPayment[0].Amount + nearByPayment[0].Liability > visaPaymentViewModel.PaymentCount)
+            {
+                return PaymentResult.LessThenMinAmount;
+            }
 
             if (recipient.Id != visaPaymentViewModel.PayForId)
             {
@@ -114,28 +132,20 @@ namespace TrueMoney.Services.Services
                 await
                 _bankApi.DoWithVisa(
                     new BankVisaTransaction
-                        {
-                            Amount = visaPaymentViewModel.PaymentCount,
-                            RecipientAccountNumber = recipient.BankAccountNumber,
-                            SenderCardNumber = visaPaymentViewModel.CardNumber,
-                            SenderCcvCode = visaPaymentViewModel.CvvCode,
-                            SenderName = visaPaymentViewModel.Name,
-                            SenderValidBefore = visaPaymentViewModel.ValidBefore.ToString("MM/yy")
-                        });
+                    {
+                        Amount = visaPaymentViewModel.PaymentCount,
+                        RecipientAccountNumber = recipient.BankAccountNumber,
+                        SenderCardNumber = visaPaymentViewModel.CardNumber,
+                        SenderCcvCode = visaPaymentViewModel.CvvCode,
+                        SenderName = visaPaymentViewModel.Name,
+                        SenderValidBefore = visaPaymentViewModel.ValidBefore.ToString("MM/yy")
+                    });
 
             switch (result)
             {
                 case BankResponse.Success:
-                    //todo - check and calculate liability if need
-                    var paymentPlan = await _context.PaymentPlans
-                        .Include(x=>x.Payments).FirstOrDefaultAsync(x => x.DealId == deal.Id);
-                    var allPaidBefore =
-                        paymentPlan.Payments.Where(x => x.IsPaid).Select(x => x.Amount + x.Liability).Sum();
-                    //some extra money before previous payment
-                    var extraMoney = paymentPlan.BankTransactions.Select(x => x.Amount).Sum() - allPaidBefore;
                     //new money will used to close calculated payments
                     var newMoney = visaPaymentViewModel.PaymentCount + extraMoney;
-                    var nearByPayment = paymentPlan.Payments.Where(x => !x.IsPaid).OrderBy(x => x.DueDate).ToList();
                     foreach (var payment in nearByPayment)
                     {
                         var currentPaymentMoney = payment.Amount + payment.Liability;
@@ -153,12 +163,12 @@ namespace TrueMoney.Services.Services
 
                     paymentPlan.BankTransactions.Add(
                         new Data.Entities.BankTransaction
-                            {
-                                Amount = visaPaymentViewModel.PaymentCount,
-                                DateOfPayment = DateTime.Now,
-                                PaymentPlan = paymentPlan,
-                                PaymentPlanId = paymentPlan.Id
-                            });
+                        {
+                            Amount = visaPaymentViewModel.PaymentCount,
+                            DateOfPayment = DateTime.Now,
+                            PaymentPlan = paymentPlan,
+                            PaymentPlanId = paymentPlan.Id
+                        });
 
                     await _context.SaveChangesAsync();
 
@@ -181,12 +191,12 @@ namespace TrueMoney.Services.Services
             var extraTime = deal.DealPeriod % deal.PaymentCount;
             var currentDate = DateTime.Now.AddDays(period + extraTime);
             paymentList.Add(new Payment
-                                {
-                                    Amount = periodAmount+extraAmount,
-                                    DueDate = currentDate,
-                                    Liability = 0,
-                                    PaymentPlan = deal.PaymentPlan,
-                                    PaymentPlanId = deal.PaymentPlan.Id
+            {
+                Amount = periodAmount + extraAmount,
+                DueDate = currentDate,
+                Liability = 0,
+                PaymentPlan = deal.PaymentPlan,
+                PaymentPlanId = deal.PaymentPlan.Id
             });
             var number = 1;
             while (number < deal.PaymentCount)

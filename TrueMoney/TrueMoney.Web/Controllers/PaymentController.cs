@@ -113,6 +113,9 @@ namespace TrueMoney.Web.Controllers
                     case PaymentResult.PermissionError:
                         ModelState.AddModelError("", "Ошибка доступа к счёту");
                         break;
+                    case PaymentResult.LessThenMinAmount:
+                        ModelState.AddModelError("", "Сумма платежа меньше минимальной суммы. См. заголовок.");
+                        break;
                 }
             }
 
