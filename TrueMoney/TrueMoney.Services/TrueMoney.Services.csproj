@@ -107,8 +107,6 @@
     <Compile Include="Mapping\MapperInitializer.cs" />
     <Compile Include="Services\OfferService.cs" />
     <Compile Include="Services\PaymentService.cs" />
-    <Compile Include="Rating\RatingAction.cs" />
-    <Compile Include="Rating\RatingHelper.cs" />
     <Compile Include="Services\UserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

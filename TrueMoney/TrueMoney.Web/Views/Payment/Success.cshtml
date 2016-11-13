@@ -3,8 +3,8 @@
     Layout = "../Shared/_Layout.cshtml";
 }
 
-<h2>Success</h2>
-<p> you paid @Model.PaymentCount to @Model.PayForId in context
-    @Model.PaymentName</p>
+<h4>@Model.PaymentName</h4>
+<h5>Платёж завершён</h5>
+<p>Вы перевели @Model.PaymentCount рублей заёмщику.</p>
 
 @Html.ActionLink("Детали займa", "Details", "Deal", routeValues: new { id = Model.DealId }, htmlAttributes: null)

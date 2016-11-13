@@ -12,9 +12,10 @@ namespace TrueMoney.Web.Controllers
     using Models.Offer;
     using Services.Interfaces;
 
+    using TrueMoney.Common;
     using TrueMoney.Models.Deal;
 
-    [Authorize]
+    [Authorize(Roles = RoleNames.User)]
     public class DealController : BaseController
     {
         private readonly IDealService _dealService;

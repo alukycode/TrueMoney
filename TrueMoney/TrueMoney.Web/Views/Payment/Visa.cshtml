@@ -1,7 +1,6 @@
 ﻿@model TrueMoney.Models.VisaPaymentViewModel
 
 <h4>@Model.PaymentName</h4>
-<h5>@Model.PaymentCount</h5>
 @using (Html.BeginForm(Model.FormAction, "Payment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()

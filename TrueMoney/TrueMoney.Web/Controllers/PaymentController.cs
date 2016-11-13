@@ -7,8 +7,10 @@ namespace TrueMoney.Web.Controllers
 {
     using System.Threading.Tasks;
 
+    using TrueMoney.Common;
     using TrueMoney.Services.Interfaces;
 
+    [Authorize(Roles = RoleNames.User)]
     public class PaymentController : BaseController
     {
         private readonly IPaymentService _paymentService;

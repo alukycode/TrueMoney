@@ -69,7 +69,7 @@ namespace TrueMoney.Services.Services
                         SenderCardNumber = visaPaymentViewModel.CardNumber,
                         SenderCcvCode = visaPaymentViewModel.CvvCode,
                         SenderName = visaPaymentViewModel.Name,
-                        SenderValidBefore = visaPaymentViewModel.ValidBefore.ToString("MM/yy")
+                        SenderValidBefore = visaPaymentViewModel.ValidBefore
                     });
 
             switch (result)
@@ -138,7 +138,7 @@ namespace TrueMoney.Services.Services
                         SenderCardNumber = visaPaymentViewModel.CardNumber,
                         SenderCcvCode = visaPaymentViewModel.CvvCode,
                         SenderName = visaPaymentViewModel.Name,
-                        SenderValidBefore = visaPaymentViewModel.ValidBefore.ToString("MM/yy")
+                        SenderValidBefore = visaPaymentViewModel.ValidBefore
                     });
 
             switch (result)

@@ -23,5 +23,10 @@ namespace TrueMoney.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Rating()
+        {
+            return View();
+        }
     }
 }

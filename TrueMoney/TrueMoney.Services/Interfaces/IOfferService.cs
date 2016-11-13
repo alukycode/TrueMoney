@@ -13,7 +13,7 @@ namespace TrueMoney.Services.Interfaces
 
         Task CancelOfferApproval(int offerId);
 
-        Task RevertOffer(int offerId);
+        Task RevertOffer(int offerId, int currentUserId);
 
         Task<CreateOfferForm> GetCreateOfferForm(int dealId, int currentUserId);
 

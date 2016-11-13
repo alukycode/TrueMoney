@@ -8,8 +8,6 @@
     {
         public int Id { get; set; }
 
-        //public bool IsOpen { get; set; }
-
         public decimal InterestRate { get; set; }
 
         public DateTime CreateDate { get; set; }
@@ -23,13 +21,6 @@
         public string Description { get; set; }
 
         public DealStatus DealStatus { get; set; }
-        //public bool IsWaitForLoan { get; set; }
-
-        //public bool IsClosed { get; set; }
-
-        //public bool IsWaitForApprove { get; set; }
-
-        //public bool IsInProgress { get; set; }
 
         public int OwnerId { get; set; }
 

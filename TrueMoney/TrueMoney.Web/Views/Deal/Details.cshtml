@@ -9,8 +9,10 @@
 
 <h2>@ViewBag.Title</h2>
 <div>
-    <h4>@Model.Deal.Id</h4>
-    <h6>Заёмщик - @Model.Deal.OwnerFullName</h6>
+    <h6>
+        Заёмщик - @Html.ActionLink(Model.Deal.OwnerFullName, "Details", "User", routeValues: new { id = Model.Deal.OwnerId },
+                 htmlAttributes: null), рейтинг **
+    </h6>
     <hr />
     <dl class="dl-horizontal">
         @ShowInfo()
@@ -28,7 +30,7 @@
                     <p>Вы предложили свои деньги в размере @Model.Deal.Amount на @Model.Deal.DealPeriod дней под @Model.CurrentUserOffer.InterestRate %</p>
                     @ShowRevertOfferForm()
                 }
-                else if(Model.IsCurrentUserActive)
+                else if (Model.IsCurrentUserActive)
                 {
                     @Html.ActionLink("Сделать предложение", "CreateOffer", "Offer", new { dealId = Model.Deal.Id }, null)
                 }
@@ -154,8 +156,8 @@
 </div>
 @helper ShowPayoutForm()
 {
-    var nearByPayment = Model.Payments.First(x => !x.IsPaid);
-    var description = $"Надо выплатить {nearByPayment.Amount - Model.ExtraMoney + nearByPayment.Liability} before {nearByPayment.DueDate.ToString("D")}";
+var nearByPayment = Model.Payments.First(x => !x.IsPaid);
+var description = $"Надо выплатить {nearByPayment.Amount - Model.ExtraMoney + nearByPayment.Liability} before {nearByPayment.DueDate.ToString("D")}";
     <h4>Надо выплачивать бабло челу</h4>
     <p>@description</p>
     <p>
@@ -163,7 +165,7 @@
              new
              {
                  paymentName = $"Выплата по займу #{Model.Deal.Id}." + description,
-                 payForId = Model.Offers.First(x=>x.IsApproved).OffererId,
+                 payForId = Model.Offers.First(x => x.IsApproved).OffererId,
                  dealId = Model.Deal.Id,
                  paymentCount = nearByPayment.Amount + nearByPayment.Liability - Model.ExtraMoney
              }), htmlAttributes: null)
@@ -191,61 +193,61 @@
 {
 foreach (var offer in Model.Offers)
 {
-    <p>@offer.OffererFullName предлагает зайем под @offer.InterestRate %</p>
-    <div class="row">
-        <div class="col-md-8">
-            @using (Ajax.BeginForm(
-                "ApproveOffer",
-                "Offer",
-                null,
-                new AjaxOptions()
+        <p>@offer.OffererFullName предлагает зайем под @offer.InterestRate %</p>
+        <div class="row">
+            <div class="col-md-8">
+                @using (Ajax.BeginForm(
+        "ApproveOffer",
+        "Offer",
+        null,
+        new AjaxOptions()
+        {
+            OnBegin = $"handleApproveClick({offer.Id})",
+            OnSuccess = $"handleApproveSuccess({offer.Id})",
+        },
+        new
+        {
+            @id = $"approveButtonId{offer.Id}",
+            @class = "form-horizontal",
+            role = "form",
+            style = string.Format("display: {0};", offer.IsApproved ? "none" : "inline")
+        }))
                 {
-                    OnBegin = $"handleApproveClick({offer.Id})",
-                    OnSuccess = $"handleApproveSuccess({offer.Id})",
-                },
-                new
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("offerId", offer.Id)
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Подтвердить предложение" class="btn btn-default" />
+                        </div>
+                    </div>
+                }
+                @using (Ajax.BeginForm(
+    "CancelOfferApproval",
+    "Offer",
+    null,
+    new AjaxOptions()
+    {
+        OnBegin = $"handleCancelApproveClick({offer.Id})",
+        OnSuccess = $"handleCancelApproveSuccess({offer.Id})",
+    },
+    new
+    {
+        @id = $"cancelApprovalButtonId{offer.Id}",
+        @class = "form-horizontal",
+        role = "form",
+        style = string.Format("display: {0};", !offer.IsApproved ? "none" : "inline")
+    }))
                 {
-                    @id = $"approveButtonId{offer.Id}",
-                    @class = "form-horizontal",
-                    role = "form",
-                    style = string.Format("display: {0};", offer.IsApproved ? "none" : "inline")
-                }))
-            {
-                @Html.AntiForgeryToken()
-                @Html.Hidden("offerId", offer.Id)
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Подтвердить предложение" class="btn btn-default" />
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("offerId", offer.Id)
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Отменить предложение" class="btn btn-default" />
+                        </div>
                     </div>
-                </div>
-            }
-            @using (Ajax.BeginForm(
-            "CancelOfferApproval",
-            "Offer",
-            null,
-            new AjaxOptions()
-            {
-                OnBegin = $"handleCancelApproveClick({offer.Id})",
-                OnSuccess = $"handleCancelApproveSuccess({offer.Id})",
-            },
-            new
-            {
-                @id = $"cancelApprovalButtonId{offer.Id}",
-                @class = "form-horizontal",
-                role = "form",
-                style = string.Format("display: {0};", !offer.IsApproved ? "none" : "inline")
-            }))
-            {
-                @Html.AntiForgeryToken()
-                @Html.Hidden("offerId", offer.Id)
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Отменить предложение" class="btn btn-default" />
-                    </div>
-                </div>
-            }
+                }
+            </div>
         </div>
-    </div>
 }
 }
 @helper ShowDeleteDealForm()

@@ -90,7 +90,8 @@ namespace TrueMoney.Data
                         DateOfIssuing = DateTime.Now,
                         Number = "test",
                         Series = "test",
-                    }
+                    },
+                    IsActive = true
                 },
                 new User
                 {
@@ -106,7 +107,8 @@ namespace TrueMoney.Data
                         DateOfIssuing = DateTime.Now,
                         Number = "test",
                         Series = "test",
-                    }
+                    },
+                    IsActive = true
                 },
                 new User
                 {
@@ -117,6 +119,7 @@ namespace TrueMoney.Data
                     FirstName = "Дима",
                     LastName = "Артюх",
                     BankAccountNumber = "408.17.810.0.9991.000002",
+                    IsActive = true
                 },
                 new User
                 {

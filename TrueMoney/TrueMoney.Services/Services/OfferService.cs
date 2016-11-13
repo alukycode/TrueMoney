@@ -13,6 +13,8 @@ using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Services.Services
 {
+    using TrueMoney.Common;
+
     public class OfferService : IOfferService
     {
         private readonly ITrueMoneyContext _context;
@@ -52,10 +54,15 @@ namespace TrueMoney.Services.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task RevertOffer(int offerId)
+        public async Task RevertOffer(int offerId, int currentUserId)
         {
             var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
             var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == offer.DealId);
+            if (deal.DealStatus == DealStatus.WaitForApprove)
+            {
+                var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);
+                user.Rating += Rating.RevertFinalOffer;
+            }
             deal.DealStatus = DealStatus.Open;
             _context.Offers.Remove(offer);
             await _context.SaveChangesAsync();
@@ -74,9 +81,6 @@ namespace TrueMoney.Services.Services
 
         public async Task CreateOffer(CreateOfferForm model)
         {
-            //var offer = _context.Offers.Create();
-            //Mapper.Map(model, offer, typeof(CreateOfferForm), typeof(Offer));
-            //_context.Offers.Add(offer); 
             _context.Offers.Add(Mapper.Map<Offer>(model));
 
             await _context.SaveChangesAsync();

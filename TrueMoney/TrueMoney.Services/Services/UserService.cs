@@ -14,6 +14,7 @@ using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Services.Services
 {
+    using TrueMoney.Common;
     using TrueMoney.Models.User;
 
     public class UserService : IUserService
@@ -129,6 +130,7 @@ namespace TrueMoney.Services.Services
         {
             var user = await _context.Users.FirstAsync(x => x.Id == userId);
             user.IsActive = true;
+            user.Rating = Rating.StartRating;
             await _context.SaveChangesAsync();
         }
     }

@@ -4,6 +4,8 @@ namespace TrueMoney.Models.Offer
 {
     using System.Web.Mvc;
 
+    using TrueMoney.Models.Basic;
+
     public class CreateOfferForm
     {
         [Required]

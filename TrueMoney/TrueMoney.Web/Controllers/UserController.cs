@@ -6,6 +6,7 @@ using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Web.Controllers
 {
+    [Authorize]
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
@@ -28,6 +29,7 @@ namespace TrueMoney.Web.Controllers
             return View(userModel);
         }
 
+        [Authorize(Roles = RoleNames.User)]
         public async Task<ActionResult> UserProfile() // имя Profile уже занято в контроллере :(
         {
             var viewModel = await _userService.GetProfileViewModel(CurrentUserId);
