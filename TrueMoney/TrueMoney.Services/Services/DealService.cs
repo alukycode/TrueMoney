@@ -120,17 +120,13 @@ namespace TrueMoney.Services.Services
             return res;
         }
 
-        public async Task FinishDealStartLoan(int userId, int offerId, int dealId) //TODO: отрефакторить по аналогии с предыдущими
+        public async Task FinishDealStartLoan(int offerId) 
         {
-            var deal = await _context.Deals
-                .Include(x => x.Offers)
-                .Include(x => x.Owner)
-                .FirstOrDefaultAsync(x => x.Id == dealId);
-            var finishOffer = deal.Offers.First(x => x.Id == offerId);
+            var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
+            var deal = offer.Deal;
             deal.DealStatus = DealStatus.WaitForLoan;
-            deal.InterestRate = finishOffer.InterestRate;
-            //finish offer
-            finishOffer.IsApproved = true;
+            deal.InterestRate = offer.InterestRate;
+            offer.IsApproved = true;
 
             await _context.SaveChangesAsync();
         }

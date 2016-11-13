@@ -17,7 +17,6 @@
         @switch (Model.Deal.DealStatus)
         {
             case DealStatus.Open:
-                ViewBag.Title = "Информация о заявке " + Model.Deal.Id;
                 if (Model.IsCurrentUserOwner)
                 {
                     @ShowOffers()

@@ -32,6 +32,10 @@ namespace TrueMoney.Data
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Deal>()
+                .HasOptional(x => x.PaymentPlan)
+                .WithRequired(x => x.Deal)
+                .WillCascadeOnDelete();
             base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<IdentityUser>().ToTable("Users", "dbo");
             //modelBuilder.Entity<User>        ().ToTable("Users", "dbo");

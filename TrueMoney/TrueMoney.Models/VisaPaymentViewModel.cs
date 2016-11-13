@@ -12,8 +12,6 @@ namespace TrueMoney.Models
 
         public bool CanSetPaymentCount { get; set; }
 
-        public int PayForId { get; set; }
-
         public int DealId { get; set; }
 
         [Required]
@@ -31,10 +29,6 @@ namespace TrueMoney.Models
         [Required]
         [RegularExpression("^[0-9]{3}$")]
         public string CvvCode { get; set; }
-
-        [Required]
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
 
         public string FormAction { get; set; }
     }

@@ -10,8 +10,6 @@ namespace TrueMoney.Data.Entities
 {
     public class PaymentPlan : Entity
     {
-        public int DealId { get; set; }
-
         [Required]
         public virtual Deal Deal { get; set; }
 
