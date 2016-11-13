@@ -32,7 +32,6 @@ namespace TrueMoney.Web.Controllers
                         {
                             PaymentCount = paymentCount,
                             PaymentName = paymentName,
-                            PayForId = payForId,
                             DealId = dealId,
                             FormAction = "VisaLoan"
                         });
@@ -82,7 +81,6 @@ namespace TrueMoney.Web.Controllers
                         {
                             PaymentCount = paymentCount,
                             PaymentName = paymentName,
-                            PayForId = payForId,
                             DealId = dealId,
                             CanSetPaymentCount = true,
                             FormAction = "VisaPayout"

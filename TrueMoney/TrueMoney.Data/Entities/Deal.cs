@@ -23,8 +23,6 @@ namespace TrueMoney.Data.Entities
         [ForeignKey("ResultOfferId")]
         public virtual Offer ResultOffer { get; set; }
 
-        public int? PaymentPlanId { get; set; }
-
         public virtual PaymentPlan PaymentPlan { get; set; }
 
         public DateTime CreateDate { get; set; }

@@ -1,4 +1,5 @@
 using System.Data.Entity.Migrations;
+using System.Linq;
 
 namespace TrueMoney.Data.Migrations
 {
@@ -16,7 +17,10 @@ namespace TrueMoney.Data.Migrations
 
         protected override void Seed(TrueMoneyContext context)
         {
-            TrueMoneyDbInitializer.InitializeData(context);
+            if (!context.Users.Any())
+            {
+                TrueMoneyDbInitializer.InitializeData(context);
+            }
         }
     }
 }

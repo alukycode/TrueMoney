@@ -16,7 +16,7 @@ namespace TrueMoney.Services.Interfaces
         
         Task DeleteDeal(int dealId, int userId);
 
-        Task FinishDealStartLoan(int userId, int offerId, int dealId);
+        Task FinishDealStartLoan(int offerId);
 
         Task<DealIndexViewModel> GetAll(int currentUserId);
 

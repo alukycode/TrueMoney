@@ -49,7 +49,7 @@ namespace TrueMoney.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> FinishDeal(int offerId, int dealId)
         {
-            await _dealService.FinishDealStartLoan(CurrentUserId, offerId, dealId);
+            await _dealService.FinishDealStartLoan(offerId);
 
             return RedirectToAction("Details", "Deal", new { id = dealId });
         }
