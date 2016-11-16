@@ -63,7 +63,7 @@ namespace TrueMoney.Data
             // seed other stuff
 
             var firsUser = users.First();
-            firsUser.Deals = GenerateDeals();
+            firsUser.Deals = GenerateDealsWithOneInProcess();
             context.SaveChanges();
             GenerateOffers(context.Deals.ToList(), users.Skip(1).ToList());
             context.SaveChanges();
@@ -196,28 +196,85 @@ namespace TrueMoney.Data
             };
         }
 
-        private static PaymentPlan GeneratePlan()
+        private static PaymentPlan GenerateOpenPlan()
         {
+            var createTime = DateTime.Now;
             return new PaymentPlan
             {
-                CreateTime = DateTime.Now,
+                CreateTime = createTime,
                 Payments = new List<Payment>
                 {
                     new Payment
                     {
                         Amount = 10,
-                        DueDate = DateTime.Now,
+                        DueDate = createTime.AddDays(10),
                     },
                     new Payment
                     {
                         Amount = 20,
-                        DueDate = DateTime.Now,
+                        DueDate = createTime.AddDays(20),
                     }
                 }
             };
         }
 
-        private static List<Deal> GenerateDeals()
+        private static PaymentPlan GenerateClosedPlan()
+        {
+            var createTime = new DateTime(2012, 12, 12);
+            return new PaymentPlan
+            {
+                CreateTime = createTime,
+                Payments = new List<Payment>
+                {
+                    new Payment
+                    {
+                        Amount = 10,
+                        DueDate = createTime.AddDays(10),
+                        IsPaid = true,
+                        PaidDate = createTime.AddDays(10),
+                    },
+                    new Payment
+                    {
+                        Amount = 20,
+                        DueDate = createTime.AddDays(20),
+                        IsPaid = true,
+                        PaidDate = createTime.AddDays(10),
+                    }
+                }
+            };
+        }
+
+        private static List<Deal> GenerateDealsWithOneInProcess()
+        {
+            var result = new List<Deal>
+            {
+                new Deal
+                {
+                    Amount = 123,
+                    CreateDate = DateTime.Now,
+                    DealPeriod = 60,
+                    PaymentCount = 2,
+                    InterestRate = 2,
+                    DealStatus = DealStatus.Closed,
+                    PaymentPlan = GenerateClosedPlan(),
+                    Offers = 
+                },
+                new Deal
+                {
+                    Amount = 13,
+                    CreateDate = DateTime.Now,
+                    DealPeriod = 5000,
+                    InterestRate = 12,
+                    PaymentPlan = GenerateOpenPlan(),
+                    PaymentCount = 2,
+                    DealStatus = DealStatus.InProgress,
+                },
+            };
+
+            return result;
+        }
+
+        private static List<Deal> GenerateDealsWithOneOpen()
         {
             var result = new List<Deal>
             {
@@ -229,6 +286,7 @@ namespace TrueMoney.Data
                     InterestRate = 12,
                     PaymentPlan = GeneratePlan(),
                     PaymentCount = 3,
+                    DealStatus = DealStatus.InProgress,
                 },
                 new Deal
                 {
