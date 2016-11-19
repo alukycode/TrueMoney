@@ -1,13 +1,14 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using TrueMoney.Common;
 using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Web.Controllers
 {
     [Authorize]
-    public class UserController : BaseController
+    public class UserController : Controller
     {
         private readonly IUserService _userService;
 
@@ -19,7 +20,7 @@ namespace TrueMoney.Web.Controllers
         [Authorize]
         public ActionResult Index()
         {
-            return RedirectToAction("Details", new { id = CurrentUserId }); 
+            return RedirectToAction("Details", new { id = User.Identity.GetUserId<int>() }); 
         }
 
         public async Task<ActionResult> Details(int id)
@@ -32,7 +33,7 @@ namespace TrueMoney.Web.Controllers
         [Authorize(Roles = RoleNames.User)]
         public async Task<ActionResult> UserProfile() // имя Profile уже занято в контроллере :(
         {
-            var viewModel = await _userService.GetProfileViewModel(CurrentUserId);
+            var viewModel = await _userService.GetProfileViewModel(User.Identity.GetUserId<int>());
 
             return View(viewModel);
         }

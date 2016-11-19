@@ -3,7 +3,7 @@ using TrueMoney.Services;
 
 namespace TrueMoney.Web.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : Controller //TODO: надо убрать лишнее
     {
         public HomeController()
         {

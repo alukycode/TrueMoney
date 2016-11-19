@@ -6,12 +6,12 @@ using TrueMoney.Services;
 namespace TrueMoney.Web.Controllers
 {
     using System.Threading.Tasks;
-
+    using Microsoft.AspNet.Identity;
     using TrueMoney.Common;
     using TrueMoney.Services.Interfaces;
 
     [Authorize(Roles = RoleNames.User)]
-    public class PaymentController : BaseController
+    public class PaymentController : Controller
     {
         private readonly IPaymentService _paymentService;
 
@@ -47,7 +47,7 @@ namespace TrueMoney.Web.Controllers
             if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)
                 && formModel.PaymentCount > 0)
             {
-                var payRes = await _paymentService.LendMoney(formModel, CurrentUserId);
+                var payRes = await _paymentService.LendMoney(formModel, User.Identity.GetUserId<int>());
                 switch (payRes)
                 {
                     case PaymentResult.Success:
@@ -96,7 +96,7 @@ namespace TrueMoney.Web.Controllers
             if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)
                 && formModel.PaymentCount > 0)
             {
-                var payRes = await _paymentService.Payout(formModel, CurrentUserId);
+                var payRes = await _paymentService.Payout(formModel, User.Identity.GetUserId<int>());
                 switch (payRes)
                 {
                     case PaymentResult.Success:

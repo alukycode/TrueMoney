@@ -65,6 +65,7 @@ namespace TrueMoney.Data
             users[1].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[1]).ToList());
             users[2].Deals = GenerateDealsWithOneWaitForApprove(users.Where(x => x != users[2]).ToList());
             users[3].Deals = GenerateDealsWithOneWaitForLoan(users.Where(x => x != users[3]).ToList());
+            users[4].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[4]).ToList());
 
             context.SaveChanges();
         }
@@ -90,7 +91,7 @@ namespace TrueMoney.Data
                         Number = "test",
                         Series = "test",
                     },
-                    IsActive = true
+                    IsActive = true,
                 },
                 new User
                 {
@@ -107,7 +108,7 @@ namespace TrueMoney.Data
                         Number = "test",
                         Series = "test",
                     },
-                    IsActive = true
+                    IsActive = true,
                 },
                 new User
                 {
@@ -118,7 +119,7 @@ namespace TrueMoney.Data
                     FirstName = "Дима",
                     LastName = "Артюх",
                     BankAccountNumber = "408.17.810.0.9991.000002",
-                    IsActive = true
+                    IsActive = true,
                 },
                 new User
                 {
@@ -129,6 +130,7 @@ namespace TrueMoney.Data
                     FirstName = "Test",
                     LastName = "Example",
                     BankAccountNumber = "408.17.810.0.9991.000003",
+                    IsActive = true,
                 },
                 new User
                 {

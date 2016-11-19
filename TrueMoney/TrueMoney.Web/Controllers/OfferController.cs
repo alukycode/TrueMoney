@@ -9,10 +9,11 @@ using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Web.Controllers
 {
+    using Microsoft.AspNet.Identity;
     using TrueMoney.Common;
 
     [Authorize(Roles = RoleNames.User)]
-    public class OfferController : BaseController
+    public class OfferController : Controller
     {
         private readonly IOfferService _offerService;
 
@@ -39,14 +40,14 @@ namespace TrueMoney.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RevertOffer(int offerId, int dealId)
         {
-            await _offerService.RevertOffer(offerId, CurrentUserId);
+            await _offerService.RevertOffer(offerId, User.Identity.GetUserId<int>());
 
             return RedirectToAction("Details", "Deal", new { id = dealId });
         }
 
         public async Task<ActionResult> CreateOffer(int dealId)
         {
-            var formModel = await _offerService.GetCreateOfferForm(dealId, CurrentUserId);
+            var formModel = await _offerService.GetCreateOfferForm(dealId, User.Identity.GetUserId<int>());
             return View(formModel);
         }
 

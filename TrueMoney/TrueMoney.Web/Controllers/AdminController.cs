@@ -10,7 +10,7 @@ using TrueMoney.Services.Interfaces;
 namespace TrueMoney.Web.Controllers
 {
     [Authorize(Roles = RoleNames.Admin)]
-    public class AdminController : BaseController
+    public class AdminController : Controller
     {
         private readonly IUserService _userService;
 

@@ -16,7 +16,7 @@ namespace TrueMoney.Web.Controllers
     using TrueMoney.Models.Deal;
 
     [Authorize(Roles = RoleNames.User)]
-    public class DealController : BaseController
+    public class DealController : Controller
     {
         private readonly IDealService _dealService;
 
@@ -29,20 +29,20 @@ namespace TrueMoney.Web.Controllers
         public async Task<ActionResult> Index()
         {
             DealIndexViewModel model;
-            model = await _dealService.GetAll(CurrentUserId);
+            model = await _dealService.GetAll(User.Identity.GetUserId<int>());
 
             return View(model);
         }
 
         public async Task<ActionResult> Details(int id)
         {
-            var model = await _dealService.GetById(id, CurrentUserId);
+            var model = await _dealService.GetById(id, User.Identity.GetUserId<int>());
             if (model != null)
             {
                 return View(model);
             }
 
-            return GoHome();
+            return RedirectToAction("Index"); //TODO: надо тут ошибку отображать на самом деле
         }
 
         [HttpPost]
@@ -72,7 +72,7 @@ namespace TrueMoney.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.OwnerId = CurrentUserId;
+                model.OwnerId = User.Identity.GetUserId<int>();
                 var id = await _dealService.CreateDeal(model);
 
                 return RedirectToAction("Details", new { id = id });
@@ -85,9 +85,9 @@ namespace TrueMoney.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int dealId)
         {
-            await _dealService.DeleteDeal(dealId, CurrentUserId);
+            await _dealService.DeleteDeal(dealId, User.Identity.GetUserId<int>());
 
-            return GoHome();
+            return RedirectToAction("Index");
         }
     }
 }
