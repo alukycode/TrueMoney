@@ -57,15 +57,15 @@ namespace TrueMoney.Data
 
             userManager.Create(admin);
             userManager.AddToRole(admin.Id, RoleNames.Admin);
-
             context.SaveChanges();
 
             // seed other stuff
 
-            var firsUser = users.First();
-            firsUser.Deals = GenerateDeals();
-            context.SaveChanges();
-            GenerateOffers(context.Deals.ToList(), users.Skip(1).ToList());
+            users[0].Deals = GenerateDealsWithOneInProgress(users.Where(x => x != users[0]).ToList());
+            users[1].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[1]).ToList());
+            users[2].Deals = GenerateDealsWithOneWaitForApprove(users.Where(x => x != users[2]).ToList());
+            users[3].Deals = GenerateDealsWithOneWaitForLoan(users.Where(x => x != users[3]).ToList());
+
             context.SaveChanges();
         }
 
@@ -143,128 +143,240 @@ namespace TrueMoney.Data
             };
         }
 
-        private static void GenerateOffers(List<Deal> deals, List<User> offerers)
+        private static List<Offer> GenerateOffersWithOneApproved(List<User> offerers, DateTime dealCreateDate)
         {
-            var offer = new Offer
+            var result = new List<Offer>
             {
-                CreateTime = DateTime.Now,
-                InterestRate = 10,
-                IsApproved = true,
-                Offerer = offerers[0],
-            };
-            var deal = deals.First();
-            deal.Offers = new List<Offer>
-            {
-                offer,
                 new Offer
                 {
-                    CreateTime = DateTime.Now,
-                    InterestRate = 20,
+                    CreateTime = dealCreateDate.AddDays(2),
+                    InterestRate = 10,
                     IsApproved = true,
                     Offerer = offerers[0],
-                }
-            };
-            deal.ResultOffer = offer;
-            deal.DealStatus = DealStatus.InProgress;
-
-            deals[1].Offers = new List<Offer>
-            {
-                new Offer
-                {
-                    CreateTime = DateTime.Now,
-                    InterestRate = 20,
-                    IsApproved = true,
-                    Offerer = offerers[0],
-                }
-            };
-
-            deals[2].Offers = new List<Offer>
-            {
-                new Offer
-                {
-                    Offerer = offerers[1],
-                    CreateTime = new DateTime(2016,10,09),
-                    InterestRate = 20,
-                    IsApproved = true,
                 },
                 new Offer
                 {
-                    Offerer = offerers[0],
-                    CreateTime = new DateTime(2016,10,09),
-                    InterestRate = 21
-                }
+                    CreateTime = dealCreateDate.AddDays(1),
+                    InterestRate = 20,
+                    Offerer = offerers[1],
+                },
             };
+
+            return result;
         }
 
-        private static PaymentPlan GeneratePlan()
+        private static List<Offer> GenerateOffers(List<User> offerers, DateTime dealCreateDate)
         {
-            return new PaymentPlan
+            var result = new List<Offer>
             {
-                CreateTime = DateTime.Now,
+                new Offer
+                {
+                    CreateTime = dealCreateDate.AddDays(2),
+                    InterestRate = 10,
+                    Offerer = offerers[0],
+                },
+                new Offer
+                {
+                    CreateTime = dealCreateDate.AddDays(3),
+                    InterestRate = 20,
+                    Offerer = offerers[1],
+                },
+            };
+
+            return result;
+        }
+
+        private static PaymentPlan GenerateOpenPlan(DateTime planCreateDate)
+        {
+            return new PaymentPlan 
+            {
+                CreateTime = planCreateDate,
                 Payments = new List<Payment>
                 {
                     new Payment
                     {
                         Amount = 10,
-                        DueDate = DateTime.Now,
+                        DueDate = planCreateDate.AddDays(10),
                     },
                     new Payment
                     {
                         Amount = 20,
-                        DueDate = DateTime.Now,
+                        DueDate = planCreateDate.AddDays(20),
                     }
                 }
             };
         }
 
-        private static List<Deal> GenerateDeals()
+        private static PaymentPlan GenerateClosedPlan(DateTime planCreateDate)
         {
+            var payments = new List<Payment>
+            {
+                new Payment
+                {
+                    Amount = 10,
+                    DueDate = planCreateDate.AddDays(10),
+                    IsPaid = true,
+                    PaidDate = planCreateDate.AddDays(10),
+                },
+                new Payment
+                {
+                    Amount = 20,
+                    DueDate = planCreateDate.AddDays(20),
+                    IsPaid = true,
+                    PaidDate = planCreateDate.AddDays(10),
+                }
+            };
+            return new PaymentPlan 
+            {
+                CreateTime = planCreateDate,
+                Payments = payments,
+                BankTransactions = GenerateBankTransactions(payments),
+            };
+        }
+
+        private static List<BankTransaction> GenerateBankTransactions(List<Payment> payments)
+        {
+            var result = new List<BankTransaction>();
+            foreach (var item in payments)
+            {
+                result.Add(new BankTransaction
+                {
+                    Amount = item.Amount,
+                    DateOfPayment = item.DueDate,
+                });
+            }
+
+            return result;
+        }
+
+        private static List<Deal> GenerateDealsWithOneInProgress(List<User> offerers)
+        {
+            var firstDealCreateDate = new DateTime(2012, 12, 12);
+            var SecondDealCreateDate = new DateTime(2013, 12, 12);
             var result = new List<Deal>
             {
                 new Deal
                 {
-                    Amount = 13,
-                    CreateDate = DateTime.Now,
-                    DealPeriod = 5000,
-                    InterestRate = 12,
-                    PaymentPlan = GeneratePlan(),
-                    PaymentCount = 3,
+                    Amount = 123,
+                    CreateDate = firstDealCreateDate,
+                    DealPeriod = 60,
+                    PaymentCount = 2,
+                    InterestRate = 2,
+                    DealStatus = DealStatus.Closed,
+                    PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3)),
+                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate),
+                    CloseDate = firstDealCreateDate.AddDays(60),
                 },
+                new Deal
+                {
+                    Amount = 13,
+                    CreateDate = SecondDealCreateDate,
+                    DealPeriod = 30,
+                    InterestRate = 12,
+                    PaymentPlan = GenerateOpenPlan(SecondDealCreateDate.AddDays(3)),
+                    PaymentCount = 2,
+                    DealStatus = DealStatus.InProgress,
+                    Offers = GenerateOffersWithOneApproved(offerers, SecondDealCreateDate),
+                },
+            };
+
+            return result;
+        }
+
+        private static List<Deal> GenerateDealsWithOneOpen(List<User> offerers)
+        {
+            var firstDealCreateDate = new DateTime(2012, 12, 12);
+            var SecondDealCreateDate = new DateTime(2013, 12, 12);
+            var result = new List<Deal>
+            {
                 new Deal
                 {
                     Amount = 123,
-                    CreateDate = DateTime.Now,
+                    CreateDate = firstDealCreateDate,
                     DealPeriod = 60,
-                    PaymentCount = 3,
+                    PaymentCount = 2,
                     InterestRate = 2,
+                    DealStatus = DealStatus.Closed,
+                    PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3)),
+                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate),
+                    CloseDate = firstDealCreateDate.AddDays(60),
                 },
                 new Deal
                 {
-                    CreateDate = new DateTime(2016, 10, 09),
-                    InterestRate = 25,
+                    Amount = 13,
+                    CreateDate = SecondDealCreateDate,
+                    DealPeriod = 30,
+                    InterestRate = 12,
+                    PaymentCount = 2,
+                    DealStatus = DealStatus.Open,
+                    Offers = GenerateOffers(offerers, SecondDealCreateDate),
+                },
+            };
+
+            return result;
+        }
+
+        private static List<Deal> GenerateDealsWithOneWaitForApprove(List<User> offerers)
+        {
+            var firstDealCreateDate = new DateTime(2012, 12, 12);
+            var SecondDealCreateDate = new DateTime(2013, 12, 12);
+            var result = new List<Deal>
+            {
+                new Deal
+                {
+                    Amount = 123,
+                    CreateDate = firstDealCreateDate,
                     DealPeriod = 60,
-                    PaymentCount = 3,
-                    Description = "for business",
-                    Amount = 100
+                    PaymentCount = 2,
+                    InterestRate = 2,
+                    DealStatus = DealStatus.Closed,
+                    PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3)),
+                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate),
+                    CloseDate = firstDealCreateDate.AddDays(60),
                 },
                 new Deal
                 {
-                    Amount = 200,
-                    CreateDate = new DateTime(2016, 10, 09),
-                    InterestRate = 25,
+                    Amount = 13,
+                    CreateDate = SecondDealCreateDate,
+                    DealPeriod = 30,
+                    InterestRate = 12,
+                    PaymentCount = 2,
+                    DealStatus = DealStatus.WaitForApprove,
+                    Offers = GenerateOffersWithOneApproved(offerers, SecondDealCreateDate),
+                },
+            };
+
+            return result;
+        }
+
+        private static List<Deal> GenerateDealsWithOneWaitForLoan(List<User> offerers)
+        {
+            var firstDealCreateDate = new DateTime(2012, 12, 12);
+            var SecondDealCreateDate = new DateTime(2013, 12, 12);
+            var result = new List<Deal>
+            {
+                new Deal
+                {
+                    Amount = 123,
+                    CreateDate = firstDealCreateDate,
                     DealPeriod = 60,
-                    PaymentCount = 10,
-                    Description = "to buy keyboard",
+                    PaymentCount = 2,
+                    InterestRate = 2,
+                    DealStatus = DealStatus.Closed,
+                    PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3)),
+                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate),
+                    CloseDate = firstDealCreateDate.AddDays(60),
                 },
                 new Deal
                 {
-                    CreateDate = new DateTime(2016, 10, 09),
-                    InterestRate = 5,
-                    DealPeriod = 60,
-                    PaymentCount = 5,
-                    Description = "to rent a bitches",
-                    Amount = 300
-                }
+                    Amount = 13,
+                    CreateDate = SecondDealCreateDate,
+                    DealPeriod = 30,
+                    InterestRate = 12,
+                    PaymentCount = 2,
+                    DealStatus = DealStatus.WaitForLoan,
+                    Offers = GenerateOffersWithOneApproved(offerers, SecondDealCreateDate),
+                },
             };
 
             return result;
