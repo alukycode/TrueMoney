@@ -56,13 +56,9 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Create()
         {
-            var viewModel = await _dealService.GetCreateDealForm(CurrentUserId);
-            if (viewModel.IsUserCanCreateDeal)
-            {
-                return View(new CreateDealForm());
-            }
+            var viewModel = await _dealService.GetCreateDealForm();
 
-            return GoHome();
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -76,7 +72,8 @@ namespace TrueMoney.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var id = await _dealService.CreateDeal(model, CurrentUserId);
+                model.OwnerId = CurrentUserId;
+                var id = await _dealService.CreateDeal(model);
 
                 return RedirectToAction("Details", new { id = id });
             }

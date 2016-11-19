@@ -99,23 +99,9 @@ namespace TrueMoney.Services.Services
             return result;
         }
 
-        //public async Task<Deal> GetByOfferId(int offerId)
-        //{
-        //    var deals = await _context.Deals
-        //        .Where(x => x.Offers.Any(y => y.OffererId == offerId))
-        //        .ToListAsync();
-
-        //    return Mapper.Map(deals); // а че за метод? он же вообще не юзается, пока коменчу
-        //}            
-
-        public async Task<CreateDealForm> GetCreateDealForm(int userId)
+        public async Task<CreateDealForm> GetCreateDealForm()
         {
             var res = new CreateDealForm();
-            var dealsByUser = await GetByUser(userId);
-            if (dealsByUser.All(x => x.DealStatus == DealStatus.Closed))
-            {
-                res.IsUserCanCreateDeal = true;
-            }
 
             return res;
         }
@@ -126,17 +112,16 @@ namespace TrueMoney.Services.Services
             var deal = offer.Deal;
             deal.DealStatus = DealStatus.WaitForLoan;
             deal.InterestRate = offer.InterestRate;
-            offer.IsApproved = true;
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<int> CreateDeal(CreateDealForm model, int userId)
+        public async Task<int> CreateDeal(CreateDealForm model)
         {
             var deal = Mapper.Map<Deal>(model);
-            deal.OwnerId = userId;
             _context.Deals.Add(deal);
             await _context.SaveChangesAsync();
+
             return deal.Id;
         }
 

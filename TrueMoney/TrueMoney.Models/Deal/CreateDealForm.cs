@@ -17,8 +17,6 @@ namespace TrueMoney.Models.Deal
 
         public bool IsUserCanCreateDeal { get; set; }
 
-        [Required]
-        [HiddenInput]
         public int OwnerId { get; set; }
     }
 }
