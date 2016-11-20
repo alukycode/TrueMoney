@@ -11,4 +11,10 @@ namespace TrueMoney.Common
         public const string Admin = "Admin";
         public const string User = "User";
     }
+
+    public static class ErrorMessages
+    {
+        public const string Required = "Поле \"{0}\" не может быть пустым";
+        public const string Invalid = "Поле \"{0}\" содержит некорректное значение";
+    }
 }

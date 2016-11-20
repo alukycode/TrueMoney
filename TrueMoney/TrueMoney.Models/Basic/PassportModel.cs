@@ -6,10 +6,10 @@
     {
         public int Id { get; set; }
 
-        public string Series { get; set; }
-
         public string Number { get; set; }
 
         public DateTime? DateOfIssuing { get; set; }
+
+        public string GiveOrganization { get; set; }
     }
 }

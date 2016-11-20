@@ -3,12 +3,8 @@ using TrueMoney.Services;
 
 namespace TrueMoney.Web.Controllers
 {
-    public class HomeController : Controller //TODO: надо убрать лишнее
+    public class HomeController : Controller
     {
-        public HomeController()
-        {
-        }
-
         public ActionResult Index()
         {
             return View();
@@ -26,7 +22,7 @@ namespace TrueMoney.Web.Controllers
 
         public ActionResult Rating()
         {
-            return View();
+            return Redirect(Url.Action("About") + "#rating" );
         }
     }
 }

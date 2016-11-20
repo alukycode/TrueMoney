@@ -33,6 +33,9 @@ namespace TrueMoney.Web
             InitializeWindsorContainer(app);
 
             ConfigureAuth(app);
+
+            ClientDataTypeModelValidatorProvider.ResourceClassKey = "ErrorMessages";
+            DefaultModelBinder.ResourceClassKey = "ErrorMessages";
         }
 
         private void InitializeWindsorContainer(IAppBuilder app)

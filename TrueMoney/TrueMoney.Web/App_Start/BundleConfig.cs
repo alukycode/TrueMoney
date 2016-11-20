@@ -4,33 +4,29 @@ namespace TrueMoney.Web
 {
     public class BundleConfig
     {
-        // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/lib/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/ajax").Include(
-                        "~/Scripts/jquery.unobtrusive-ajax.min.js"));
+                        "~/Scripts/lib/jquery.unobtrusive-ajax.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+                        "~/Scripts/lib/jquery.validate*"));
 
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+                      "~/Scripts/lib/bootstrap.js",
+                      "~/Scripts/lib/respond.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/DealFunctions").IncludeDirectory(
-                      "~/Scripts/Deal", "*.js"));
-            
+            bundles.Add(new ScriptBundle("~/bundles/DealDetails").Include(
+                      "~/Scripts/DealDetails.js"));
 
             bundles.Add(new StyleBundle("~/Styles/css").Include(
-                      "~/Styles/bootstrap.lumen.css",
+                      "~/Styles/lib/bootstrap.lumen.css",
                       "~/Styles/site.css"));
         }
     }
