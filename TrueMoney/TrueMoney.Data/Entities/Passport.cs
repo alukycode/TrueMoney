@@ -11,11 +11,10 @@ namespace TrueMoney.Data.Entities
     public class Passport : Entity
     {
         [Required]
-        public string Series { get; set; }
-
-        [Required]
         public string Number { get; set; }
 
         public DateTime? DateOfIssuing { get; set; }
+
+        public string GiveOrganization { get; set; }
     }
 }

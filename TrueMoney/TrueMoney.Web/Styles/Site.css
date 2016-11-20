@@ -29,3 +29,7 @@ textarea {
     padding-right: 12px;
     padding-left: 12px;
 }
+
+.with-right-border {
+    border-right: 1px solid #EEE;
+}

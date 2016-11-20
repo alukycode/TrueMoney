@@ -51,7 +51,6 @@ namespace TrueMoney.Data
                 {
                     DateOfIssuing = DateTime.Now,
                     Number = "=",
-                    Series = "-",
                 }
             };
 
@@ -89,7 +88,6 @@ namespace TrueMoney.Data
                     {
                         DateOfIssuing = DateTime.Now,
                         Number = "test",
-                        Series = "test",
                     },
                     IsActive = true,
                 },
@@ -106,7 +104,6 @@ namespace TrueMoney.Data
                     {
                         DateOfIssuing = DateTime.Now,
                         Number = "test",
-                        Series = "test",
                     },
                     IsActive = true,
                 },
@@ -254,7 +251,7 @@ namespace TrueMoney.Data
         private static List<Deal> GenerateDealsWithOneInProgress(List<User> offerers)
         {
             var firstDealCreateDate = new DateTime(2012, 12, 12);
-            var SecondDealCreateDate = new DateTime(2013, 12, 12);
+            var secondDealCreateDate = new DateTime(2013, 12, 12);
             var result = new List<Deal>
             {
                 new Deal
@@ -272,13 +269,13 @@ namespace TrueMoney.Data
                 new Deal
                 {
                     Amount = 13,
-                    CreateDate = SecondDealCreateDate,
+                    CreateDate = secondDealCreateDate,
                     DealPeriod = 30,
                     InterestRate = 12,
-                    PaymentPlan = GenerateOpenPlan(SecondDealCreateDate.AddDays(3)),
+                    PaymentPlan = GenerateOpenPlan(secondDealCreateDate.AddDays(3)),
                     PaymentCount = 2,
                     DealStatus = DealStatus.InProgress,
-                    Offers = GenerateOffersWithOneApproved(offerers, SecondDealCreateDate),
+                    Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate),
                 },
             };
 
@@ -288,7 +285,7 @@ namespace TrueMoney.Data
         private static List<Deal> GenerateDealsWithOneOpen(List<User> offerers)
         {
             var firstDealCreateDate = new DateTime(2012, 12, 12);
-            var SecondDealCreateDate = new DateTime(2013, 12, 12);
+            var secondDealCreateDate = new DateTime(2013, 12, 12);
             var result = new List<Deal>
             {
                 new Deal
@@ -306,12 +303,12 @@ namespace TrueMoney.Data
                 new Deal
                 {
                     Amount = 13,
-                    CreateDate = SecondDealCreateDate,
+                    CreateDate = secondDealCreateDate,
                     DealPeriod = 30,
                     InterestRate = 12,
                     PaymentCount = 2,
                     DealStatus = DealStatus.Open,
-                    Offers = GenerateOffers(offerers, SecondDealCreateDate),
+                    Offers = GenerateOffers(offerers, secondDealCreateDate),
                 },
             };
 
@@ -321,7 +318,7 @@ namespace TrueMoney.Data
         private static List<Deal> GenerateDealsWithOneWaitForApprove(List<User> offerers)
         {
             var firstDealCreateDate = new DateTime(2012, 12, 12);
-            var SecondDealCreateDate = new DateTime(2013, 12, 12);
+            var secondDealCreateDate = new DateTime(2013, 12, 12);
             var result = new List<Deal>
             {
                 new Deal
@@ -339,12 +336,12 @@ namespace TrueMoney.Data
                 new Deal
                 {
                     Amount = 13,
-                    CreateDate = SecondDealCreateDate,
+                    CreateDate = secondDealCreateDate,
                     DealPeriod = 30,
                     InterestRate = 12,
                     PaymentCount = 2,
                     DealStatus = DealStatus.WaitForApprove,
-                    Offers = GenerateOffersWithOneApproved(offerers, SecondDealCreateDate),
+                    Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate),
                 },
             };
 
@@ -354,7 +351,7 @@ namespace TrueMoney.Data
         private static List<Deal> GenerateDealsWithOneWaitForLoan(List<User> offerers)
         {
             var firstDealCreateDate = new DateTime(2012, 12, 12);
-            var SecondDealCreateDate = new DateTime(2013, 12, 12);
+            var secondDealCreateDate = new DateTime(2013, 12, 12);
             var result = new List<Deal>
             {
                 new Deal
@@ -372,12 +369,12 @@ namespace TrueMoney.Data
                 new Deal
                 {
                     Amount = 13,
-                    CreateDate = SecondDealCreateDate,
+                    CreateDate = secondDealCreateDate,
                     DealPeriod = 30,
                     InterestRate = 12,
                     PaymentCount = 2,
                     DealStatus = DealStatus.WaitForLoan,
-                    Offers = GenerateOffersWithOneApproved(offerers, SecondDealCreateDate),
+                    Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate),
                 },
             };
 

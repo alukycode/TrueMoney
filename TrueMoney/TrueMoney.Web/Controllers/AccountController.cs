@@ -65,7 +65,7 @@ namespace TrueMoney.Web.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "Неудачная попытка входа");
                     return View(model);
             }
         }
@@ -104,7 +104,7 @@ namespace TrueMoney.Web.Controllers
                     return View("Lockout");
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid code.");
+                    ModelState.AddModelError("", "Неправильный код.");
                     return View(model);
             }
         }
