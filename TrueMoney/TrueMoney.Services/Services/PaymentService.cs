@@ -162,9 +162,11 @@ namespace TrueMoney.Services.Services
 
         private PaymentPlan GeneratePlan(Deal deal)
         {
-            var paymentPlan = _context.PaymentPlans.Create();
-            paymentPlan.CreateTime = DateTime.Now;
-            paymentPlan.Payments = CalculatePayments(deal);
+            var paymentPlan = new PaymentPlan
+            {
+                CreateTime = DateTime.Now,
+                Payments = CalculatePayments(deal),
+            };
 
             return paymentPlan;
         }
@@ -177,16 +179,20 @@ namespace TrueMoney.Services.Services
             var period = deal.DealPeriod / deal.PaymentCount;
             var extraTime = deal.DealPeriod % deal.PaymentCount;
             var firstPayDate = DateTime.Now.AddDays(period + extraTime);
-            var payment = _context.Payments.Create();
-            payment.Amount = periodAmount + extraAmount;
-            payment.DueDate = firstPayDate;
+            var payment = new Payment
+            {
+                Amount = periodAmount + extraAmount,
+                DueDate = firstPayDate,
+            };
             paymentList.Add(payment);
 
             for (int i = 1; i < deal.PaymentCount; i++)
             {
-                payment = _context.Payments.Create();
-                payment.Amount = periodAmount;
-                payment.DueDate = firstPayDate.AddDays(period * i);
+                payment = new Payment
+                {
+                    Amount = periodAmount,
+                    DueDate = firstPayDate.AddDays(period * i),
+                };
                 paymentList.Add(payment);
             }
 
