@@ -54,10 +54,11 @@ namespace TrueMoney.Services.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task RevertOffer(int offerId, int currentUserId)
+        public async Task RevertOffer(int dealId, int currentUserId)
         {
-            var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
-            var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == offer.DealId);
+            // todo: validate if currentUserId allowed to perform this action
+            var offer = await _context.Offers.FirstAsync(x => x.DealId == dealId && x.OffererId == currentUserId);
+            var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
             if (deal.DealStatus == DealStatus.WaitForApprove)
             {
                 var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);

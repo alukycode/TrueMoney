@@ -31,21 +31,6 @@ namespace TrueMoney.Services.Services
             ITrueMoneyContext context,
             IOfferService offerService)
         {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (offerService == null)
-            {
-                throw new ArgumentNullException(nameof(offerService));
-            }
-
-            if (userService == null)
-            {
-                throw new ArgumentNullException(nameof(userService));
-            }
-
             _context = context;
             _userService = userService;
             _offerService = offerService;
@@ -106,28 +91,30 @@ namespace TrueMoney.Services.Services
             return res;
         }
 
-        public async Task FinishDealStartLoan(int offerId) 
+        public async Task FinishDealStartLoan(int dealId, int currentUserId) 
         {
-            var offer = await _context.Offers.FirstAsync(x => x.Id == offerId);
-            var deal = offer.Deal;
+            // todo validate userId
+            var deal = await _context.Deals.FirstAsync(x => x.Id == dealId);
+            var offer = await _context.Offers.FirstAsync(x => x.IsApproved && x.DealId == dealId);
             deal.DealStatus = DealStatus.WaitForLoan;
             deal.InterestRate = offer.InterestRate;
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<int> CreateDeal(CreateDealForm model)
+        public async Task<int> CreateDeal(int userId, CreateDealForm model)
         {
             var deal = Mapper.Map<Deal>(model);
+            deal.OwnerId = userId;
             _context.Deals.Add(deal);
             await _context.SaveChangesAsync();
 
             return deal.Id;
         }
 
-        public async Task DeleteDeal(int dealId, int userId)
+        public async Task DeleteDeal(int dealId, int currentUserId)
         {
-            var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
+            var deal = await _context.Deals.FirstAsync(x => x.Id == dealId && x.OwnerId == currentUserId);
             _context.Deals.Remove(deal);
 
             await _context.SaveChangesAsync();

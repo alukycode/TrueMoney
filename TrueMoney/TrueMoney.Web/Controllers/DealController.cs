@@ -28,36 +28,25 @@ namespace TrueMoney.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
-            DealIndexViewModel model;
-            model = await _dealService.GetAll(User.Identity.GetUserId<int>());
-
+            var model = await _dealService.GetAll(User.Identity.GetUserId<int>());
             return View(model);
         }
 
         public async Task<ActionResult> Details(int id)
         {
             var model = await _dealService.GetById(id, User.Identity.GetUserId<int>());
-            if (model != null)
-            {
-                return View(model);
-            }
-
-            return RedirectToAction("Index"); //TODO: надо тут ошибку отображать на самом деле
+            return View(model);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> FinishDeal(int offerId, int dealId)
+        public async Task FinishDeal(int dealId)
         {
-            await _dealService.FinishDealStartLoan(offerId);
-
-            return RedirectToAction("Details", "Deal", new { id = dealId });
+            await _dealService.FinishDealStartLoan(dealId, User.Identity.GetUserId<int>());
         }
 
         public async Task<ActionResult> Create()
         {
             var viewModel = await _dealService.GetCreateDealForm();
-
             return View(viewModel);
         }
 
@@ -72,8 +61,7 @@ namespace TrueMoney.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                model.OwnerId = User.Identity.GetUserId<int>();
-                var id = await _dealService.CreateDeal(model);
+                var id = await _dealService.CreateDeal(User.Identity.GetUserId<int>(), model);
 
                 return RedirectToAction("Details", new { id = id });
             }

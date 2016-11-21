@@ -7,9 +7,7 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @* todo: allow user to change his password based on manage/index page
-                @Html.ActionLink("Привет, " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })*@
-            @Html.ActionLink("Привет, " + User.Identity.GetUserName() + "!", "UserProfile", "User", routeValues: null, htmlAttributes: new { title = "Manage" })
+            <a href="@Url.Action("UserProfile", "User")" title = "Личный кабинет">@User.Identity.GetUserName()</a>
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
     </ul>

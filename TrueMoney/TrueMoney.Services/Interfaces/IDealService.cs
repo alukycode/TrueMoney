@@ -12,11 +12,11 @@ namespace TrueMoney.Services.Interfaces
 
     public interface IDealService
     {
-        Task<int> CreateDeal(CreateDealForm createDealForm);
+        Task<int> CreateDeal(int userId, CreateDealForm createDealForm);
         
-        Task DeleteDeal(int dealId, int userId);
+        Task DeleteDeal(int dealId, int currentUserId);
 
-        Task FinishDealStartLoan(int offerId);
+        Task FinishDealStartLoan(int dealId, int currentUserId);
 
         Task<DealIndexViewModel> GetAll(int currentUserId);
 

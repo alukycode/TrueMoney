@@ -2,10 +2,10 @@
 {
     public enum DealStatus
     {
-        Open,
-        WaitForApprove,
-        WaitForLoan,
-        InProgress,
-        Closed
+        Open = 0,
+        WaitForApprove = 1,
+        WaitForLoan = 2,
+        InProgress = 3,
+        Closed = 4
     }
 }

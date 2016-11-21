@@ -1,4 +1,6 @@
-﻿namespace TrueMoney.Models.Deal
+﻿using TrueMoney.Common.Enums;
+
+namespace TrueMoney.Models.Deal
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -31,11 +33,11 @@
             }
         }
 
-        public IEnumerable<OfferModel> Offers { get; set; }
+        public IList<OfferModel> Offers { get; set; }
 
         public PaymentPlanModel PaymentPlanModel { get; set; }
 
-        public IEnumerable<PaymentModel> Payments { get; set; }
+        public IList<PaymentModel> Payments { get; set; }
 
         public decimal ExtraMoney { get; set; }
     }

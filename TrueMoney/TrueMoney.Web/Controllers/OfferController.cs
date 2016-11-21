@@ -23,26 +23,21 @@ namespace TrueMoney.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task ApproveOffer(int offerId)
         {
             await _offerService.ApproveOffer(offerId);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task CancelOfferApproval(int offerId)
         {
             await _offerService.CancelOfferApproval(offerId);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RevertOffer(int offerId, int dealId)
+        public async Task RevertOffer(int dealId)
         {
-            await _offerService.RevertOffer(offerId, User.Identity.GetUserId<int>());
-
-            return RedirectToAction("Details", "Deal", new { id = dealId });
+            await _offerService.RevertOffer(dealId, User.Identity.GetUserId<int>());
         }
 
         public async Task<ActionResult> CreateOffer(int dealId)

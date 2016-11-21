@@ -226,7 +226,9 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\DealDetails.js" />
+    <Content Include="Scripts\lib\knockout.mapping-latest.debug.js" />
+    <Content Include="Scripts\lib\knockout.mapping-latest.js" />
+    <Content Include="Scripts\lib\knockout-3.4.0.js" />
     <Content Include="Scripts\lib\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\lib\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Styles\lib\bootstrap-theme.css" />
@@ -291,7 +293,6 @@
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\RegisterOld.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
@@ -317,6 +318,7 @@
     <Content Include="Views\Payment\Visa.cshtml" />
     <Content Include="Views\Admin\InactiveUsers.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Deal\Details - Backup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

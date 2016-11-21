@@ -1,324 +1,248 @@
 ﻿@using TrueMoney.Common.Enums
-@using TrueMoney.Models
-@model TrueMoney.Models.Deal.DealDetailsViewModel
+@using TrueMoney.Models.Deal
+@model DealDetailsViewModel
+
 @{
-    ViewBag.Title = "Информация о займе " + Model.Deal.Id;
+    ViewBag.Title = "Информация о займе №" + Model.Deal.Id;
 }
 
-@Scripts.Render("~/bundles/DealDetails")
+@section styles {
+    <style>
+        .status-Open           { color: blue; }
+        .status-WaitForApprove { color: green; }
+        .status-WaitForLoan    { color: yellowgreen; }
+        .status-InProgress     { color: darkorange; }
+        .status-Closed         { color: red; }
+    </style>
+}
+
+@section scripts {
+    <script>
+        $(document).ajaxStart(function() { loading(); });
+
+        $(document).ajaxSuccess(function() { location.reload(); });
+
+        $(document).ajaxError(function() { alert("упс, ошибочка"); });
+
+        function approveOffer(offerId) {
+            $.ajax({
+                url: '@Url.Action("ApproveOffer", "Offer")',
+                data: { offerId: offerId },
+                method: 'POST',
+            });
+        }
+
+        function unapproveOffer(offerId) {
+            $.ajax({
+                url: '@Url.Action("CancelOfferApproval", "Offer")',
+                data: { offerId: offerId },
+                method: 'POST',
+            });
+        }
+
+        function deleteDeal() {
+            $.ajax({
+                url: '@Url.Action("Delete", "Deal")',
+                data: { dealId: @Model.Deal.Id },
+                method: 'POST',
+            });
+        }
+
+        function finishDeal() {
+            $.ajax({
+                url: '@Url.Action("FinishDeal", "Deal")',
+                data: { dealId: @Model.Deal.Id },
+                method: 'POST',
+            });
+        }
+
+        function revertOffer() {
+            $.ajax({
+                url: '@Url.Action("RevertOffer", "Offer")',
+                data: { dealId: @Model.Deal.Id },
+                method: 'POST',
+            });
+        }
+
+        function loading(selector) {
+            var element = $(selector || ".body-content");
+            element.animate({ opacity: 0.2 }, 1000);
+            element.css("pointer-events", "none");
+        }
+    </script>
+}
 
 <h2>@ViewBag.Title</h2>
 <div>
-    <h6>
-        Заёмщик - @Html.ActionLink(Model.Deal.OwnerFullName, "Details", "User", routeValues: new { id = Model.Deal.OwnerId },
-                 htmlAttributes: null), рейтинг **
-    </h6>
     <hr />
     <dl class="dl-horizontal">
-        @ShowInfo()
-        @switch (Model.Deal.DealStatus)
+        <dt>Заёмщик</dt>
+        <dd><a href="@Url.Action("Details", "User", new {id = Model.Deal.OwnerId})">@Model.Deal.OwnerFullName</a></dd>
+
+        <dt>Рейтинг заёмщика</dt>
+        <dd>**</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Deal.CreateDate)</dt>
+        <dd>@Model.Deal.CreateDate</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Deal.Amount)</dt>
+        <dd>@Model.Deal.Amount р.</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Deal.InterestRate)</dt>
+        <dd>@Model.Deal.InterestRate %</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Deal.DealPeriod)</dt>
+        <dd>@Model.Deal.DealPeriod</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Deal.Description)</dt>
+        <dd>@Model.Deal.Description</dd>
+
+        <dt>@Html.DisplayNameFor(model => model.Deal.DealStatus)</dt>
+        <dd class="status-@Model.Deal.DealStatus">@Html.DisplayFor(model => model.Deal.DealStatus)</dd>
+    </dl>
+
+    <hr />
+
+    @if (Model.Deal.DealStatus == DealStatus.Open || Model.Deal.DealStatus == DealStatus.WaitForApprove)
+    {
+        if (Model.IsCurrentUserOwner)
         {
-            case DealStatus.Open:
-                if (Model.IsCurrentUserOwner)
-                {
-                    @ShowOffers()
-                    @ShowDeleteDealForm()
-                }
-                else if (Model.IsCurrentUserLender)
-                {
-                    <p>Вы предложили свои деньги в размере @Model.Deal.Amount на @Model.Deal.DealPeriod дней под @Model.CurrentUserOffer.InterestRate %</p>
-                    @ShowRevertOfferForm()
-                }
-                else if (Model.IsCurrentUserActive)
-                {
-                    @Html.ActionLink("Сделать предложение", "CreateOffer", "Offer", new { dealId = Model.Deal.Id }, null)
-                }
+            <div class="row">
+                <button id="delete-deal-btn" class="btn btn-default" onclick="deleteDeal()">Удалить заявку</button>
+            </div>
 
-                break;
-            case DealStatus.WaitForApprove:
-                if (Model.IsCurrentUserOwner)
+            <hr/>
+
+            <h3>Доступные предложения от других пользователей</h3>
+
+            <table class="table table-hover">
+                <tr>
+                    <th>Процент</th><th>Имя пользователя</th><th>Действия</th>
+                </tr>
+                @foreach (var offer in Model.Offers)
                 {
-                    @ShowOffers()
-                    @ShowDeleteDealForm()
-                }
-                else if (Model.IsCurrentUserLender)
-                {
-                    <div class="row">
-                        <div class="col-md-8">
-                            @using (Html.BeginForm("FinishDeal", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    <tr>
+                        <td>@offer.InterestRate %</td>
+                        <td>@offer.OffererFullName</td>
+                        <td>
+                            @if (offer.IsApproved)
                             {
-                                @Html.AntiForgeryToken()
-                                @Html.Hidden("offerId", Model.CurrentUserOffer.Id)
-                                @Html.Hidden("dealId", Model.Deal.Id)
-                                <div class="form-group">
-                                    <div class="col-md-offset-2 col-md-10">
-                                        <input type="submit" value="Дать взаймы" class="btn btn-default" />
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    @ShowRevertOfferForm()
-                }
-
-                break;
-            case DealStatus.WaitForLoan:
-                if (Model.IsCurrentUserLender)
-                {
-                    @ShowLoanMoneyForm()
-                }
-                else if (Model.IsCurrentUserOwner)
-                {
-                    <p>Ожидаем перевод средств от @Model.Offers.FirstOrDefault(x => x.IsApproved).OffererFullName</p>
-                }
-
-                break;
-            case DealStatus.InProgress:
-                if (Model.IsCurrentUserOwner)
-                {
-                    var number = 1;
-                    <p>Deal started @Model.PaymentPlanModel.CreateTime.ToString("D")</p>
-                    <dd>
-                        Платежи:
-                        @foreach (var payment in Model.Payments)
-                        {
-                            if (payment.IsPaid)
-                            {
-                                <p style="background-color: greenyellow">@(number++) - paid @payment.Amount + @payment.Liability on @payment.PaidDate.Value.ToString("D")</p>
+                                <button class="btn btn-default" onclick="unapproveOffer(@offer.Id)">Отменить подтверждение</button>
                             }
                             else
                             {
-                                <p style="background-color: lightcoral">@(number++) - pay @payment.Amount + @payment.Liability before @payment.DueDate.ToString("D")</p>
+                                <button class="btn btn-default" onclick="approveOffer(@offer.Id)">Подтвердить предложение</button>
                             }
-                        }
-                        @if (Model.ExtraMoney > 0)
-                        {
-                            <p>Остаток: @Model.ExtraMoney</p>
-                        }
-                        @ShowPayoutForm()
-                    </dd>
+                        </td>
+                    </tr>
                 }
-                else if (Model.IsCurrentUserLender)
-                {
-                    var number = 1;
-                    <p>Deal started @Model.PaymentPlanModel.CreateTime.ToString("D")</p>
-                    <dd>
-                        Платежи:
-                        @foreach (var payment in Model.Payments)
-                        {
-                            if (payment.IsPaid)
-                            {
-                                <p style="background-color: greenyellow">@(number++) - paid @(payment.Amount + payment.Liability) on @payment.PaidDate.Value.ToString("D")</p>
-                            }
-                            else
-                            {
-                                <p style="background-color: lightcoral">@(number++) - will pay @(payment.Amount + payment.Liability) before @payment.DueDate.ToString("D")</p>
-                            }
-                        }
-                        @if (Model.ExtraMoney > 0)
-                        {
-                            <p>Следующий платёж погашен частично: @Model.ExtraMoney</p>
-                        }
-                    </dd>
-                }
+            </table>
+        }
 
-                break;
-            case DealStatus.Closed:
-                var paidCount = Model.Payments.Sum(x => x.Amount);
-                var extraPaidCount = Model.Payments.Sum(x => x.Liability);
-                var actualPeriod = (Model.PaymentPlanModel.CreateTime - Model.Payments.Last().PaidDate).Value.Days;
-                if (Model.IsCurrentUserOwner)
+        else if (Model.IsCurrentUserLender)
+        {
+            if (Model.Deal.DealStatus == DealStatus.Open)
+            {
+                <p>Вы предложили свои деньги в размере @Model.Deal.Amount на @Model.Deal.DealPeriod дней под @Model.CurrentUserOffer.InterestRate %</p>
+            }
+
+            if (Model.Deal.DealStatus == DealStatus.WaitForApprove)
+            {
+                <div class="row">
+                    <button class="btn btn-default" onclick="finishDeal()">Дать взаймы</button>
+                </div>
+            }
+
+            <div class="row">
+                <button class="btn btn-default" onclick="revertOffer()">Отменить предложение</button>
+            </div>
+        }
+
+        else if (Model.IsCurrentUserActive && Model.Deal.DealStatus == DealStatus.Open)
+        {
+            @Html.ActionLink("Сделать предложение", "CreateOffer", "Offer", new { dealId = Model.Deal.Id }, null)
+        }
+    }
+
+    @if (Model.Deal.DealStatus == DealStatus.WaitForLoan)
+    {
+        <p>Ожидается перевод средств заёмщику от кредитора (@Model.Offers.First(x => x.IsApproved).OffererFullName)</p>
+
+        if (Model.IsCurrentUserLender)
+        {
+            <p>
+                Visa: <a href="@Url.Action("VisaLoan", "Payment", new { dealId = Model.Deal.Id })">Перевести деньги пользователю</a>
+            </p>
+        }
+    }
+
+    @if (Model.Deal.DealStatus == DealStatus.InProgress)
+    {
+        if (Model.IsCurrentUserOwner || Model.IsCurrentUserLender)
+        {
+            <p>Deal started @Model.PaymentPlanModel.CreateTime.ToString("D")</p>
+            <div>
+                Платежи:
+                @for (var index = 0; index < Model.Payments.Count; index++)
                 {
-                    <p>ВЫ успешно завершили заем</p>
-                    <p>Отдолжив @Model.Deal.Amount рублей под @Model.Deal.InterestRate на @Model.Deal.DealPeriod день.</p>
-                    if (Model.Deal.DealPeriod <= actualPeriod)
+                    var payment = Model.Payments[index];
+                    if (payment.IsPaid)
                     {
-                        <p>Завершили в срок и выплатили @paidCount</p>
+                        <p style="background-color: greenyellow">
+                            @index - оплачено @payment.Amount + @payment.Liability на дату @payment.PaidDate.Value.ToString("D")
+                        </p>
                     }
                     else
                     {
-                        <p>
-                            Не успели выплатить вовремя и заплатили @paidCount,
-                            из них @(paidCount - Model.Deal.Amount * (100 + Model.Deal.InterestRate)) было потрачено
-                            на возмещение задержек выплат
+                        <p style="background-color: lightcoral">
+                            @index - ожидается оплата @payment.Amount + @payment.Liability не позднее @payment.DueDate.ToString("D")
                         </p>
                     }
-                    <p>Вы потратили @(paidCount - Model.Deal.Amount) рублей.</p>
                 }
-                else if (Model.IsCurrentUserLender)
+                @if (Model.ExtraMoney > 0)
                 {
-                    <p>Вы заработали @(paidCount - Model.Deal.Amount) рублей за @Model.Deal.DealPeriod</p>
+                    <p>Следующий платёж погашен частично: @Model.ExtraMoney</p>
                 }
-                break;
-        }
-    </dl>
-</div>
-@helper ShowPayoutForm()
-{
-var nearByPayment = Model.Payments.First(x => !x.IsPaid);
-var description = $"Надо выплатить {nearByPayment.Amount - Model.ExtraMoney + nearByPayment.Liability} before {nearByPayment.DueDate.ToString("D")}";
-    <h4>Надо выплачивать бабло челу</h4>
-    <p>@description</p>
-    <p>
-        Visa - @Html.ActionLink("Оплатить", "VisaPayout", "Payment", routeValues: new RouteValueDictionary(
-             new
-             {
-                 paymentName = $"Выплата по займу #{Model.Deal.Id}." + description,
-                 payForId = Model.Offers.First(x => x.IsApproved).OffererId,
-                 dealId = Model.Deal.Id,
-                 paymentCount = nearByPayment.Amount + nearByPayment.Liability - Model.ExtraMoney
-             }), htmlAttributes: null)
-    </p>
-}
-@helper ShowRevertOfferForm()
-{
-    <div class="row">
-        <div class="col-md-8">
-            @using (Html.BeginForm("RevertOffer", "Offer", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-                @Html.Hidden("offerId", Model.CurrentUserOffer.Id)
-                @Html.Hidden("dealId", Model.Deal.Id)
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Отменить предложение" class="btn btn-default" />
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-}
-@helper ShowOffers()
-{
-foreach (var offer in Model.Offers)
-{
-        <p>@offer.OffererFullName предлагает зайем под @offer.InterestRate %</p>
-        <div class="row">
-            <div class="col-md-8">
-                @using (Ajax.BeginForm(
-        "ApproveOffer",
-        "Offer",
-        null,
-        new AjaxOptions()
-        {
-            OnBegin = $"handleApproveClick({offer.Id})",
-            OnSuccess = $"handleApproveSuccess({offer.Id})",
-        },
-        new
-        {
-            @id = $"approveButtonId{offer.Id}",
-            @class = "form-horizontal",
-            role = "form",
-            style = string.Format("display: {0};", offer.IsApproved ? "none" : "inline")
-        }))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("offerId", offer.Id)
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Подтвердить предложение" class="btn btn-default" />
-                        </div>
-                    </div>
-                }
-                @using (Ajax.BeginForm(
-    "CancelOfferApproval",
-    "Offer",
-    null,
-    new AjaxOptions()
-    {
-        OnBegin = $"handleCancelApproveClick({offer.Id})",
-        OnSuccess = $"handleCancelApproveSuccess({offer.Id})",
-    },
-    new
-    {
-        @id = $"cancelApprovalButtonId{offer.Id}",
-        @class = "form-horizontal",
-        role = "form",
-        style = string.Format("display: {0};", !offer.IsApproved ? "none" : "inline")
-    }))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("offerId", offer.Id)
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <input type="submit" value="Отменить предложение" class="btn btn-default" />
-                        </div>
-                    </div>
+                @{
+                    var nearByPayment = Model.Payments.First(x => !x.IsPaid);
+
+                    <h4>Надо выплачивать бабло челу</h4>
+                    <p>Надо выплатить @(nearByPayment.Amount - Model.ExtraMoney + nearByPayment.Liability) не позднее @nearByPayment.DueDate.ToString("D")"</p>
+
+                    <p>
+                        Visa: <a href="@Url.Action("VisaPayout", "Payment", new { dealId = Model.Deal.Id })">Оплатить</a>
+                    </p>
                 }
             </div>
-        </div>
-}
-}
-@helper ShowDeleteDealForm()
-{
-    <div class="row">
-        <div class="col-md-8">
-            @using (Html.BeginForm("Delete", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        }
+    }
+
+    @if (Model.Deal.DealStatus == DealStatus.Closed)
+    {
+        var paidCount = Model.Payments.Sum(x => x.Amount);
+        var extraPaidCount = Model.Payments.Sum(x => x.Liability);
+        var actualPeriod = (Model.PaymentPlanModel.CreateTime - Model.Payments.Last().PaidDate).Value.Days;
+        if (Model.IsCurrentUserOwner)
+        {
+            <p>ВЫ успешно завершили заем</p>
+            <p>Отдолжив @Model.Deal.Amount рублей под @Model.Deal.InterestRate на @Model.Deal.DealPeriod день.</p>
+            if (Model.Deal.DealPeriod <= actualPeriod)
             {
-                @Html.AntiForgeryToken()
-                @Html.Hidden("dealId", Model.Deal.Id)
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Удалить заявку" class="btn btn-default" />
-                    </div>
-                </div>
+                <p>Завершили в срок и выплатили @paidCount</p>
             }
-        </div>
-    </div>
-}
-@helper ShowLoanMoneyForm()
-{
-    <h4>перевиди деньги пользователю</h4>
-    <p>
-        Visa - @Html.ActionLink("Перечислить займ", "VisaLoan", "Payment", routeValues: new RouteValueDictionary(
-             new
-             {
-                 paymentName = $"Перевод денег на счёт {Model.Deal.OwnerFullName}. Займ № {Model.Deal.Id}.",
-                 paymentCount = Model.Deal.Amount,
-                 payForId = Model.Deal.OwnerId,
-                 dealId = Model.Deal.Id
-             }), htmlAttributes: null)
-    </p>
-}
-@helper ShowInfo()
-{
-    <dt>
-        @Html.DisplayNameFor(model => model.Deal.CreateDate)
-    </dt>
-
-    <dd>
-        @Html.DisplayFor(model => model.Deal.CreateDate)
-    </dd>
-
-    <dt>
-        @Html.DisplayNameFor(model => model.Deal.Amount)
-    </dt>
-
-    <dd>
-        @Html.DisplayFor(model => model.Deal.Amount)
-    </dd>
-
-    <dt>
-        @Html.DisplayNameFor(model => model.Deal.InterestRate)
-    </dt>
-
-    <dd>
-        @Html.DisplayFor(model => model.Deal.InterestRate)
-    </dd>
-
-    <dt>
-        @Html.DisplayNameFor(model => model.Deal.DealPeriod)
-    </dt>
-
-    <dd>
-        @Html.DisplayFor(model => model.Deal.DealPeriod)
-    </dd>
-
-    <dt>
-        @Html.DisplayNameFor(model => model.Deal.Description)
-    </dt>
-
-    <dd>
-        @Html.DisplayFor(model => model.Deal.Description)
-    </dd>
-}
+            else
+            {
+                <p>
+                    Не успели выплатить вовремя и заплатили @paidCount,
+                    из них @(paidCount - Model.Deal.Amount * (100 + Model.Deal.InterestRate)) было потрачено
+                    на возмещение задержек выплат
+                </p>
+            }
+            <p>Вы потратили @(paidCount - Model.Deal.Amount) рублей.</p>
+        }
+        else if (Model.IsCurrentUserLender)
+        {
+            <p>Вы заработали @(paidCount - Model.Deal.Amount) рублей за @Model.Deal.DealPeriod</p>
+        }
+    }
+</div>
