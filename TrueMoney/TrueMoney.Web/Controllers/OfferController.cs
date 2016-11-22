@@ -49,22 +49,15 @@ namespace TrueMoney.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateOffer(CreateOfferForm model)
         {
-            if (model.DealRate < model.InterestRate) // это нужно убрать отсуюда, здесь уже все проверено должно быть
+            if (model.DealRate < model.InterestRate)
             {
-                ModelState.AddModelError("InterestRate", "Вы превысили маскимальнодопустимую процентную ставку.");
+                ModelState.AddModelError(nameof(model.InterestRate), "Вы превысили максимально допустимую процентную ставку.");
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    await _offerService.CreateOffer(model);
-                    return RedirectToAction("Details", "Deal", new { id = model.DealId });
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("InterestRate", "Что-то пошло не так.");
-                }
+                await _offerService.CreateOffer(model);
+                return RedirectToAction("Details", "Deal", new { id = model.DealId });
             }
 
             return View(model);

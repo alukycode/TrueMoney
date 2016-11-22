@@ -6,7 +6,7 @@ namespace TrueMoney.Models.Deal
 {
     public class CreateDealForm
     {
-        [Display(Name="Необходимое количество денег (USD)")]
+        [Display(Name="Необходимое количество денег (р.)")]
         [Required(ErrorMessage = ErrorMessages.Required)]
         [Range(1, 100000, ErrorMessage = "Сумма займа должна быть в пределах от 1 до 100 000 USD")]
         public decimal? Amount { get; set; }

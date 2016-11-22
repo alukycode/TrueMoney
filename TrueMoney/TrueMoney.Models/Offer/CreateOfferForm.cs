@@ -9,7 +9,8 @@ namespace TrueMoney.Models.Offer
     public class CreateOfferForm
     {
         [Required]
-        [Display(Name = "Процентная ставка")]
+        [Display(Name = "Процентная ставка (%)")]
+        [Range(0, 1000, ErrorMessage = "Значение процента не может быть меньше 0 и больше, чем 1000%")]
         public decimal InterestRate { get; set; }
 
         [HiddenInput]
