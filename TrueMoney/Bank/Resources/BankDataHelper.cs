@@ -40,11 +40,7 @@
         {
             List<BankAccount> accounts;
             XmlSerializer formatter = new XmlSerializer(typeof(List<BankAccount>));
-            var filePath = "BankData.xml";
-            if (!new FileInfo("BankData.xml").Exists)
-            {
-                filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", filePath);
-            }
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "BankData.xml");
             using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
             {
                 accounts = (List<BankAccount>)formatter.Deserialize(fs);
@@ -56,11 +52,7 @@
         public static void SaveAccounts(List<BankAccount> accounts)
         {
             XmlSerializer formatter = new XmlSerializer(typeof(List<BankAccount>));
-            var filePath = "BankData.xml";
-            if (!new FileInfo("BankData.xml").Exists)
-            {
-                filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", filePath);
-            }
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "BankData.xml");
             using (FileStream fs = new FileStream(filePath, FileMode.Truncate))
             {
                 formatter.Serialize(fs, accounts);

@@ -109,7 +109,9 @@
   <ItemGroup>
     <Compile Include="BankTests\OperationsTest.cs" />
     <Compile Include="BankTests\WriteReadTest.cs" />
-    <Compile Include="CalculationTests\CalculatePaymentsTests.cs" />
+    <Compile Include="Extensions\EnumerableExtensionsTests.cs" />
+    <Compile Include="Helpers\PaymentHelperTests.cs" />
+    <Compile Include="Services\PaymentServiceTests.cs" />
     <Compile Include="FakeDbSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\UserServiceTests.cs" />
