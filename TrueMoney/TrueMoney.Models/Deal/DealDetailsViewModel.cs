@@ -21,7 +21,8 @@ namespace TrueMoney.Models.Deal
         {
             get
             {
-                return Offers != null && Offers.Any() && Offers.Any(x => x.OffererId == CurrentUserId);
+                return Offers != null && Offers.Any() && Offers.Any(x => x.OffererId == CurrentUserId &&
+                x.IsApproved);
             }
         }
 
