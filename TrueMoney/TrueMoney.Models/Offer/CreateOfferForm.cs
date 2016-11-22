@@ -9,9 +9,8 @@ namespace TrueMoney.Models.Offer
     public class CreateOfferForm
     {
         [Required]
-        //[RegularExpression("^[0-9]{1,2}[.][0-9]{1,2}$", ErrorMessage = "Используйте формат XX.XX")]
-        [Display(Name = "Процентная ставка", Description = "Должна быть меньше максимальнодопустимой.")]
-        public decimal InterestRate { get; set; } //пока пусть лучше int
+        [Display(Name = "Процентная ставка")]
+        public decimal InterestRate { get; set; }
 
         [HiddenInput]
         public decimal DealRate { get; set; }

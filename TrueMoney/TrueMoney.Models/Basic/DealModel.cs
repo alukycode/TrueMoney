@@ -19,19 +19,21 @@ namespace TrueMoney.Models.Basic
         [Display(Name="Дата закрытия")]
         public DateTime? CloseDate { get; set; }
 
-        [Display(Name = "Необходимая сумма денег")]
+        [Display(Name = "Необходимая сумма")]
         public decimal Amount { get; set; }
 
-        [Display(Name = "На какой срок (дней)")]
+        [Display(Name="Срок возврата займа")]
         public int DealPeriod { get; set; }
 
-        [Display(Name = "Цель займа")]
+        [Display(Name="Цель займа")]
         public string Description { get; set; }
 
+        [Display(Name="Текущий статус займа")]
         public DealStatus DealStatus { get; set; }
 
         public int OwnerId { get; set; }
 
+        [Display(Name="Имя заёмщика")]
         public string OwnerFullName { get; set; }
     }
 }
