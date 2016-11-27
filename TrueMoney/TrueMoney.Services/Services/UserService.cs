@@ -105,5 +105,41 @@ namespace TrueMoney.Services.Services
             user.Rating = Rating.StartRating;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<EditUserViewModel> GetEditModel(int id)
+        {
+            var user = await _context.Users.FirstAsync(x => x.Id == id);
+            var model = new EditUserViewModel
+            {
+                User = Mapper.Map<UserModel>(user),
+            };
+
+            return model;
+        }
+
+        public async Task<EditPassportViewModel> GetEditPassportModel(int userId)
+        {
+            var user = await _context.Users.FirstAsync(x => x.Id == userId);
+            var model = new EditPassportViewModel
+            {
+                Passport = Mapper.Map<PassportModel>(user.Passport),
+            };
+
+            return model;
+        }
+
+        public async Task Update(EditUserViewModel model)
+        {
+            var user = _context.Users.First(x => x.Id == model.User.Id);
+            Mapper.Map(model.User, user, typeof(UserModel), typeof(User));
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdatePassport(EditPassportViewModel model)
+        {
+            var passport = _context.Passports.First(x => x.Id == model.Passport.Id);
+            Mapper.Map(model.Passport, passport, typeof(PassportModel), typeof(Passport));
+            await _context.SaveChangesAsync();
+        }
     }
 }

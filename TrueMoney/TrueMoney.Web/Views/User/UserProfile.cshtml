@@ -1,12 +1,16 @@
 ﻿@using TrueMoney.Models.Basic
 @using TrueMoney.Common.Enums
 @using TrueMoney.Models.User
+@using Microsoft.AspNet.Identity
 @model ProfileViewModel
 
 @{
     ViewBag.Title = "Личный кабинет";
 }
 
+@Html.ActionLink("Редактировать личные данные", "Edit", new { id = User.Identity.GetUserId<int>() }, new { @class = "btn btn-primary" })
+<br />
+@Html.ActionLink("Редактировать паспортные данные", "EditPassport", new { userId = User.Identity.GetUserId<int>() }, new { @class = "btn btn-primary" })
 <h2>@ViewBag.Title</h2>
 
 <h5>Ваш активный займ:</h5>

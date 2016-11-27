@@ -106,7 +106,6 @@
     <Compile Include="Account\ForgotPasswordViewModel.cs" />
     <Compile Include="Account\ForgotViewModel.cs" />
     <Compile Include="Account\LoginViewModel.cs" />
-    <Compile Include="Account\PassportViewModel.cs" />
     <Compile Include="Account\RegisterViewModel.cs" />
     <Compile Include="Account\ResetPasswordViewModel.cs" />
     <Compile Include="Account\SendCodeViewModel.cs" />
@@ -129,6 +128,8 @@
     <Compile Include="Basic\OfferModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Admin\InactiveUsersViewModel.cs" />
+    <Compile Include="User\EditPassportViewModel.cs" />
+    <Compile Include="User\EditUserViewModel.cs" />
     <Compile Include="User\UserAndPassportViewModel.cs" />
     <Compile Include="User\UserDetailsViewModel.cs" />
     <Compile Include="Deal\DealDetailsViewModel.cs" />
