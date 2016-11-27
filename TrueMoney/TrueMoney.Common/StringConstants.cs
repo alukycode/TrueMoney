@@ -14,7 +14,7 @@ namespace TrueMoney.Common
 
     public static class ErrorMessages
     {
-        public const string Required = "Это поле не может быть пустым";
+        public const string Required = "Поле '{0}' не может быть пустым";
         public const string Invalid = "Поле \"{0}\" содержит некорректное значение";
     }
 }

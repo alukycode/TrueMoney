@@ -47,11 +47,6 @@ namespace TrueMoney.Data
                 FirstName = "Admin",
                 LastName = "Администратор",
                 BankAccountNumber = "-",
-                Passport = new Passport
-                {
-                    DateOfIssuing = DateTime.Now,
-                    Number = "=",
-                }
             };
 
             userManager.Create(admin);
@@ -116,6 +111,11 @@ namespace TrueMoney.Data
                     FirstName = "Дима",
                     LastName = "Артюх",
                     BankAccountNumber = "408.17.810.0.9991.000002",
+                    Passport = new Passport
+                    {
+                        DateOfIssuing = DateTime.Now,
+                        Number = "test",
+                    },
                     IsActive = true,
                 },
                 new User
@@ -127,6 +127,11 @@ namespace TrueMoney.Data
                     FirstName = "Test",
                     LastName = "Example",
                     BankAccountNumber = "408.17.810.0.9991.000003",
+                    Passport = new Passport
+                    {
+                        DateOfIssuing = DateTime.Now,
+                        Number = "test",
+                    },
                     IsActive = true,
                 },
                 new User
@@ -138,6 +143,11 @@ namespace TrueMoney.Data
                     FirstName = "Qwe",
                     LastName = "Asd",
                     BankAccountNumber = "408.17.810.0.9991.000004",
+                    Passport = new Passport
+                    {
+                        DateOfIssuing = DateTime.Now,
+                        Number = "test",
+                    },
                 },
             };
         }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using TrueMoney.Common;
+using TrueMoney.Models.User;
 using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Web.Controllers
@@ -17,7 +18,6 @@ namespace TrueMoney.Web.Controllers
             _userService = userService;
         }
 
-        [Authorize]
         public ActionResult Index()
         {
             return RedirectToAction("Details", new { id = User.Identity.GetUserId<int>() }); 
@@ -31,11 +31,57 @@ namespace TrueMoney.Web.Controllers
         }
 
         [Authorize(Roles = RoleNames.User)]
-        public async Task<ActionResult> UserProfile() // имя Profile уже занято в контроллере :(
+        public ActionResult UserProfile()
         {
-            var viewModel = await _userService.GetProfileViewModel(User.Identity.GetUserId<int>());
+            //var viewModel = await _userService.GetProfileViewModel(User.Identity.GetUserId<int>());
+            return View();
+        }
 
-            return View(viewModel);
+        public async Task<ActionResult> Edit(int id)
+        {
+            var editModel = await _userService.GetEditModel(id);
+
+            return View(editModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Edit(EditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _userService.Update(model);
+
+                return RedirectToAction("UserProfile");
+            }
+
+            return View(model);
+        }
+
+        public async Task<ActionResult> EditPassport(int userId)
+        {
+            var editModel = await _userService.GetEditPassportModel(userId);
+
+            return View(editModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditPassport(EditPassportViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _userService.UpdatePassport(model);
+
+                return RedirectToAction("UserProfile");
+            }
+
+            return View(model);
+        }
+
+        public async Task<ActionResult> UserActivity()
+        {
+            var model = await _userService.GetUserActivityModel(User.Identity.GetUserId<int>());
+
+            return View(model);
         }
     }
 }

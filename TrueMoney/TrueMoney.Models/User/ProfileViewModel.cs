@@ -6,7 +6,7 @@
     using TrueMoney.Common.Enums;
     using TrueMoney.Models.Basic;
 
-    public class ProfileViewModel
+    public class UserActivityViewModel
     {
         public IList<DealModel> Deals { get; set; } = new List<DealModel>();
 
@@ -14,7 +14,7 @@
 
         public bool IsCurrentUserActive { get; set; }
 
-        public bool IsHaveOpenDealOrLoan
+        public bool HasOpenDeal
         {
             get
             {
