@@ -2,79 +2,21 @@
 @using TrueMoney.Common.Enums
 @using TrueMoney.Models.User
 @using Microsoft.AspNet.Identity
-@model ProfileViewModel
 
 @{
     ViewBag.Title = "Личный кабинет";
 }
 
-@Html.ActionLink("Редактировать личные данные", "Edit", new { id = User.Identity.GetUserId<int>() }, new { @class = "btn btn-primary" })
-<br />
-@Html.ActionLink("Редактировать паспортные данные", "EditPassport", new { userId = User.Identity.GetUserId<int>() }, new { @class = "btn btn-primary" })
 <h2>@ViewBag.Title</h2>
-
-<h5>Ваш активный займ:</h5>
-@* todo: сделать в модели поля ActiveDeals, ClosedDeals, OpenDeals *@
-@foreach (var item in Model.Deals.Where(x => x.DealStatus != DealStatus.Closed && x.DealStatus != DealStatus.Open))
-{
-    @RenderDeal(item)
-}
-
-<h5>Ваши завершённые займы:</h5>
-@foreach (var item in Model.Deals.Where(x => x.DealStatus == DealStatus.Closed))
-{
-    @RenderDeal(item)
-}
-
-<hr />
-
-@* todo: у юзера может быть только одна активная заявка? если да, то зачем цикл? *@
-<h5>Ваша активная заявка:</h5>
-@foreach (var item in Model.Deals.Where(x => x.DealStatus == DealStatus.Open))
-{
-    @RenderDeal(item)
-}
-
-@if (Model.IsCurrentUserActive)
-{
-    if (!Model.IsHaveOpenDealOrLoan)
-    {
-        @Html.ActionLink("Создать заявку", "Create", "Deal", routeValues: null, htmlAttributes: null)<br />
-    }
-    else
-    {
-        <p>Завершите текущий займ и сможете сделать ещё заявку</p>
-    }
-}
-else
-{
-    <p>Ожидайте подтверждение регистрации и тогда сможете создать заявку</p>
-}
-
-<hr />
-
-<h5>Ваши предложения:</h5>
-@foreach (var item in Model.Offers)
-{
-    @RenderOffer(item)
-}
-
-<hr />
-
-@Html.ActionLink("Список всех заявок", "Index", "Deal", routeValues: null, htmlAttributes: null)<br />
-
-@helper RenderOffer(OfferModel offer)
-{
-    <p>
-        <strong>@offer.Id</strong> - @offer.InterestRate
-        @Html.ActionLink("Просмотреть заявку", "Details", "Deal", routeValues: new { id = offer.DealId }, htmlAttributes: null)<br />
-    </p>
-}
-
-@helper RenderDeal(DealModel deal)
-{
-    <p>
-        <strong>@deal.Id</strong> - @deal.Amount - @deal.InterestRate
-        @Html.ActionLink("Просмотреть заявку", "Details", "Deal", routeValues: new { id = deal.Id }, htmlAttributes: null)<br />
-    </p>
-}
+<div>
+    @Html.ActionLink("Редактировать личные данные", "Edit", new { id = User.Identity.GetUserId<int>() }, new { @class = "btn btn-primary" })
+</div>
+<br />
+<div>
+    @Html.ActionLink("Редактировать паспортные данные", "EditPassport", new { userId = User.Identity.GetUserId<int>() }, new { @class = "btn btn-primary" })
+</div>
+<br />
+<div>
+    @Html.ActionLink("Информация о займах", "UserActivity", null, new { @class = "btn btn-primary" })
+</div>
+<br />

@@ -1,0 +1,68 @@
+﻿@using TrueMoney.Models.Basic
+@using TrueMoney.Common.Enums
+@using TrueMoney.Models.User
+@using Microsoft.AspNet.Identity
+@model UserActivityViewModel
+
+@{
+    ViewBag.Title = "Информация о займах";
+}
+
+<h2>@ViewBag.Title</h2>
+<br />
+<h5>Ваш активный займ:</h5>
+@RenderDeal(Model.Deals.FirstOrDefault(x => x.DealStatus != DealStatus.Closed))
+
+<h5>Ваши завершённые займы:</h5>
+@foreach (var item in Model.Deals.Where(x => x.DealStatus == DealStatus.Closed))
+{
+    @RenderDeal(item)
+}
+<hr />
+
+@if (Model.IsCurrentUserActive)
+{
+    if (!Model.HasOpenDeal)
+    {
+        @Html.ActionLink("Создать заявку", "Create", "Deal", routeValues: null, htmlAttributes: null)<br />
+    }
+    else
+    {
+        <p>Завершите текущий займ и сможете сделать ещё заявку</p>
+    }
+}
+else
+{
+    <p>Вы сможете создать заявку на займ, после того, как администратор подтвердит валидность ваших личных данных</p>
+}
+
+<hr />
+
+<h5>Ваши предложения:</h5>
+@foreach (var item in Model.Offers)
+{
+    @RenderOffer(item)
+}
+
+<hr />
+
+@Html.ActionLink("Назад", "UserProfile", null, new { @class = "btn btn-primary" })<br />
+
+@helper RenderOffer(OfferModel offer)
+{
+    <p>
+        <strong>@offer.Id</strong> - @offer.InterestRate
+        @Html.ActionLink("Просмотреть заявку", "Details", "Deal", routeValues: new { id = offer.DealId }, htmlAttributes: null)<br />
+    </p>
+}
+
+@helper RenderDeal(DealModel deal)
+{
+    if (deal != null)
+    {
+	    <p>
+            <strong>@deal.Id</strong> - @deal.Amount - @deal.InterestRate
+            @Html.ActionLink("Просмотреть заявку", "Details", "Deal", routeValues: new { id = deal.Id }, htmlAttributes: null)<br />
+        </p> 
+    }
+}

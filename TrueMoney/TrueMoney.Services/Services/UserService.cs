@@ -84,19 +84,19 @@ namespace TrueMoney.Services.Services
                        };
         }
 
-        public async Task<ProfileViewModel> GetProfileViewModel(int currentUserId)
-        {
-            var offers = await _context.Offers.Where(x => x.OffererId == currentUserId).ToListAsync();
-            var deals = await _context.Deals.Where(x => x.OwnerId == currentUserId).ToListAsync();
-            var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);
+        //public async Task<UserActivityViewModel> GetProfileViewModel(int currentUserId)
+        //{
+        //    var offers = await _context.Offers.Where(x => x.OffererId == currentUserId).ToListAsync();
+        //    var deals = await _context.Deals.Where(x => x.OwnerId == currentUserId).ToListAsync();
+        //    var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);
 
-            return new ProfileViewModel
-            {
-                Deals = Mapper.Map<List<DealModel>>(deals),
-                Offers = Mapper.Map<IList<OfferModel>>(offers),
-                IsCurrentUserActive = user.IsActive
-            };
-        }
+        //    return new UserActivityViewModel
+        //    {
+        //        Deals = Mapper.Map<List<DealModel>>(deals),
+        //        Offers = Mapper.Map<IList<OfferModel>>(offers),
+        //        IsCurrentUserActive = user.IsActive
+        //    };
+        //}
 
         public async Task ActivateUser(int userId)
         {
@@ -109,10 +109,7 @@ namespace TrueMoney.Services.Services
         public async Task<EditUserViewModel> GetEditModel(int id)
         {
             var user = await _context.Users.FirstAsync(x => x.Id == id);
-            var model = new EditUserViewModel
-            {
-                User = Mapper.Map<UserModel>(user),
-            };
+            var model = Mapper.Map<EditUserViewModel>(user);
 
             return model;
         }
@@ -130,8 +127,8 @@ namespace TrueMoney.Services.Services
 
         public async Task Update(EditUserViewModel model)
         {
-            var user = _context.Users.First(x => x.Id == model.User.Id);
-            Mapper.Map(model.User, user, typeof(UserModel), typeof(User));
+            var user = _context.Users.First(x => x.Id == model.Id);
+            Mapper.Map(model, user, typeof(EditUserViewModel), typeof(User));
             await _context.SaveChangesAsync();
         }
 
@@ -140,6 +137,20 @@ namespace TrueMoney.Services.Services
             var passport = _context.Passports.First(x => x.Id == model.Passport.Id);
             Mapper.Map(model.Passport, passport, typeof(PassportModel), typeof(Passport));
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<UserActivityViewModel> GetUserActivityModel(int userId)
+        {
+            var user = await _context.Users.FirstAsync(x => x.Id == userId);
+            var offers = user.Offers;
+            var deals = user.Deals;
+
+            return new UserActivityViewModel
+            {
+                Deals = Mapper.Map<List<DealModel>>(deals),
+                Offers = Mapper.Map<IList<OfferModel>>(offers),
+                IsCurrentUserActive = user.IsActive
+            };
         }
     }
 }

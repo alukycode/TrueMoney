@@ -1,8 +1,10 @@
 ﻿@model TrueMoney.Models.User.EditPassportViewModel
 @{
-    ViewBag.Title = "EditPassport";
+    ViewBag.Title = "Редактирование паспортных данных";
 }
-<h2>Редактирование паспортных данных</h2>
+
+<h2>@ViewBag.Title</h2>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
