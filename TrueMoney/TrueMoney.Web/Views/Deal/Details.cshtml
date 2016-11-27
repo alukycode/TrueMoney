@@ -104,7 +104,7 @@
     <dd>@Model.Deal.Description</dd>
 
     <dt>@Html.DisplayNameFor(model => model.Deal.DealStatus)</dt>
-    <dd class="status-@Model.Deal.DealStatus">@Html.DisplayFor(model => model.Deal.DealStatus)</dd>
+    <dd class="status-@Model.Deal.DealStatus">@Model.Deal.DealStatus.GetDescription()</dd>
 </dl>
 
 @if (Model.Deal.DealStatus == DealStatus.Open || Model.Deal.DealStatus == DealStatus.WaitForApprove)
