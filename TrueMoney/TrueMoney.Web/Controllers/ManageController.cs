@@ -209,9 +209,10 @@ namespace TrueMoney.Web.Controllers
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+
+                return RedirectToAction("UserProfile", "User");
             }
-            AddErrors(result);
+            ModelState.AddModelError(string.Empty, "Вы ввели неверный пароль.");
             return View(model);
         }
 
