@@ -148,6 +148,13 @@ namespace TrueMoney.Services.Services
                             PaymentPlanId = paymentPlan.Id
                         });
 
+                    // check if all payments were paid
+                    if (paymentPlan.Payments.All(x => x.IsPaid))
+                    {
+                        deal.DealStatus = DealStatus.Closed;
+                        UpdateRatingAfterFinish(ref deal);
+                    }
+
                     await _context.SaveChangesAsync();
 
                     return PaymentResult.Success;
@@ -183,7 +190,7 @@ namespace TrueMoney.Services.Services
             var payment = new Payment
             {
                 Amount = periodAmount + extraAmount,
-                DueDate = firstPayDate,
+                DueDate = firstPayDate
             };
             paymentList.Add(payment);
 
@@ -198,6 +205,30 @@ namespace TrueMoney.Services.Services
             }
 
             return paymentList;
+        }
+
+        public void UpdateRatingAfterFinish(ref Deal deal)
+        {
+            var mainOfferer = deal.Offers.First(x => x.IsApproved).Offerer;
+            deal.Owner.Rating += Rating.SuccessFinishDeal;
+            mainOfferer.Rating += Rating.SuccessFinishDeal;
+
+            var allPaidInTime = true;
+
+            for (int i = 0; i < deal.PaymentPlan.Payments.Count; i++)
+            {
+                var currentPayment = deal.PaymentPlan.Payments[i];
+                if (currentPayment.DueDate < currentPayment.PaidDate)
+                {
+                    deal.Owner.Rating += Rating.DelayPayment;
+                    allPaidInTime = false;
+                }
+            }
+
+            if (allPaidInTime)
+            {
+                deal.Owner.Rating += Rating.SuccessPayments;
+            }
         }
     }
 }
