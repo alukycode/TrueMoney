@@ -8,14 +8,14 @@
 
     public class BankApi : IBankApi
     {
-        public async Task<BankResponse> Do(BankTransaction bankTransaction)
+        public BankResponse Do(BankTransaction bankTransaction)
         {
             //var bankData = new BankData().GetBankData();
             //todo - check and update bank date
             return BankResponse.Error;
         }
 
-        public async Task<BankResponse> DoWithVisa(BankVisaTransaction bankTransaction)
+        public BankResponse DoWithVisa(BankVisaTransaction bankTransaction)
         {
             var data = BankDataHelper.GetAccounts();
             var senderAccount =
@@ -43,6 +43,13 @@
             BankDataHelper.SaveAccounts(data);
 
             return BankResponse.Success;
+        }
+        
+        public decimal GetBalance(string accountNumber)
+        {
+            var accounts = BankDataHelper.GetAccounts();
+
+            return accounts.First(x => x.BankAccountNumber == accountNumber).Amount;
         }
     }
 }

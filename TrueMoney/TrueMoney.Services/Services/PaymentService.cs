@@ -52,17 +52,16 @@ namespace TrueMoney.Services.Services
                 return PaymentResult.Error;
             }
 
-            var result = await
-                _bankApi.DoWithVisa(
-                    new BankVisaTransaction
-                    {
-                        Amount = visaPaymentViewModel.PaymentCount,
-                        RecipientAccountNumber = recipient.BankAccountNumber,
-                        SenderCardNumber = visaPaymentViewModel.CardNumber,
-                        SenderCcvCode = visaPaymentViewModel.CvvCode,
-                        SenderName = visaPaymentViewModel.Name,
-                        SenderValidBefore = visaPaymentViewModel.ValidBefore
-                    });
+            var result = _bankApi.DoWithVisa(
+                new BankVisaTransaction
+                {
+                    Amount = visaPaymentViewModel.PaymentCount,
+                    RecipientAccountNumber = recipient.BankAccountNumber,
+                    SenderCardNumber = visaPaymentViewModel.CardNumber,
+                    SenderCcvCode = visaPaymentViewModel.CvvCode,
+                    SenderName = visaPaymentViewModel.Name,
+                    SenderValidBefore = visaPaymentViewModel.ValidBefore
+                });
 
             switch (result)
             {
@@ -106,18 +105,31 @@ namespace TrueMoney.Services.Services
                 return PaymentResult.LessThenMinAmount;
             }
 
-            var result =
-                await
+            var result = BankResponse.NotEnoughtMoney;
+            var resultMoneyAmount = visaPaymentViewModel.PaymentCount * (1 + NumericConstants.Tax);
+            if (_bankApi.GetBalance(deal.Owner.BankAccountNumber) >= resultMoneyAmount)
+            {
+                result = _bankApi.DoWithVisa(
+                        new BankVisaTransaction
+                        {
+                            Amount = visaPaymentViewModel.PaymentCount,
+                            RecipientAccountNumber = recipient.BankAccountNumber,
+                            SenderCardNumber = visaPaymentViewModel.CardNumber,
+                            SenderCcvCode = visaPaymentViewModel.CvvCode,
+                            SenderName = visaPaymentViewModel.Name,
+                            SenderValidBefore = visaPaymentViewModel.ValidBefore
+                        });
                 _bankApi.DoWithVisa(
                     new BankVisaTransaction
                     {
-                        Amount = visaPaymentViewModel.PaymentCount,
+                        Amount = visaPaymentViewModel.PaymentCount * NumericConstants.Tax,
                         RecipientAccountNumber = recipient.BankAccountNumber,
                         SenderCardNumber = visaPaymentViewModel.CardNumber,
                         SenderCcvCode = visaPaymentViewModel.CvvCode,
                         SenderName = visaPaymentViewModel.Name,
                         SenderValidBefore = visaPaymentViewModel.ValidBefore
-                    });
+                    }); 
+            }
 
             switch (result)
             {

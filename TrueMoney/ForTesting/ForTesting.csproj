@@ -78,6 +78,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Bank\Bank.csproj">
+      <Project>{a64b1a72-dcea-4709-bae7-1c232225b127}</Project>
+      <Name>Bank</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrueMoney.Data\TrueMoney.Data.csproj">
       <Project>{DA385B71-A556-49E8-B871-F659D7640E8A}</Project>
       <Name>TrueMoney.Data</Name>

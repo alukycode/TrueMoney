@@ -8,6 +8,7 @@
     using System.Xml.Serialization;
 
     using Bank.BankEntities;
+    using TrueMoney.Common;
 
     /// <summary>
     /// Generate default test data.
@@ -18,19 +19,29 @@
         {
             //https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D1%87%D1%91%D1%82%D0%BD%D1%8B%D0%B9_%D1%81%D1%87%D1%91%D1%82
             var accounts = new List<BankAccount>();
-            for (int i = 0; i < 10; i++)
+            accounts.Add(new BankAccount
+            {
+                Id = 0,
+                BankAccountNumber = BankConstants.TrueMoneyAccountNumber,
+                Amount = 1000M,
+                VisaNumber = "-",
+                VisaName = "-",
+                VisaCcv = "-",
+                VisaDate = "-"
+            });
+            for (int i = 1; i < 11; i++)
             {
                 accounts.Add(
                     new BankAccount
-                        {
-                            Id = i,
-                            BankAccountNumber = $"408.17.810.0.9991.{i.ToString("D6")}",
-                            Amount = Convert.ToDecimal(i * 1000),
-                            VisaNumber = i.ToString("D16"),
-                            VisaName = $"Test User{i}",
-                            VisaCcv = i.ToString("D3"),
-                            VisaDate = "01/18"
-                        });
+                    {
+                        Id = i,
+                        BankAccountNumber = $"408.17.810.0.9991.{i.ToString("D6")}",
+                        Amount = Convert.ToDecimal(i * 1000),
+                        VisaNumber = i.ToString("D16"),
+                        VisaName = $"Test User{i}",
+                        VisaCcv = i.ToString("D3"),
+                        VisaDate = "01/18"
+                    });
             }
 
             SaveAccounts(accounts);
@@ -40,20 +51,20 @@
         {
             List<BankAccount> accounts;
             XmlSerializer formatter = new XmlSerializer(typeof(List<BankAccount>));
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "BankData.xml");
-            using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BankData.xml");
+            using (FileStream fs = new FileStream(filePath, FileMode.Open))
             {
                 accounts = (List<BankAccount>)formatter.Deserialize(fs);
             }
 
             return accounts;
         }
-
+        
         public static void SaveAccounts(List<BankAccount> accounts)
         {
             XmlSerializer formatter = new XmlSerializer(typeof(List<BankAccount>));
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", "BankData.xml");
-            using (FileStream fs = new FileStream(filePath, FileMode.Truncate))
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BankData.xml");
+            using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
             {
                 formatter.Serialize(fs, accounts);
             }

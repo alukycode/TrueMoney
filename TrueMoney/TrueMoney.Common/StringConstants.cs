@@ -15,6 +15,11 @@ namespace TrueMoney.Common
     public static class ErrorMessages
     {
         public const string Required = "Поле '{0}' не может быть пустым";
-        public const string Invalid = "Поле \"{0}\" содержит некорректное значение";
+        public const string Invalid = "Поле \"{0}\" содержит некорректное значение"; 
+    }
+
+    public static class BankConstants
+    {
+        public const string TrueMoneyAccountNumber = "123123";
     }
 }

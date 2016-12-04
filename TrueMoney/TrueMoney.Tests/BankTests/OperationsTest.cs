@@ -57,7 +57,7 @@
 
 
             var bankApi = new BankApi();
-            var res1 = bankApi.DoWithVisa(bankVisaTransaction1).Result;
+            var res1 = bankApi.DoWithVisa(bankVisaTransaction1);
             Assert.NotNull(res1);
             result = BankDataHelper.GetAccounts();
             Assert.AreEqual(res1, BankResponse.Success);
@@ -65,7 +65,7 @@
             Assert.AreEqual(1000, result[0].Amount);
             Assert.AreEqual(0, result[1].Amount);
 
-            var res2 = bankApi.DoWithVisa(bankVisaTransaction1).Result;
+            var res2 = bankApi.DoWithVisa(bankVisaTransaction1);
             Assert.NotNull(res2);
             result = BankDataHelper.GetAccounts();
             Assert.AreEqual(res2, BankResponse.NotEnoughtMoney);
@@ -83,7 +83,7 @@
                 SenderValidBefore = accounts[4].VisaDate
             };
 
-            var res3 = bankApi.DoWithVisa(bankVisaTransaction2).Result;
+            var res3 = bankApi.DoWithVisa(bankVisaTransaction2);
             Assert.NotNull(res3);
             result = BankDataHelper.GetAccounts();
             Assert.AreEqual(res3, BankResponse.Success);
@@ -101,7 +101,7 @@
                 SenderValidBefore = accounts[4].VisaDate
             };
 
-            var res4 = bankApi.DoWithVisa(bankVisaTransaction3).Result;
+            var res4 = bankApi.DoWithVisa(bankVisaTransaction3);
             Assert.NotNull(res4);
             result = BankDataHelper.GetAccounts();
             Assert.AreEqual(res4, BankResponse.Error);
