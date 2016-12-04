@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.DataProtection;
+using TrueMoney.Common;
 using TrueMoney.Data;
 using TrueMoney.Data.Entities;
 using TrueMoney.Services.Services;
@@ -23,7 +24,7 @@ namespace TrueMoney.Web.Auth_Identity_Startup
             // Configure validation logic for passwords
             this.PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 1,
+                RequiredLength = NumericConstants.PasswordMaxLength,
                 RequireNonLetterOrDigit = false,
                 RequireDigit = false,
                 RequireLowercase = false,
@@ -32,8 +33,8 @@ namespace TrueMoney.Web.Auth_Identity_Startup
 
             // Configure user lockout defaults
             this.UserLockoutEnabledByDefault = true;
-            this.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            this.MaxFailedAccessAttemptsBeforeLockout = 5;
+            this.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(1);
+            this.MaxFailedAccessAttemptsBeforeLockout = 3;
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.

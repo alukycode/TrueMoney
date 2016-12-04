@@ -85,6 +85,7 @@ namespace TrueMoney.Data
                         Number = "test",
                     },
                     IsActive = true,
+                    LockoutEnabled = true,
                 },
                 new User
                 {
@@ -101,6 +102,7 @@ namespace TrueMoney.Data
                         Number = "test",
                     },
                     IsActive = true,
+                    LockoutEnabled = true,
                 },
                 new User
                 {
@@ -117,6 +119,7 @@ namespace TrueMoney.Data
                         Number = "test",
                     },
                     IsActive = true,
+                    LockoutEnabled = true,
                 },
                 new User
                 {
@@ -133,6 +136,7 @@ namespace TrueMoney.Data
                         Number = "test",
                     },
                     IsActive = true,
+                    LockoutEnabled = true,
                 },
                 new User
                 {
@@ -148,6 +152,7 @@ namespace TrueMoney.Data
                         DateOfIssuing = DateTime.Now,
                         Number = "test",
                     },
+                    LockoutEnabled = true,
                 },
             };
         }

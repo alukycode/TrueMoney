@@ -55,7 +55,7 @@ namespace TrueMoney.Services.Services
         public User GetMappedUserEnity(RegisterViewModel model)
         {
             var user = Mapper.Map<User>(model);
-
+            user.LockoutEnabled = true;
             user.UserName = model.Email;
 
             return user;

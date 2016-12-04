@@ -8,6 +8,7 @@ namespace TrueMoney.Common
 {
     public static class NumericConstants
     {
-        public static decimal Eps = 0.000001M;
+        public const decimal Eps = 0.000001M;
+        public const int PasswordMaxLength = 1;
     }
 }
