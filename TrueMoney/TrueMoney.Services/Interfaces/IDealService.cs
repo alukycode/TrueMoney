@@ -7,6 +7,7 @@ namespace TrueMoney.Services.Interfaces
 {
     using Models.Offer;
     using TrueMoney.Models;
+    using TrueMoney.Models.Admin;
     using TrueMoney.Models.Deal;
     using TrueMoney.Models.User;
 
@@ -27,5 +28,7 @@ namespace TrueMoney.Services.Interfaces
         //Task<Deal> GetByOfferId(int offerId); пока не используется, ну и сервисы не должны возвращать сущности базы
 
         Task<CreateDealForm> GetCreateDealForm();
+
+        Task<DealListViewModel> GetDealListViewModel();
     }
 }

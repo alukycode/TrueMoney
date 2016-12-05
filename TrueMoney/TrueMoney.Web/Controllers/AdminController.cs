@@ -9,14 +9,19 @@ using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Web.Controllers
 {
+    using Microsoft.AspNet.Identity;
+
     [Authorize(Roles = RoleNames.Admin)]
     public class AdminController : Controller
     {
         private readonly IUserService _userService;
 
-        public AdminController(IUserService userService)
+        private readonly IDealService _dealService;
+
+        public AdminController(IUserService userService, IDealService dealService)
         {
             _userService = userService;
+            _dealService = dealService;
         }
 
         public async Task<ActionResult> InactiveUsers()
@@ -30,6 +35,12 @@ namespace TrueMoney.Web.Controllers
         {
             await _userService.ActivateUser(userId);
             return RedirectToAction("InactiveUsers");
+        }
+
+        public async Task<ActionResult> DealList()
+        {
+            var model = await _dealService.GetDealListViewModel();
+            return View(model);
         }
     }
 }

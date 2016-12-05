@@ -110,6 +110,8 @@
     <Compile Include="Account\ResetPasswordViewModel.cs" />
     <Compile Include="Account\SendCodeViewModel.cs" />
     <Compile Include="Account\VerifyCodeViewModel.cs" />
+    <Compile Include="Admin\DealListViewModel.cs" />
+    <Compile Include="Basic\BankTransactionModel.cs" />
     <Compile Include="Basic\PassportModel.cs" />
     <Compile Include="Basic\PaymentModel.cs" />
     <Compile Include="Basic\PaymentPlanModel.cs" />

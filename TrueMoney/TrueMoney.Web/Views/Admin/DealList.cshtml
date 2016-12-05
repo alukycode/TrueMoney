@@ -1,0 +1,74 @@
+﻿@using System.Globalization
+@model TrueMoney.Models.Admin.DealListViewModel
+@{
+    Layout = null;
+}
+
+<h2>Все заявки</h2>
+<hr />
+
+<table class="table" border="1" >
+    <tr>
+        <th>№</th>
+        <th>@Html.DisplayNameFor(model => model.Deals.First().DealStatus)</th>
+        <th>@Html.DisplayNameFor(model => model.Deals.First().CreateDate)</th>
+        <th>@Html.DisplayNameFor(model => model.Deals.First().Amount)</th>
+        <th>@Html.DisplayNameFor(model => model.Deals.First().InterestRate)</th>
+        <th>@Html.DisplayNameFor(model => model.Deals.First().OwnerFullName)</th>
+        <th>@Html.DisplayNameFor(model => model.Deals.First().Description)</th>
+        <th>Дата выдачи займа</th>
+        <th>Дата погашения</th>
+        <th>Дата следующего платежа</th>
+        <th>Cумма следующего платежа</th>
+        <th>Остаточная сумма</th>
+        <th>Заимодавец</th>
+        <th>Заемщик</th>
+        <th></th>
+    </tr>
+    @foreach (var deal in Model.Deals.OrderBy(x => x.DealStatus))
+    {
+        var paymentPlan = Model.PaymentPlans.FirstOrDefault(x => x.DealId == deal.Id);
+        var payments = paymentPlan != null ? Model.Payments.
+            Where(x => x.PaymentPlanId == paymentPlan.Id).OrderBy(x => x.DueDate) : null;
+        var bankTransactions = paymentPlan != null ? Model.BankTransactions.
+            Where(x => x.PaymentPlanId == paymentPlan.Id).OrderBy(x => x.DateOfPayment) : null;
+        var allPaidBefore = paymentPlan != null ? payments.Where(x => x.IsPaid).Select(x => x.Amount + x.Liability).Sum() : 0;
+        //some extra money before previous payment
+        var extraMoney = paymentPlan != null ? bankTransactions.Select(x => x.Amount).Sum() - allPaidBefore : 0;
+        var mainOffer = Model.Offers.FirstOrDefault(x => x.DealId == deal.Id);
+        <tr>
+            <td>@deal.Id</td>
+            <td>@deal.DealStatus</td>
+            <td>@deal.CreateDate.ToString("D")</td>
+            <td>@deal.Amount р.</td>
+            <td>@deal.InterestRate %</td>
+            <td>@deal.OwnerFullName</td>
+            <td>@deal.Description</td>
+            <td>@Html.Raw(paymentPlan != null ? paymentPlan.CreateTime.ToString("D") : "")</td>
+            <td>@Html.Raw(paymentPlan != null ? payments.Last().DueDate.ToString("D") : "")</td>
+            <td>@Html.Raw(paymentPlan != null && payments.Any(x => !x.IsPaid) 
+                    ? payments.First(x => !x.IsPaid).DueDate.ToString("D") : "")</td>
+            <td>
+                @Html.Raw(paymentPlan != null && payments.Any(x => !x.IsPaid) 
+                    ? (payments.First(x => !x.IsPaid).Amount + payments.First(x => !x.IsPaid).Amount).ToString() : "")
+            </td>
+            <td>@extraMoney</td>
+            <td>
+                @if (mainOffer != null)
+                {
+                    @Html.ActionLink(mainOffer.OffererFullName, "Details", "User",
+                        routeValues: new { id = mainOffer.Id }, htmlAttributes: null)
+                }
+            </td>
+            <td>
+                @Html.ActionLink(deal.OwnerFullName, "Details", "User",
+                       routeValues: new { id = deal.OwnerId },
+                       htmlAttributes: null)
+            </td>
+            <td>
+                @Html.ActionLink("Детали", "Details", "Deal",
+                    routeValues: new { id = deal.OwnerId }, htmlAttributes: null)
+            </td>
+        </tr>
+    }
+</table>
