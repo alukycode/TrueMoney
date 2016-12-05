@@ -1,13 +1,13 @@
 ﻿@using System.Globalization
 @model TrueMoney.Models.Admin.DealListViewModel
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Все заявки</h2>
 <hr />
 
-<table class="table" border="1" >
+<table class="table">
     <tr>
         <th>№</th>
         <th>@Html.DisplayNameFor(model => model.Deals.First().DealStatus)</th>
