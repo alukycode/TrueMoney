@@ -26,7 +26,7 @@
         <th></th>
     </tr>
     @foreach (var deal in Model.Deals.OrderBy(x => x.DealStatus))
-    {
+    {//если будет время вынести в модель
         var paymentPlan = Model.PaymentPlans.FirstOrDefault(x => x.DealId == deal.Id);
         var payments = paymentPlan != null ? Model.Payments.
             Where(x => x.PaymentPlanId == paymentPlan.Id).OrderBy(x => x.DueDate) : null;
