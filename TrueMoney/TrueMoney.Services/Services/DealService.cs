@@ -16,6 +16,7 @@ namespace TrueMoney.Services.Services
     using Interfaces;
     using Models.Offer;
     using TrueMoney.Models;
+    using TrueMoney.Models.Admin;
     using TrueMoney.Models.Deal;
     using TrueMoney.Models.User;
     using TrueMoney.Services.Extensions;
@@ -89,6 +90,22 @@ namespace TrueMoney.Services.Services
             var res = new CreateDealForm();
 
             return res;
+        }
+
+        public async Task<DealListViewModel> GetDealListViewModel()
+        {
+            return new DealListViewModel
+                       {
+                           Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
+                           Payments =
+                               Mapper.Map<IList<PaymentModel>>(await _context.Payments.ToListAsync()),
+                           PaymentPlans =
+                               Mapper.Map<IList<PaymentPlanModel>>(await _context.PaymentPlans.ToListAsync()),
+                           BankTransactions =
+                               Mapper.Map<IList<BankTransactionModel>>(await _context.BankTransactions.ToListAsync()),
+                           Offers =
+                               Mapper.Map<IList<OfferModel>>(await _context.Offers.Where(x => x.IsApproved).ToListAsync())
+                       };
         }
 
         public async Task FinishDealStartLoan(int dealId, int currentUserId) 

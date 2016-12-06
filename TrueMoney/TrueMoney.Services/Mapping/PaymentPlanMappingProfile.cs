@@ -10,6 +10,7 @@ namespace TrueMoney.Services.Mapping
         {
             CreateMap<PaymentPlan, PaymentPlanModel>();
             CreateMap<Payment, PaymentModel>();
+            CreateMap<BankTransaction, BankTransactionModel>();
         }
     }
 }

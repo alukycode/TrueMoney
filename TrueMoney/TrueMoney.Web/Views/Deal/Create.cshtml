@@ -1,5 +1,5 @@
 ﻿@model TrueMoney.Models.Deal.CreateDealForm
-
+@using TrueMoney.Common;
 @{
     ViewBag.Title = "Создать заявку на займ";
 }
@@ -15,7 +15,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "control-label col-md-3" })
             <div class="col-md-9">
-                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @id = "amount", @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -31,7 +31,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.InterestRate, htmlAttributes: new { @class = "control-label col-md-3" })
             <div class="col-md-9">
-                @Html.EditorFor(model => model.InterestRate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.InterestRate, new { htmlAttributes = new { @id = "interestRate", @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.InterestRate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -51,6 +51,10 @@
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
         </div>
+        
+        <div class="form-group">
+            <label class="col-md-6" id="finalAmount"></label>
+        </div>
 
         <div class="form-group">
             <div class="col-md-offset-3 col-md-9">
@@ -63,3 +67,19 @@
 <div>
     @Html.ActionLink("Вернуться к списку заявок", "Index")
 </div>
+@section scripts {
+    <script>
+        $("#amount").change(calculateFinalAmount);
+        $("#interestRate").change(calculateFinalAmount);
+
+        function calculateFinalAmount() {
+            debugger;
+            var amount = $("#amount").val();
+            var interestRate = $("#interestRate").val();
+            var resultAmount = (amount * (1 + interestRate / 100)) * (1 + @NumericConstants.Tax)
+            if (amount && interestRate) {
+                $("#finalAmount").html("Общий объем выплат с учетом процентной ставки и комиссии составит <b>" + resultAmount + "</b> р.");
+            }
+        }
+    </script>
+}
