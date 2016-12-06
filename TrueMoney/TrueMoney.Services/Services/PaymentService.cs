@@ -79,7 +79,7 @@ namespace TrueMoney.Services.Services
             }
         }
 
-        public async Task<PaymentResult> Payout(VisaPaymentViewModel visaPaymentViewModel, int currentUserId)
+        public async Task<PaymentResult> Payout(VisaPaymentViewModel visaPaymentViewModel)
         {
             var deal = await _context.Deals
                 .Include(x => x.Owner)

@@ -20,7 +20,7 @@ namespace TrueMoney.Web.Controllers
             _paymentService = paymentService;
         }
 
-        public async Task<ActionResult> VisaLoan(string paymentName, decimal paymentCount, int payForId, int dealId)
+        public ActionResult VisaLoan(string paymentName, decimal paymentCount, int payForId, int dealId) //TODO: да че за paymentName?????? paymentCount??? payForId????????????
         {
             if (!string.IsNullOrEmpty(paymentName)
                 && paymentCount > 0)
@@ -70,33 +70,26 @@ namespace TrueMoney.Web.Controllers
             return View("Visa", formModel);
         }
 
-        public async Task<ActionResult> VisaPayout(string paymentName, int payForId, int dealId, decimal paymentCount = 0)
+        public ActionResult VisaPayout(int dealId)
         {
-            if (!string.IsNullOrEmpty(paymentName))
+            var model = new VisaPaymentViewModel
             {
+                //PaymentCount = paymentCount,
+                //PaymentName = paymentName,
+                DealId = dealId,
+                CanSetPaymentCount = true,
+                FormAction = "VisaPayout"
+            };
 
-                return
-                    View("Visa",
-                        new VisaPaymentViewModel
-                        {
-                            PaymentCount = paymentCount,
-                            PaymentName = paymentName,
-                            DealId = dealId,
-                            CanSetPaymentCount = true,
-                            FormAction = "VisaPayout"
-                        });
-            }
-
-            return RedirectToAction("Index", "Home");
+            return View("Visa", model);
         }
 
         [HttpPost]
         public async Task<ActionResult> VisaPayout(VisaPaymentViewModel formModel)
         {
-            if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)
-                && formModel.PaymentCount > 0)
+            if (ModelState.IsValid && formModel.PaymentCount > 0)
             {
-                var payRes = await _paymentService.Payout(formModel, User.Identity.GetUserId<int>());
+                var payRes = await _paymentService.Payout(formModel);
                 switch (payRes)
                 {
                     case PaymentResult.Success:

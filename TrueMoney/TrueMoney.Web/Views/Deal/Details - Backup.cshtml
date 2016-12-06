@@ -129,8 +129,6 @@
                                 Visa - @Html.ActionLink("Оплатить", "VisaPayout", "Payment", routeValues: new RouteValueDictionary(
                                            new
                                            {
-                                               paymentName = $"Выплата по займу #{Model.Deal.Id}." + description,
-                                               payForId = Model.Offers.First(x => x.IsApproved).OffererId,
                                                dealId = Model.Deal.Id,
                                                paymentCount = nearByPayment.Amount + nearByPayment.Liability - Model.ExtraMoney
                                            }), htmlAttributes: null)

@@ -1,6 +1,6 @@
 ﻿@model TrueMoney.Models.VisaPaymentViewModel
 
-<h4>@Model.PaymentName</h4>
+<h4>@Model.PaymentName</h4> @*это не работает*@
 @using (Html.BeginForm(Model.FormAction, "Payment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()

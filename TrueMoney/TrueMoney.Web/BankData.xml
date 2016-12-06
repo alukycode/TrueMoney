@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ArrayOfBankAccount xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <BankAccount>
+    <Id>0</Id>
+    <BankAccountNumber>123123</BankAccountNumber>
+    <Amount>1000</Amount>
+    <VisaNumber>-</VisaNumber>
+    <VisaName>-</VisaName>
+    <VisaCcv>-</VisaCcv>
+    <VisaDate>-</VisaDate>
+  </BankAccount>
+  <BankAccount>
+    <Id>1</Id>
+    <BankAccountNumber>408.17.810.0.9991.000001</BankAccountNumber>
+    <Amount>1000</Amount>
+    <VisaNumber>0000000000000001</VisaNumber>
+    <VisaName>Test User1</VisaName>
+    <VisaCcv>001</VisaCcv>
+    <VisaDate>01/18</VisaDate>
+  </BankAccount>
+  <BankAccount>
+    <Id>2</Id>
+    <BankAccountNumber>408.17.810.0.9991.000002</BankAccountNumber>
+    <Amount>2000</Amount>
+    <VisaNumber>0000000000000002</VisaNumber>
+    <VisaName>Test User2</VisaName>
+    <VisaCcv>002</VisaCcv>
+    <VisaDate>01/18</VisaDate>
+  </BankAccount>
+  <BankAccount>
+    <Id>3</Id>
+    <BankAccountNumber>408.17.810.0.9991.000003</BankAccountNumber>
+    <Amount>3000</Amount>
+    <VisaNumber>0000000000000003</VisaNumber>
+    <VisaName>Test User3</VisaName>
+    <VisaCcv>003</VisaCcv>
+    <VisaDate>01/18</VisaDate>
+  </BankAccount>
+  <BankAccount>
+    <Id>4</Id>
+    <BankAccountNumber>408.17.810.0.9991.000004</BankAccountNumber>
+    <Amount>4000</Amount>
+    <VisaNumber>0000000000000004</VisaNumber>
+    <VisaName>Test User4</VisaName>
+    <VisaCcv>004</VisaCcv>
+    <VisaDate>01/18</VisaDate>
+  </BankAccount>
+  <BankAccount>
+    <Id>5</Id>
+    <BankAccountNumber>408.17.810.0.9991.000005</BankAccountNumber>
+    <Amount>5000</Amount>
+    <VisaNumber>0000000000000005</VisaNumber>
+    <VisaName>Test User5</VisaName>
+    <VisaCcv>005</VisaCcv>
+    <VisaDate>01/18</VisaDate>
+  </BankAccount>
+  <BankAccount>
+    <Id>6</Id>
+    <BankAccountNumber>408.17.810.0.9991.000006</BankAccountNumber>
+    <Amount>6000</Amount>
+    <VisaNumber>0000000000000006</VisaNumber>
+    <VisaName>Test User6</VisaName>
+    <VisaCcv>006</VisaCcv>
+    <VisaDate>01/18</VisaDate>
+  </BankAccount>
+  <BankAccount>
+    <Id>7</Id>
+    <BankAccountNumber>408.17.810.0.9991.000007</BankAccountNumber>
+    <Amount>7000</Amount>
+    <VisaNumber>0000000000000007</VisaNumber>
+    <VisaName>Test User7</VisaName>
+    <VisaCcv>007</VisaCcv>
+    <VisaDate>01/18</VisaDate>
+  </BankAccount>
+  <BankAccount>
+    <Id>8</Id>
+    <BankAccountNumber>408.17.810.0.9991.000008</BankAccountNumber>
+    <Amount>8000</Amount>
+    <VisaNumber>0000000000000008</VisaNumber>
+    <VisaName>Test User8</VisaName>
+    <VisaCcv>008</VisaCcv>
+    <VisaDate>01/18</VisaDate>
+  </BankAccount>
+  <BankAccount>
+    <Id>9</Id>
+    <BankAccountNumber>408.17.810.0.9991.000009</BankAccountNumber>
+    <Amount>9000</Amount>
+    <VisaNumber>0000000000000009</VisaNumber>
+    <VisaName>Test User9</VisaName>
+    <VisaCcv>009</VisaCcv>
+    <VisaDate>01/18</VisaDate>
+  </BankAccount>
+  <BankAccount>
+    <Id>10</Id>
+    <BankAccountNumber>408.17.810.0.9991.000010</BankAccountNumber>
+    <Amount>10000</Amount>
+    <VisaNumber>0000000000000010</VisaNumber>
+    <VisaName>Test User10</VisaName>
+    <VisaCcv>010</VisaCcv>
+    <VisaDate>01/18</VisaDate>
+  </BankAccount>
+</ArrayOfBankAccount>

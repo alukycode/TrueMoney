@@ -17,8 +17,8 @@ namespace ForTesting
     {
         static void Main(string[] args)
         {
-            BankDataHelper.UpdateDataFile();
             var x = BankDataHelper.GetAccounts();
+            BankDataHelper.UpdateDataFile();
         }
     }
 }

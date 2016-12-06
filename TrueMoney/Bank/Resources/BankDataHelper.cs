@@ -15,6 +15,16 @@
     /// </summary>
     public static class BankDataHelper
     {
+        private static string _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BankData.xml");
+
+        static BankDataHelper()
+        {
+            if (!File.Exists(_filePath))
+            {
+                UpdateDataFile();
+            }
+        }
+
         public static void UpdateDataFile()
         {
             //https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D1%87%D1%91%D1%82%D0%BD%D1%8B%D0%B9_%D1%81%D1%87%D1%91%D1%82
@@ -51,8 +61,7 @@
         {
             List<BankAccount> accounts;
             XmlSerializer formatter = new XmlSerializer(typeof(List<BankAccount>));
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BankData.xml");
-            using (FileStream fs = new FileStream(filePath, FileMode.Open))
+            using (FileStream fs = new FileStream(_filePath, FileMode.Open))
             {
                 accounts = (List<BankAccount>)formatter.Deserialize(fs);
             }
@@ -63,8 +72,7 @@
         public static void SaveAccounts(List<BankAccount> accounts)
         {
             XmlSerializer formatter = new XmlSerializer(typeof(List<BankAccount>));
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BankData.xml");
-            using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream(_filePath, FileMode.OpenOrCreate))
             {
                 formatter.Serialize(fs, accounts);
             }
