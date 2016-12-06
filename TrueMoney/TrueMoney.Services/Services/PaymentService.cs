@@ -107,7 +107,13 @@ namespace TrueMoney.Services.Services
 
             var result = BankResponse.NotEnoughtMoney;
             var resultMoneyAmount = visaPaymentViewModel.PaymentCount * (1 + NumericConstants.Tax);
-            if (_bankApi.GetBalance(deal.Owner.BankAccountNumber) >= resultMoneyAmount)
+            var userBalance = _bankApi.GetBalance(deal.Owner.BankAccountNumber);
+            if (!userBalance.HasValue)
+            {
+                return PaymentResult.Error;
+            }
+
+            if (userBalance >= resultMoneyAmount)
             {
                 result = _bankApi.DoWithVisa(
                         new BankVisaTransaction
@@ -123,7 +129,7 @@ namespace TrueMoney.Services.Services
                     new BankVisaTransaction
                     {
                         Amount = visaPaymentViewModel.PaymentCount * NumericConstants.Tax,
-                        RecipientAccountNumber = recipient.BankAccountNumber,
+                        RecipientAccountNumber = BankConstants.TrueMoneyAccountNumber,
                         SenderCardNumber = visaPaymentViewModel.CardNumber,
                         SenderCcvCode = visaPaymentViewModel.CvvCode,
                         SenderName = visaPaymentViewModel.Name,
@@ -173,6 +179,9 @@ namespace TrueMoney.Services.Services
 
                 case BankResponse.NotEnoughtMoney:
                     return PaymentResult.NotEnoughtMoney;
+
+                case BankResponse.PermissionError:
+                    return PaymentResult.PermissionError;
 
                 default:
                     return PaymentResult.Error;

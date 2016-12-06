@@ -15,7 +15,7 @@ namespace Bank.BankApi
             return BankResponse.Success;
         }
 
-        public decimal GetBalance(string accountNumber)
+        public decimal? GetBalance(string accountNumber)
         {
             return decimal.MaxValue;
         }

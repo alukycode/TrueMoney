@@ -53,11 +53,6 @@
     <Compile Include="Resources\BankDataHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BankData.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\TrueMoney.Common\TrueMoney.Common.csproj">
       <Project>{edca40cd-bf8f-43c3-9320-6061379acf10}</Project>
       <Name>TrueMoney.Common</Name>

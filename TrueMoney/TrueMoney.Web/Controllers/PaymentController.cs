@@ -87,7 +87,7 @@ namespace TrueMoney.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> VisaPayout(VisaPaymentViewModel formModel)
         {
-            if (ModelState.IsValid && formModel.PaymentCount > 0)
+            if (ModelState.IsValid)
             {
                 var payRes = await _paymentService.Payout(formModel);
                 switch (payRes)
@@ -98,13 +98,13 @@ namespace TrueMoney.Web.Controllers
                         ModelState.AddModelError("", "Заполните форму");
                         break;
                     case PaymentResult.Error:
-                        ModelState.AddModelError("", "Server Error");
+                        ModelState.AddModelError("", "Сервис временно недоступен, повторите попытку позже");
                         break;
                     case PaymentResult.NotEnoughtMoney:
                         ModelState.AddModelError("", "Недостаточно средств на счёте");
                         break;
                     case PaymentResult.PermissionError:
-                        ModelState.AddModelError("", "Ошибка доступа к счёту");
+                        ModelState.AddModelError("", "Ошибка доступа к счёту, проверьте введенные данные");
                         break;
                     case PaymentResult.LessThenMinAmount:
                         ModelState.AddModelError("", "Сумма платежа меньше минимальной суммы. См. заголовок.");
