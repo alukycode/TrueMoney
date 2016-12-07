@@ -10,6 +10,6 @@
 
         BankResponse DoWithVisa(BankVisaTransaction bankTransaction);
 
-        decimal GetBalance(string accountNumber);
+        decimal? GetBalance(string accountNumber);
     }
 }

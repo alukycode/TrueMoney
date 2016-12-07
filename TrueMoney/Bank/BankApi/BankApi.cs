@@ -27,7 +27,13 @@
                     x.VisaName == bankTransaction.SenderName);
             var receiverAccount = data.FirstOrDefault(
                 x => x.BankAccountNumber == bankTransaction.RecipientAccountNumber);
-            if (senderAccount == null || receiverAccount == null)
+            
+            if (senderAccount == null)
+            {
+                return BankResponse.PermissionError;
+            }
+
+            if (receiverAccount == null)
             {
                 return BankResponse.Error;
             }
@@ -45,11 +51,11 @@
             return BankResponse.Success;
         }
         
-        public decimal GetBalance(string accountNumber)
+        public decimal? GetBalance(string accountNumber)
         {
             var accounts = BankDataHelper.GetAccounts();
 
-            return accounts.First(x => x.BankAccountNumber == accountNumber).Amount;
+            return accounts.FirstOrDefault(x => x.BankAccountNumber == accountNumber)?.Amount;
         }
     }
 }
