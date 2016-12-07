@@ -63,14 +63,19 @@ namespace TrueMoney.Data
             users[3].Deals = GenerateDealsWithOneWaitForLoan(users.Where(x => x != users[3]).ToList());
             users[4].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[4]).ToList());
 
+            foreach (var item in users.Skip(5))
+            {
+                item.Deals = GenerateDealsWithOneOpen(users.Where(x => x != item).ToList());
+            }
+
             context.SaveChanges();
         }
 
+        #region Users generation
         private static List<User> GenerateUsers()
         {
             var defaultPasswordHash = new PasswordHasher().HashPassword("123123");
-
-            return new List<User>
+            var users = new List<User>
             {
                 new User
                 {
@@ -146,8 +151,8 @@ namespace TrueMoney.Data
                     UserName = "qwe@asd.zxc",
                     PasswordHash = defaultPasswordHash,
                     SecurityStamp = Guid.NewGuid().ToString(),
-                    FirstName = "Qwe",
-                    LastName = "Asd",
+                    FirstName = "Неактивный",
+                    LastName = "Единственный",
                     BankAccountNumber = "408.17.810.0.9991.000004",
                     Passport = new Passport
                     {
@@ -157,7 +162,40 @@ namespace TrueMoney.Data
                     LockoutEnabled = true,
                 },
             };
+
+            users.AddRange(GenerateFakeUsers(defaultPasswordHash));
+
+            return users;
         }
+
+        private static IEnumerable<User> GenerateFakeUsers(string defaultPasswordHash)
+        {
+            List<User> users = new List<User>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                users.Add(new User
+                {
+                    Email = $"fake{i}@money.dev",
+                    UserName = $"fake{i}@money.dev",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    FirstName = $"Fake{i}",
+                    LastName = $"Fake",
+                    BankAccountNumber = $"408.17.810.0.9991.{(i + 5).ToString("D6")}",
+                    Passport = new Passport
+                    {
+                        DateOfIssuing = DateTime.Now,
+                        Number = "fake",
+                    },
+                    IsActive = true,
+                    LockoutEnabled = true,
+                });
+            }
+
+            return users;
+        } 
+        #endregion
 
         #region Offers generation
         private static List<Offer> GenerateOffersWithOneApproved(
@@ -211,7 +249,10 @@ namespace TrueMoney.Data
         #endregion
 
         #region Payment plans generation
-        private static PaymentPlan GenerateOpenPlan(DateTime planCreateDate, decimal paymentsAmount, int dealPeriod)
+        private static PaymentPlan GenerateOpenPlan(
+            DateTime planCreateDate,
+            decimal paymentsAmount,
+            int dealPeriod)
         {
             return new PaymentPlan
             {
