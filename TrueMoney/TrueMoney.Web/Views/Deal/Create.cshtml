@@ -84,7 +84,7 @@ else
         function calculateFinalAmount() {
             var amount = $("#amount").val();
             var interestRate = $("#interestRate").val();
-            if (amount && interestRate) {
+            if (amount && interestRate && amount > 0 && interestRate > 0) {
                 var resultAmount = (amount * (1 + interestRate / 100)) * (1 + @NumericConstants.Tax);
                 $("#finalAmount").text(+resultAmount.toFixed(2));
                 $("#finalAmountBlock").show();

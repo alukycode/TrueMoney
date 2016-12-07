@@ -100,7 +100,7 @@ namespace TrueMoney.Services.Services
             var nearByPayment = paymentPlan.Payments.Where(x => !x.IsPaid)
                 .CalculateLiability(extraMoney, deal).OrderBy(x => x.DueDate).ToList();
 
-            if (nearByPayment[0].Amount + nearByPayment[0].Liability > visaPaymentViewModel.PaymentCount)
+            if (nearByPayment[0].Amount + nearByPayment[0].Liability - extraMoney > visaPaymentViewModel.PaymentCount)
             {
                 return PaymentResult.LessThenMinAmount;
             }
