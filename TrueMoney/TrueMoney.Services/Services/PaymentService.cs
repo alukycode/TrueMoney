@@ -201,7 +201,7 @@ namespace TrueMoney.Services.Services
 
         public List<Payment> CalculatePayments(Deal deal)
         {
-            var amount = deal.Amount * deal.InterestRate;
+            var amount = deal.Amount * (1 + deal.InterestRate / 100);
             var paymentList = new List<Payment>();
             var extraAmount = amount % deal.PaymentCount;
             var periodAmount = (amount - extraAmount) / deal.PaymentCount;
