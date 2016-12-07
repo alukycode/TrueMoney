@@ -177,7 +177,7 @@ namespace TrueMoney.Data
                 new Offer
                 {
                     CreateTime = dealCreateDate.AddDays(1),
-                    InterestRate = finalRate + 1,
+                    InterestRate = finalRate,
                     Offerer = offerers[1],
                 },
             };
@@ -201,13 +201,13 @@ namespace TrueMoney.Data
                 new Offer
                 {
                     CreateTime = dealCreateDate.AddDays(3),
-                    InterestRate = finalRate + 2,
+                    InterestRate = finalRate,
                     Offerer = offerers[1],
                 },
             };
 
             return result;
-        } 
+        }
         #endregion
 
         #region Payment plans generation
