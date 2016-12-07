@@ -211,7 +211,7 @@ namespace TrueMoney.Data
         #endregion
 
         #region Payment plans generation
-        private static PaymentPlan GenerateOpenPlan(DateTime planCreateDate, decimal paymentsAmount)
+        private static PaymentPlan GenerateOpenPlan(DateTime planCreateDate, decimal paymentsAmount, int dealPeriod)
         {
             return new PaymentPlan
             {
@@ -221,12 +221,12 @@ namespace TrueMoney.Data
                     new Payment
                     {
                         Amount = paymentsAmount / 2,
-                        DueDate = planCreateDate.AddDays(10),
+                        DueDate = planCreateDate.AddDays(dealPeriod / 2),
                     },
                     new Payment
                     {
                         Amount = paymentsAmount / 2,
-                        DueDate = planCreateDate.AddDays(20),
+                        DueDate = planCreateDate.AddDays(dealPeriod),
                     }
                 }
             };
@@ -287,6 +287,8 @@ namespace TrueMoney.Data
             var secondRate = _random.Next(1, 50);
             decimal firstAmount = _random.Next(100, 5000);
             decimal secondAmount = _random.Next(100, 5000);
+            var secondDealPeriod = 30;
+
             var result = new List<Deal>
             {
                 new Deal
@@ -306,9 +308,12 @@ namespace TrueMoney.Data
                 {
                     Amount = secondAmount,
                     CreateDate = secondDealCreateDate,
-                    DealPeriod = 30,
+                    DealPeriod = secondDealPeriod,
                     InterestRate = secondRate,
-                    PaymentPlan = GenerateOpenPlan(secondDealCreateDate.AddDays(3), secondAmount * (1 + (decimal)secondRate / 100)),
+                    PaymentPlan = GenerateOpenPlan(
+                        secondDealCreateDate.AddDays(3),
+                        secondAmount * (1 + (decimal)secondRate / 100),
+                        secondDealPeriod),
                     PaymentCount = 2,
                     DealStatus = DealStatus.InProgress,
                     Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
