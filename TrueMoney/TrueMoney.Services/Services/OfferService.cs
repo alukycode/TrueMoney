@@ -59,12 +59,15 @@ namespace TrueMoney.Services.Services
             // todo: validate if currentUserId allowed to perform this action
             var offer = await _context.Offers.FirstAsync(x => x.DealId == dealId && x.OffererId == currentUserId);
             var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
-            if (deal.DealStatus == DealStatus.WaitForApprove)
+            if (offer.IsApproved)
             {
-                var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);
-                user.Rating += Rating.RevertFinalOffer;
+                if (deal.DealStatus == DealStatus.WaitForApprove)
+                {
+                    var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);
+                    user.Rating += Rating.RevertFinalOffer;
+                }
+                deal.DealStatus = DealStatus.Open;
             }
-            deal.DealStatus = DealStatus.Open;
             _context.Offers.Remove(offer);
             await _context.SaveChangesAsync();
         }

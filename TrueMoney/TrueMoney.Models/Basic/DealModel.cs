@@ -28,7 +28,7 @@ namespace TrueMoney.Models.Basic
         [Display(Name="Цель займа")]
         public string Description { get; set; }
 
-        [Display(Name="Текущий статус займа")]
+        [Display(Name="Статус займа")]
         public DealStatus DealStatus { get; set; }
 
         public int OwnerId { get; set; }

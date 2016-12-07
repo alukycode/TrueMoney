@@ -1,33 +1,48 @@
-﻿@using TrueMoney.Common.Enums
+﻿@using TrueMoney.Common
+@using TrueMoney.Common.Enums
+@using TrueMoney.Common.Extensions
 @model TrueMoney.Models.Deal.DealIndexViewModel
 @{
     ViewBag.Title = "Список открытых заявок";
 }
 
 <h2>@ViewBag.Title</h2>
-<hr/>
+<hr />
 
-<table class="table">
+
+@if (!User.IsInRole(RoleNames.Admin))
+{
+    <p>
+        На данной странице отображаются открытые заявки на займ от всех пользователей сайта.
+        <br/>Вы можете просмотреть просмотреть любую заявку и оставить предложение на понравившиеся заявки, нажав кнопку "Детали"
+    </p>
+    <hr/>
+}
+
+<table class="table table-striped table-hover">
+    @{
+        var firstDeal = Model.Deals.First();
+    }
     <tr>
         <th>№</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().CreateDate)</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().Amount)</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().InterestRate)</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().OwnerFullName)</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().Description)</th>
-        <th></th>
+        <th>@Html.DisplayNameFor(model => firstDeal.CreateDate)</th>
+        <th>@Html.DisplayNameFor(model => firstDeal.Amount)</th>
+        <th>@Html.DisplayNameFor(model => firstDeal.InterestRate)</th>
+        <th>@Html.DisplayNameFor(model => firstDeal.OwnerFullName)</th>
+        <th>@Html.DisplayNameFor(model => firstDeal.Description)</th>
+        <th>Действия</th>
     </tr>
-    @foreach (var deal in Model.Deals.Where(x=>x.DealStatus == DealStatus.Open))
+    @foreach (var deal in Model.Deals.Where(x => x.DealStatus == DealStatus.Open))
     {
         <tr>
             <td>@deal.Id</td>
-            <td>@deal.CreateDate</td>
+            <td>@deal.CreateDate.ToDateWithTime()</td>
             <td>@deal.Amount р.</td>
             <td>@deal.InterestRate %</td>
             <td>@deal.OwnerFullName</td>
             <td>@deal.Description</td>
             <td>
-                @Html.ActionLink("Детали", "Details", new { id = deal.Id })
+                <a href="@Url.Action("Details", new {id = deal.Id})" class="btn btn-primary">Детали</a>
             </td>
         </tr>
     }

@@ -60,12 +60,14 @@ namespace TrueMoney.Services.Services
         {
             var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             var deal = await _context.Deals
+                .Include(x => x.Owner)
                 .Include(x => x.PaymentPlan.Payments)
                 .Include(x => x.PaymentPlan.BankTransactions).FirstOrDefaultAsync(x => x.Id == id);
             var result = new DealDetailsViewModel
             {
                 CurrentUserId = userId,
                 IsCurrentUserActive = currentUser.IsActive,
+                DealOwner = Mapper.Map<UserModel>(deal.Owner),
                 Offers = Mapper.Map<IList<OfferModel>>(deal.Offers),
                 Deal = Mapper.Map<DealModel>(deal),
                 PaymentPlanModel = Mapper.Map<PaymentPlanModel>(deal.PaymentPlan)
@@ -85,9 +87,13 @@ namespace TrueMoney.Services.Services
             return result;
         }
 
-        public async Task<CreateDealForm> GetCreateDealForm()
+        public async Task<CreateDealForm> GetCreateDealForm(int currentUserId)
         {
-            var res = new CreateDealForm();
+            var currentUser = await _context.Users.FirstAsync(x => x.Id == currentUserId);
+            var res = new CreateDealForm
+            {
+                IsCurrentUserActive = currentUser.IsActive
+            };
 
             return res;
         }
