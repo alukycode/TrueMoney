@@ -5,6 +5,7 @@ using TrueMoney.Services;
 
 namespace TrueMoney.Web.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNet.Identity;
     using TrueMoney.Common;
@@ -29,7 +30,7 @@ namespace TrueMoney.Web.Controllers
                 View("Visa",
                     new VisaPaymentViewModel
                     {
-                        PaymentName = $"Вы переводите деньги в размере {deal.Deal.Amount} р. в контексте заявки № {deal.Deal.Id}",
+                        PaymentName = $"Вы переводите деньги в размере {deal.Deal.Amount} р. в контексте заявки № {deal.Deal.Id}.",
                         PaymentCount = deal.Deal.Amount,
                         DealId = dealId,
                         FormAction = "VisaLoan"
@@ -65,15 +66,20 @@ namespace TrueMoney.Web.Controllers
             return View("Visa", formModel);
         }
 
-        public ActionResult VisaPayout(int dealId)
+        public async Task<ActionResult> VisaPayout(int dealId)
         {
+            var dealDetailsViewModel = await _dealService.GetById(dealId, User.Identity.GetUserId<int>());
+            var nearByPayment = dealDetailsViewModel.Payments.FirstOrDefault(x => !x.IsPaid);
+            var paymentCount = nearByPayment.Amount + nearByPayment.Liability - dealDetailsViewModel.ExtraMoney;
             var model = new VisaPaymentViewModel
             {
-                //PaymentCount = paymentCount,
-                //PaymentName = paymentName,
+                PaymentCount = paymentCount * (1 + NumericConstants.Tax),
                 DealId = dealId,
                 CanSetPaymentCount = true,
-                FormAction = "VisaPayout"
+                FormAction = "VisaPayout",
+                PaymentName = $"Вы переводите деньги в размере {paymentCount} р. в контексте заявки № {dealDetailsViewModel.Deal.Id}." +
+                                      " Так же с Вашего счёта будет списан налог за использования сервиса " +
+                                      $"в размере {paymentCount * NumericConstants.Tax} р."
             };
 
             return View("Visa", model);
