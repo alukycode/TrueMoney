@@ -32,7 +32,7 @@
                     else
                     {
                         <li>@Html.ActionLink("О сервисе", "About", "Home")</li>
-                        <li>@Html.ActionLink("Обратная связь", "Contact", "Home")</li>
+                        @*<li>@Html.ActionLink("Обратная связь", "Contact", "Home")</li>*@
 
                         if (User.IsInRole(RoleNames.User))
                         {

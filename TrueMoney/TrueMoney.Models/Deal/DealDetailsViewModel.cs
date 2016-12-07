@@ -21,8 +21,15 @@ namespace TrueMoney.Models.Deal
         {
             get
             {
-                return Offers != null && Offers.Any() && Offers.Any(x => x.OffererId == CurrentUserId &&
-                x.IsApproved);
+                return Offers != null && Offers.Any() && Offers.Any(x => x.OffererId == CurrentUserId );
+            }
+        }
+
+        public bool IsCurrentUserApprovedLender
+        {
+            get
+            {
+                return Offers != null && Offers.Any() && Offers.Any(x => x.OffererId == CurrentUserId && x.IsApproved);
             }
         }
 
@@ -39,6 +46,8 @@ namespace TrueMoney.Models.Deal
         public PaymentPlanModel PaymentPlanModel { get; set; }
 
         public IList<PaymentModel> Payments { get; set; }
+
+        public UserModel DealOwner { get; set; }
 
         public decimal ExtraMoney { get; set; }
     }

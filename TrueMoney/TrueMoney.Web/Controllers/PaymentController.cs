@@ -14,38 +14,33 @@ namespace TrueMoney.Web.Controllers
     public class PaymentController : Controller
     {
         private readonly IPaymentService _paymentService;
+        private readonly IDealService _dealService;
 
-        public PaymentController(IPaymentService paymentService)
+        public PaymentController(IPaymentService paymentService, IDealService dealService)
         {
             _paymentService = paymentService;
+            _dealService = dealService;
         }
 
-        public ActionResult VisaLoan(string paymentName, decimal paymentCount, int payForId, int dealId) //TODO: да че за paymentName?????? paymentCount??? payForId????????????
+        public async Task<ActionResult> VisaLoan(int dealId)
         {
-            if (!string.IsNullOrEmpty(paymentName)
-                && paymentCount > 0)
-            {
-
-                return
-                    View("Visa",
-                        new VisaPaymentViewModel
-                        {
-                            PaymentCount = paymentCount,
-                            PaymentName = paymentName,
-                            DealId = dealId,
-                            FormAction = "VisaLoan"
-                        });
-            }
-
-            return RedirectToAction("Index", "Home");
+            var deal = await _dealService.GetById(dealId, User.Identity.GetUserId<int>());
+            return
+                View("Visa",
+                    new VisaPaymentViewModel
+                    {
+                        PaymentName = $"Вы переводите деньги в размере {deal.Deal.Amount} р. в контексте заявки № {deal.Deal.Id}",
+                        PaymentCount = deal.Deal.Amount,
+                        DealId = dealId,
+                        FormAction = "VisaLoan"
+                    });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> VisaLoan(VisaPaymentViewModel formModel)
         {
-            if (ModelState.IsValid && !string.IsNullOrEmpty(formModel.PaymentName)
-                && formModel.PaymentCount > 0)
+            if (ModelState.IsValid)
             {
                 var payRes = await _paymentService.LendMoney(formModel, User.Identity.GetUserId<int>());
                 switch (payRes)

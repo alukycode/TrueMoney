@@ -28,5 +28,7 @@ namespace TrueMoney.Models.Deal
 
         [Display(Name="С какой целью берется займ?")]
         public string Description { get; set; }
+
+        public bool IsCurrentUserActive { get; set; }
     }
 }

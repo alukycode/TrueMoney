@@ -22,4 +22,9 @@ namespace TrueMoney.Common
     {
         public const string TrueMoneyAccountNumber = "123123";
     }
+
+    public static class StringFormats
+    {
+        public const string DateWithTime = "dd.MM.yyyy hh:mm";
+    }
 }

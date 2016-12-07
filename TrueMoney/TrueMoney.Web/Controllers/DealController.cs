@@ -46,7 +46,8 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> Create()
         {
-            var viewModel = await _dealService.GetCreateDealForm();
+            var viewModel = await _dealService.GetCreateDealForm(User.Identity.GetUserId<int>());
+
             return View(viewModel);
         }
 

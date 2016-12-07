@@ -7,78 +7,89 @@
 <h2>@ViewBag.Title</h2>
 <hr />
 
-@using (Html.BeginForm()) 
+@if (Model.IsCurrentUserActive)
 {
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @id = "amount", @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+    using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+            <div class="form-group">
+                @Html.LabelFor(model => model.Amount, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Amount, new {htmlAttributes = new {@id = "amount", @class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.Amount, "", new {@class = "text-danger"})
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.PaymentCount, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @Html.EditorFor(model => model.PaymentCount, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PaymentCount, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.PaymentCount, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.PaymentCount, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.PaymentCount, "", new {@class = "text-danger"})
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.InterestRate, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @Html.EditorFor(model => model.InterestRate, new { htmlAttributes = new { @id = "interestRate", @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InterestRate, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.InterestRate, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.InterestRate, new {htmlAttributes = new {@id = "interestRate", @class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.InterestRate, "", new {@class = "text-danger"})
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DealPeriod, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @Html.EditorFor(model => model.DealPeriod, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DealPeriod, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.DealPeriod, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.DealPeriod, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.DealPeriod, "", new {@class = "text-danger"})
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-9">
-                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = 4 })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Description, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-9">
+                    @Html.TextAreaFor(model => model.Description, new {@class = "form-control", rows = 4})
+                    @Html.ValidationMessageFor(model => model.Description, "", new {@class = "text-danger"})
+                </div>
             </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-md-6" id="finalAmount"></label>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-3 col-md-9">
-                <button type="submit" class="btn btn-primary">Создать</button>
+            <div class="form-group" id="finalAmountBlock" style="display: none">
+                Общий объем выплат с учетом процентной ставки и комиссии составит <strong id="finalAmount"></strong> р.
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                </div>
             </div>
         </div>
-    </div>
+    }
+}
+else
+{
+    <p>Вы должны дождаться подтверждения активации администратором сайта, прежде чем сможете создавать заявки на сайте.</p>
 }
 
+<hr />
 <div>
     @Html.ActionLink("Вернуться к списку заявок", "Index")
 </div>
+
 @section scripts {
     <script>
         $("#amount").change(calculateFinalAmount);
         $("#interestRate").change(calculateFinalAmount);
 
         function calculateFinalAmount() {
-            debugger;
             var amount = $("#amount").val();
             var interestRate = $("#interestRate").val();
-            var resultAmount = (amount * (1 + interestRate / 100)) * (1 + @NumericConstants.Tax)
             if (amount && interestRate) {
-                $("#finalAmount").html("Общий объем выплат с учетом процентной ставки и комиссии составит <b>" + resultAmount + "</b> р.");
+                var resultAmount = (amount * (1 + interestRate / 100)) * (1 + @NumericConstants.Tax);
+                $("#finalAmount").text(+resultAmount.toFixed(2));
+                $("#finalAmountBlock").show();
+            } else {
+                $("#finalAmountBlock").hide();
             }
         }
     </script>
