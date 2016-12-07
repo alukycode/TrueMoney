@@ -19,11 +19,11 @@
     public class PaymentServiceTests
     {
         [Test]
-        [TestCase(1000, 7, 1, 0.2)]
-        [TestCase(1000, 7, 2, 0.02)]
-        [TestCase(1000, 7, 7, 0.15)]
-        [TestCase(999, 7, 7, 0.2)]
-        [TestCase(999.99, 20, 5, 0.3)]
+        [TestCase(1000, 7, 1, 20)]
+        [TestCase(1000, 7, 2, 2)]
+        [TestCase(1000, 7, 7, 15)]
+        [TestCase(999, 7, 7, 20)]
+        [TestCase(999.99, 20, 5, 30)]
         public void CalculatePaymentsTest(decimal amount, int period, int paymentCount,
             decimal interestRate)
         {
@@ -41,7 +41,7 @@
             Assert.NotNull(result);
             Assert.AreEqual(result.Count, paymentCount);
             Assert.AreEqual(result[result.Count - 1].DueDate.Date, DateTime.Now.AddDays(period).Date);
-            Assert.IsTrue(Math.Abs(result.Sum(x => x.Amount) - amount * interestRate) < NumericConstants.Eps);
+            Assert.IsTrue(Math.Abs(result.Sum(x => x.Amount) - amount * (1 + interestRate / 100)) < NumericConstants.Eps);
         }
 
         [Test]
