@@ -39,13 +39,13 @@
     </dd>
 
     <dt>@Html.DisplayNameFor(model => model.Deal.CreateDate)</dt>
-    <dd>@Model.Deal.CreateDate.ToDateWithTime()</dd>
+    <dd>@Model.Deal.CreateDate.Format()</dd>
 
     <dt>@Html.DisplayNameFor(model => model.Deal.Amount)</dt>
-    <dd>@Model.Deal.Amount р.</dd>
+    <dd>@Model.Deal.Amount.Format() р.</dd>
 
     <dt>@Html.DisplayNameFor(model => model.Deal.InterestRate)</dt>
-    <dd>@Model.Deal.InterestRate %</dd>
+    <dd>@Model.Deal.InterestRate.Format() %</dd>
 
     <dt>@Html.DisplayNameFor(model => model.Deal.DealPeriod)</dt>
     <dd>@Model.Deal.DealPeriod (дней)</dd>
@@ -225,6 +225,12 @@
 
 @section scripts {
     <script>
+        function loading(selector) {
+            var element = $(selector || ".body-content");
+            element.animate({ opacity: 0.2 }, 1000);
+            element.css("pointer-events", "none");
+        }
+
         $(document).ajaxStart(function() { loading(); });
 
         $(document).ajaxSuccess(function() { location.reload(); });
@@ -248,11 +254,19 @@
         }
 
         function deleteDeal() {
-            $.ajax({
-                url: '@Url.Action("Delete", "Deal")',
-                data: { dealId: @Model.Deal.Id },
-                method: 'POST',
-            });
+            if (confirm("Вы уверены что хотите удалить эту заявку?")) {
+                loading();
+                $.ajax({
+                    url: '@Url.Action("Delete", "Deal")',
+                    data: { dealId: @Model.Deal.Id },
+                    method: 'POST',
+                    global: false, //If $.ajax() is called with the global option set to false, the .ajaxSuccess() method will not fire.
+                    success: function() {
+                        location.href = '@Url.Action("Index", "Deal")';
+                    },
+                    error: function() { alert("упс, ошибочка"); location.reload(); }
+                });
+            }
         }
 
         function finishDeal() {
@@ -269,12 +283,6 @@
                 data: { dealId: @Model.Deal.Id },
                 method: 'POST',
             });
-        }
-
-        function loading(selector) {
-            var element = $(selector || ".body-content");
-            element.animate({ opacity: 0.2 }, 1000);
-            element.css("pointer-events", "none");
         }
     </script>
 }

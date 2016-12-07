@@ -6,6 +6,12 @@
     ViewBag.Title = "Список открытых заявок";
 }
 
+@section styles {
+    <style>
+        td {vertical-align: middle !important; }
+    </style>
+}
+
 <h2>@ViewBag.Title</h2>
 <hr />
 
@@ -36,9 +42,9 @@
     {
         <tr>
             <td>@deal.Id</td>
-            <td>@deal.CreateDate.ToDateWithTime()</td>
-            <td>@deal.Amount р.</td>
-            <td>@deal.InterestRate %</td>
+            <td>@deal.CreateDate.Format()</td>
+            <td>@deal.Amount.Format() р.</td>
+            <td>@deal.InterestRate.Format() %</td>
             <td>@deal.OwnerFullName</td>
             <td>@deal.Description</td>
             <td>

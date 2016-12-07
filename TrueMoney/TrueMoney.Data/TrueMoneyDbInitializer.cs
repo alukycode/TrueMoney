@@ -302,7 +302,7 @@ namespace TrueMoney.Data
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
                     Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = $"Рандомная цель {_random.Next(100)}",
+                    Description = "Предзаполненная цель",
                 },
                 new Deal
                 {
@@ -317,7 +317,7 @@ namespace TrueMoney.Data
                     PaymentCount = 2,
                     DealStatus = DealStatus.InProgress,
                     Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
-                    Description = $"Рандомная цель {_random.Next(100)}",
+                    Description = "Предзаполненная цель",
                 },
             };
 
@@ -344,7 +344,7 @@ namespace TrueMoney.Data
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
                     Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = $"Рандомная цель {_random.Next(100)}",
+                    Description = "Предзаполненная цель",
                 },
                 new Deal
                 {
@@ -355,7 +355,7 @@ namespace TrueMoney.Data
                     PaymentCount = 2,
                     DealStatus = DealStatus.Open,
                     Offers = GenerateOffers(offerers, secondDealCreateDate, secondRate),
-                    Description = $"Рандомная цель {_random.Next(100)}",
+                    Description = "Предзаполненная цель",
                 },
             };
 
@@ -382,7 +382,7 @@ namespace TrueMoney.Data
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
                     Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = $"Рандомная цель {_random.Next(100)}",
+                    Description = "Предзаполненная цель",
                 },
                 new Deal
                 {
@@ -393,7 +393,7 @@ namespace TrueMoney.Data
                     PaymentCount = 2,
                     DealStatus = DealStatus.WaitForApprove,
                     Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
-                    Description = $"Рандомная цель {_random.Next(100)}",
+                    Description = "Предзаполненная цель",
                 },
             };
 
@@ -420,7 +420,7 @@ namespace TrueMoney.Data
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
                     Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = $"Рандомная цель {_random.Next(100)}",
+                    Description = "Предзаполненная цель",
                 },
                 new Deal
                 {
@@ -431,7 +431,7 @@ namespace TrueMoney.Data
                     PaymentCount = 2,
                     DealStatus = DealStatus.WaitForLoan,
                     Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
-                    Description = $"Рандомная цель {_random.Next(100)}",
+                    Description = "Предзаполненная цель",
                 },
             };
 

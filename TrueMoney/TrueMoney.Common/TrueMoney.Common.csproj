@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Enums\DealStatus.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\DecimalExtensions.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Enums\PaymentResult.cs" />
     <Compile Include="NumericConstants.cs" />

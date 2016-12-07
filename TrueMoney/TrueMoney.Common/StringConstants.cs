@@ -26,5 +26,6 @@ namespace TrueMoney.Common
     public static class StringFormats
     {
         public const string DateWithTime = "dd.MM.yyyy hh:mm";
+        public const string DateOnly = "dd.MM.yyyy";
     }
 }

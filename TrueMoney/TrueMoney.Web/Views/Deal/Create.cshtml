@@ -7,7 +7,7 @@
 <h2>@ViewBag.Title</h2>
 <hr />
 
-@if (Model.IsCurrentUserActive)
+@if (Model.IsCurrentUserActive && !Model.HaveDeal)
 {
     using (Html.BeginForm())
     {
@@ -61,14 +61,19 @@
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-9">
                     <button type="submit" class="btn btn-primary">Создать</button>
+                    <button type="button" class="btn" click="history.back()">Отмена</button>
                 </div>
             </div>
         </div>
     }
 }
-else
+else if (!Model.IsCurrentUserActive)
 {
     <p>Вы должны дождаться подтверждения активации администратором сайта, прежде чем сможете создавать заявки на сайте.</p>
+}
+else if (Model.HaveDeal)
+{
+    <p>У вас уже создана одна заявка. Удалите её, если хотите создать новую</p>
 }
 
 <hr />

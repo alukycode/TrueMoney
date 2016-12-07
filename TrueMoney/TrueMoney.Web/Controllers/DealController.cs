@@ -71,12 +71,9 @@ namespace TrueMoney.Web.Controllers
         }
         
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int dealId)
+        public async Task Delete(int dealId)
         {
             await _dealService.DeleteDeal(dealId, User.Identity.GetUserId<int>());
-
-            return RedirectToAction("Index");
         }
     }
 }
