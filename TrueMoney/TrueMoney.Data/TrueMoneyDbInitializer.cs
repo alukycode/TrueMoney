@@ -12,7 +12,7 @@ namespace TrueMoney.Data
 {
     public class TrueMoneyDbInitializer : DropCreateDatabaseIfModelChanges<TrueMoneyContext>
     {
-        private static readonly Random _random = new Random();
+        private static readonly Random _random = new Random(524287);
 
         protected override void Seed(TrueMoneyContext context)
         {
