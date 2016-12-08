@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+п»їusing System.ComponentModel.DataAnnotations;
 using TrueMoney.Common;
 using TrueMoney.Models.Basic;
 
@@ -12,32 +12,32 @@ namespace TrueMoney.Models.Account
         public string Email { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.Required)]
-        [StringLength(100, ErrorMessage = "{0} не может быть короче, чем {2} символ", MinimumLength = 1)]
+        [StringLength(100, ErrorMessage = "{0} РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РєРѕСЂРѕС‡Рµ, С‡РµРј {2} СЃРёРјРІРѕР»", MinimumLength = 1)]
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
+        [Display(Name = "РџР°СЂРѕР»СЊ")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль (подтверждение)")]
-        [Compare(nameof(Password), ErrorMessage = "Введенные пароли не совпадают")]
+        [Display(Name = "РџР°СЂРѕР»СЊ (РїРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ)")]
+        [Compare(nameof(Password), ErrorMessage = "Р’РІРµРґРµРЅРЅС‹Рµ РїР°СЂРѕР»Рё РЅРµ СЃРѕРІРїР°РґР°СЋС‚")]
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.Required)]
-        [Display(Name="Фамилия")]
+        [Display(Name="Р¤Р°РјРёР»РёСЏ")]
         public string LastName { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.Required)]
-        [Display(Name="Имя")]
+        [Display(Name="РРјСЏ")]
         public string FirstName { get; set; }
 
-        [Display(Name = "Отчество")]
+        [Display(Name = "РћС‚С‡РµСЃС‚РІРѕ")]
         public string MiddleName { get; set; }
 
         public PassportModel Passport { get; set; }
 
         //[Required]
         //[RegularExpression("[0-9]{3}.[0-9]{2}.[0-9]{3}.[0-9]{1}.[0-9]{4}.[0-9]{7}")] // https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D1%87%D1%91%D1%82%D0%BD%D1%8B%D0%B9_%D1%81%D1%87%D1%91%D1%82
-        [Display(Name="Номер банковского счёта")]
+        [Display(Name="РќРѕРјРµСЂ Р±Р°РЅРєРѕРІСЃРєРѕРіРѕ СЃС‡С‘С‚Р°")]
         public string BankAccountNumber { get; set; }
     }
 }

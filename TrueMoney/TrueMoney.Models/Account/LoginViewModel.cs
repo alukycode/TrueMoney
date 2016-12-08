@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+п»їusing System.ComponentModel.DataAnnotations;
 using TrueMoney.Common;
 
 namespace TrueMoney.Models.Account
@@ -12,10 +12,10 @@ namespace TrueMoney.Models.Account
 
         [Required(ErrorMessage = ErrorMessages.Required)]
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
+        [Display(Name = "РџР°СЂРѕР»СЊ")]
         public string Password { get; set; }
 
-        [Display(Name = "Запомнить меня?")]
+        [Display(Name = "Р—Р°РїРѕРјРЅРёС‚СЊ РјРµРЅСЏ?")]
         public bool RememberMe { get; set; }
     }
 }
