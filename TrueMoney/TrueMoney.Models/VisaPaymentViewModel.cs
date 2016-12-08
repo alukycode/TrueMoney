@@ -5,8 +5,6 @@ namespace TrueMoney.Models
 {
     public class VisaPaymentViewModel
     {
-        public string PaymentName { get; set; }
-
         [Required]
         [Display(Name = "Сумма платежа")]
         public decimal PaymentCount { get; set; }
@@ -37,5 +35,7 @@ namespace TrueMoney.Models
         public string FormAction { get; set; }
 
         public string DealOwnerName { get; set; }
+
+        public string OffererFullName { get; set; }
     }
 }

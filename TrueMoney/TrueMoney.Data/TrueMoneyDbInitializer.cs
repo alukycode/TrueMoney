@@ -57,11 +57,10 @@ namespace TrueMoney.Data
 
             // seed other stuff
 
-            users[0].Deals = GenerateDealsWithOneInProgress(users.Where(x => x != users[0]).ToList());
-            users[1].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[1]).ToList());
-            users[2].Deals = GenerateDealsWithOneWaitForApprove(users.Where(x => x != users[2]).ToList());
-            users[3].Deals = GenerateDealsWithOneWaitForLoan(users.Where(x => x != users[3]).ToList());
-            users[4].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[4]).ToList());
+            users[0].Deals = GenerateDealsWithOneInProgress(users.Where(x => x != users[0] && x.IsActive).ToList());
+            users[1].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[1] && x.IsActive).ToList());
+            users[2].Deals = GenerateDealsWithOneWaitForApprove(users.Where(x => x != users[2] && x.IsActive).ToList());
+            users[3].Deals = GenerateDealsWithOneWaitForLoan(users.Where(x => x != users[3] && x.IsActive).ToList());
 
             foreach (var item in users.Skip(5))
             {
@@ -376,6 +375,7 @@ namespace TrueMoney.Data
             var firstRate = _random.Next(1, 50);
             var secondRate = _random.Next(1, 50);
             decimal firstAmount = _random.Next(100, 5000);
+            decimal secondAmount = _random.Next(100, 5000);
             var result = new List<Deal>
             {
                 new Deal
@@ -393,7 +393,7 @@ namespace TrueMoney.Data
                 },
                 new Deal
                 {
-                    Amount = 2000,
+                    Amount = secondAmount,
                     CreateDate = secondDealCreateDate,
                     DealPeriod = 30,
                     InterestRate = secondRate,
@@ -414,6 +414,7 @@ namespace TrueMoney.Data
             var firstRate = _random.Next(1, 50);
             var secondRate = _random.Next(1, 50);
             decimal firstAmount = _random.Next(100, 5000);
+            decimal secondAmount = _random.Next(100, 5000);
             var result = new List<Deal>
             {
                 new Deal
@@ -431,7 +432,7 @@ namespace TrueMoney.Data
                 },
                 new Deal
                 {
-                    Amount = 13,
+                    Amount = secondAmount,
                     CreateDate = secondDealCreateDate,
                     DealPeriod = 30,
                     InterestRate = secondRate,
@@ -452,6 +453,7 @@ namespace TrueMoney.Data
             var firstRate = _random.Next(1, 50);
             var secondRate = _random.Next(1, 50);
             decimal firstAmount = _random.Next(100, 5000);
+            decimal secondAmount = _random.Next(100, 5000);
             var result = new List<Deal>
             {
                 new Deal
@@ -469,7 +471,7 @@ namespace TrueMoney.Data
                 },
                 new Deal
                 {
-                    Amount = 13,
+                    Amount = secondAmount,
                     CreateDate = secondDealCreateDate,
                     DealPeriod = 30,
                     InterestRate = secondRate,

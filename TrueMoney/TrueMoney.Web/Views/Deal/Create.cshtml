@@ -12,6 +12,8 @@
     using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.IsCurrentUserActive)
+        @Html.HiddenFor(model => model.HaveOpenDeal)
         <div class="form-horizontal">
             @Html.ValidationSummary(true, "", new {@class = "text-danger"})
             <div class="form-group">
