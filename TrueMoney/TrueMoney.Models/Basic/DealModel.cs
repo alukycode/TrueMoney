@@ -35,5 +35,7 @@ namespace TrueMoney.Models.Basic
 
         [Display(Name="Имя заёмщика")]
         public string OwnerFullName { get; set; }
+
+        public int Rating { get; set; }
     }
 }

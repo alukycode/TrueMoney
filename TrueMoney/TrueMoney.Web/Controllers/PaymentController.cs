@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using TrueMoney.Common.Enums;
+using TrueMoney.Common.Extensions;
 using TrueMoney.Models;
 using TrueMoney.Services;
 
@@ -30,10 +31,11 @@ namespace TrueMoney.Web.Controllers
                 View("Visa",
                     new VisaPaymentViewModel
                     {
-                        PaymentName = $"Вы переводите деньги в размере {deal.Deal.Amount} р. в контексте заявки № {deal.Deal.Id}.",
+                        PaymentName = $"Вы переводите деньги заёмщику (<b>{deal.Deal.OwnerFullName}</b>)" +
+                                      $" в размере <b>{deal.Deal.Amount.Format()} р.</b> в контексте заявки <b>№ {deal.Deal.Id}</b>.",
                         PaymentCount = deal.Deal.Amount,
                         DealId = dealId,
-                        FormAction = "VisaLoan"
+                        FormAction = "VisaLoan",
                     });
         }
 
@@ -47,6 +49,8 @@ namespace TrueMoney.Web.Controllers
                 switch (payRes)
                 {
                     case PaymentResult.Success:
+                        var deal = await _dealService.GetById(formModel.DealId, User.Identity.GetUserId<int>());
+                        formModel.DealOwnerName = deal.Deal.OwnerFullName;
                         return View("Success", formModel);
                     case PaymentResult.EmptyData:
                         ModelState.AddModelError("", "Заполните форму");
@@ -68,18 +72,19 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> VisaPayout(int dealId)
         {
-            var dealDetailsViewModel = await _dealService.GetById(dealId, User.Identity.GetUserId<int>());
-            var nearByPayment = dealDetailsViewModel.Payments.FirstOrDefault(x => !x.IsPaid);
-            var paymentCount = nearByPayment.Amount + nearByPayment.Liability - dealDetailsViewModel.ExtraMoney;
+            var deal = await _dealService.GetById(dealId, User.Identity.GetUserId<int>());
+            var nearByPayment = deal.Payments.FirstOrDefault(x => !x.IsPaid);
+            var paymentCount = nearByPayment.Amount + nearByPayment.Liability - deal.ExtraMoney;
             var model = new VisaPaymentViewModel
             {
                 PaymentCount = paymentCount * (1 + NumericConstants.Tax),
                 DealId = dealId,
                 CanSetPaymentCount = true,
                 FormAction = "VisaPayout",
-                PaymentName = $"Вы переводите деньги в размере {paymentCount} р. в контексте заявки № {dealDetailsViewModel.Deal.Id}." +
-                                      " Так же с Вашего счёта будет списан налог за использования сервиса " +
-                                      $"в размере {paymentCount * NumericConstants.Tax} р."
+                PaymentName = $"<p>Вы переводите деньги кредитору (<b>{deal.Offers.First(x => x.IsApproved).OffererFullName}</b>)"
+                              + $" в размере <b>{paymentCount.Format()} р.</b> в контексте заявки <b>№ {deal.Deal.Id}</b>.</p>"
+                              + "<p>Также с Вашего счёта будет списан налог за использования сервиса"
+                              + $" в размере <b>{(paymentCount * NumericConstants.Tax).Format()} р.</b></p>"
             };
 
             return View("Visa", model);
@@ -108,7 +113,7 @@ namespace TrueMoney.Web.Controllers
                         ModelState.AddModelError("", "Ошибка доступа к счёту, проверьте введенные данные");
                         break;
                     case PaymentResult.LessThenMinAmount:
-                        ModelState.AddModelError("", "Сумма платежа меньше минимальной суммы. См. заголовок.");
+                        ModelState.AddModelError("", "Сумма платежа меньше минимальной суммы.");
                         break;
                 }
             }

@@ -31,6 +31,6 @@ namespace TrueMoney.Models.Deal
 
         public bool IsCurrentUserActive { get; set; }
 
-        public bool HaveDeal { get; set; }
+        public bool HaveOpenDeal { get; set; }
     }
 }

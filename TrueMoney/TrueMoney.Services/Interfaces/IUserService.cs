@@ -36,5 +36,7 @@ namespace TrueMoney.Services.Interfaces
         Task UpdatePassport(EditPassportViewModel model);
 
         Task<UserActivityViewModel> GetUserActivityModel(int userId);
+
+        Task<UserProfileModel> GetUserProfileModel(int userId);
     }
 }

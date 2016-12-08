@@ -42,7 +42,7 @@ namespace TrueMoney.Services.Services
             var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == currentUserId);
             return new DealIndexViewModel
             {
-                Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()),
+                Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()), //.OrderByDescending(x => x.CreateDate).ToList(),
                 UserCanCreateDeal =
                     currentUser != null
                     && currentUser.IsActive
@@ -90,11 +90,11 @@ namespace TrueMoney.Services.Services
         public async Task<CreateDealForm> GetCreateDealForm(int currentUserId)
         {
             var currentUser = await _context.Users.FirstAsync(x => x.Id == currentUserId);
-            var haveDeal = await _context.Deals.AnyAsync(x => x.OwnerId == currentUserId);
+            var haveOpenDeal = await _context.Deals.AnyAsync(x => x.OwnerId == currentUserId && x.DealStatus == DealStatus.Open);
             var res = new CreateDealForm
             {
                 IsCurrentUserActive = currentUser.IsActive,
-                HaveDeal = haveDeal
+                HaveOpenDeal = haveOpenDeal
             };
 
             return res;

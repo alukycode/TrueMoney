@@ -309,7 +309,7 @@ namespace TrueMoney.Web.Controllers
                     return View("ExternalLoginFailure");
                 }
                 var user = new User { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user); // todo: it won't work because user don't have [required] fields with passport etc
+                var result = await _userManager.CreateAsync(user); // todo: it won't work because user don't have [required] fields with Passport etc
                 if (result.Succeeded)
                 {
                     result = await _userManager.AddLoginAsync(user.Id, info.Login);

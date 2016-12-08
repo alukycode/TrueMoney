@@ -125,6 +125,25 @@ namespace TrueMoney.Services.Services
             return model;
         }
 
+        public async Task<UserProfileModel> GetUserProfileModel(int userId)
+        {
+            var user = await _context.Users.FirstAsync(x => x.Id == userId);
+
+            var offers = user.Offers;
+            var deals = user.Deals;
+
+            var model = new UserProfileModel
+            {
+                User = Mapper.Map<UserModel>(user),
+                Passport = Mapper.Map<PassportModel>(user.Passport),
+                Deals = Mapper.Map<List<DealModel>>(deals),
+                Offers = Mapper.Map<IList<OfferModel>>(offers),
+                IsCurrentUserActive = user.IsActive
+            };
+
+            return model;
+        }
+
         public async Task Update(EditUserViewModel model)
         {
             var user = _context.Users.First(x => x.Id == model.Id);

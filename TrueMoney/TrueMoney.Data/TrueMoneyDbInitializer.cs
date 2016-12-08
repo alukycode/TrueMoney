@@ -93,6 +93,7 @@ namespace TrueMoney.Data
                     },
                     IsActive = true,
                     LockoutEnabled = true,
+                    Rating = 0,
                 },
                 new User
                 {
@@ -110,6 +111,7 @@ namespace TrueMoney.Data
                     },
                     IsActive = true,
                     LockoutEnabled = true,
+                    Rating = 0,
                 },
                 new User
                 {
@@ -127,6 +129,7 @@ namespace TrueMoney.Data
                     },
                     IsActive = true,
                     LockoutEnabled = true,
+                    Rating = 0,
                 },
                 new User
                 {
@@ -190,6 +193,7 @@ namespace TrueMoney.Data
                     },
                     IsActive = true,
                     LockoutEnabled = true,
+                    Rating = _random.Next(-3, 3)
                 });
             }
 

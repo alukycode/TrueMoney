@@ -31,10 +31,11 @@ namespace TrueMoney.Web.Controllers
         }
 
         [Authorize(Roles = RoleNames.User)]
-        public ActionResult UserProfile()
+        public async Task<ActionResult> UserProfile()
         {
-            //var viewModel = await _userService.GetProfileViewModel(User.Identity.GetUserId<int>());
-            return View();
+            var model = await _userService.GetUserProfileModel(User.Identity.GetUserId<int>());
+
+            return View(model);
         }
 
         public async Task<ActionResult> Edit(int id)
