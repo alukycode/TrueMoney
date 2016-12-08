@@ -9,18 +9,9 @@
 
 @section styles {
     <style>
-        .status-Open           { color: blue; }
-        .status-WaitForApprove { color: green; }
-        .status-WaitForLoan    { color: yellowgreen; }
-        .status-InProgress     { color: darkorange; }
-        .status-Closed         { color: red; }
-
-        .rating-Good { color: green; }
-        .rating-Bad  { color: red; }
-
         @@media ( min-width: 768px ) {
-            #deal-info dt { width: 200px; }
-            #deal-info dd { margin-left: 220px; }
+            .deal-info dt { width: 200px; }
+            .deal-info dd { margin-left: 220px; }
         }
     </style>
 }
@@ -28,10 +19,10 @@
 <h2>@ViewBag.Title</h2>
 <hr/>
 
-<dl id="deal-info" class="dl-horizontal">
+<dl class="deal-info dl-horizontal">
     <dt>Заёмщик</dt>
     @*<dd><a href="@Url.Action("Details", "User", new {id = Model.Deal.OwnerId})">@Model.Deal.OwnerFullName</a></dd>*@
-    <dd>@Model.Deal.OwnerFullName</dd>
+    <dd class="@(Model.DealOwner.Rating > 0 ? "rating-Good" : Model.DealOwner.Rating < 0 ? "rating-Bad" : "")">@Model.Deal.OwnerFullName</dd>
 
     <dt>Рейтинг заёмщика</dt>
     <dd>
@@ -39,13 +30,13 @@
     </dd>
 
     <dt>@Html.DisplayNameFor(model => model.Deal.CreateDate)</dt>
-    <dd>@Model.Deal.CreateDate.ToDateWithTime()</dd>
+    <dd>@Model.Deal.CreateDate.Format()</dd>
 
     <dt>@Html.DisplayNameFor(model => model.Deal.Amount)</dt>
-    <dd>@Model.Deal.Amount р.</dd>
+    <dd>@Model.Deal.Amount.Format() р.</dd>
 
     <dt>@Html.DisplayNameFor(model => model.Deal.InterestRate)</dt>
-    <dd>@Model.Deal.InterestRate %</dd>
+    <dd>@Model.Deal.InterestRate.Format() %</dd>
 
     <dt>@Html.DisplayNameFor(model => model.Deal.DealPeriod)</dt>
     <dd>@Model.Deal.DealPeriod (дней)</dd>
@@ -77,14 +68,16 @@
             <table class="table table-striped table-hover">
                 <tr>
                     <th>Имя пользователя</th>
+                    <th>Рейтинг</th>
                     <th>Процент</th>
                     <th>Действия</th>
                 </tr>
                 @foreach (var offer in Model.Offers)
                 {
                     <tr>
-                        <td>@offer.OffererFullName</td>
-                        <td>@offer.InterestRate %</td>
+                        <td class="@(offer.Rating > 0 ? "rating-Good" : offer.Rating < 0 ? "rating-Bad" : "")">@offer.OffererFullName</td>
+                        <td class="@(offer.Rating > 0 ? "rating-Good" : offer.Rating < 0 ? "rating-Bad" : "")">@offer.Rating</td>
+                        <td>@offer.InterestRate.Format() %</td>
                         <td>
                         @if (offer.IsApproved)
                         {
@@ -105,7 +98,7 @@
     {
         <hr/>
 
-        <p>Вы предложили свои деньги под @Model.CurrentUserOffer.InterestRate %</p>
+        <p>Вы предложили свои деньги под @Model.CurrentUserOffer.InterestRate.Format() %</p>
 
         <div class="row">
             <div class="col-md-4">
@@ -141,12 +134,15 @@
 @if (Model.Deal.DealStatus == DealStatus.WaitForLoan)
 {
     <hr />
-    <p>Ожидается перевод средств заёмщику от кредитора (@Model.Offers.First(x => x.IsApproved).OffererFullName)</p>
+    <p>Ожидается перевод средств заёмщику (@Model.Deal.OwnerFullName) от кредитора (@Model.Offers.First(x => x.IsApproved).OffererFullName)</p>
 
     if (Model.IsCurrentUserApprovedLender)
     {
         <p>
-            Visa: <a href="@Url.Action("VisaLoan", "Payment", new { dealId = Model.Deal.Id })">Перевести деньги пользователю</a>
+            <a href="@Url.Action("VisaLoan", "Payment", new {dealId = Model.Deal.Id})" class="btn btn-primary btn-with-icon">
+                <i class="glyphicon glyphicon-credit-card"></i>
+                Перевести деньги заёмщику
+            </a>
         </p>
     }
 }
@@ -155,76 +151,122 @@
 {
     if (Model.IsCurrentUserOwner || Model.IsCurrentUserApprovedLender)
     {
-        <p>Deal started @Model.PaymentPlanModel.CreateTime.ToString("D")</p>
-        <div>
-            Платежи:
+        <hr/>
+        <dl class="deal-info dl-horizontal">
+            <dt>Кредитор</dt>
+            <dd>@Model.Offers.First(x => x.IsApproved).OffererFullName</dd>
+
+            <dt>Дата начала сделки</dt>
+            <dd>@Model.PaymentPlanModel.CreateTime.Format()</dd>
+        </dl>
+
+        <hr />
+        <h3>План платежей от заёмщика кредитору</h3>
+
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>№</th>
+                <th>Действие</th>
+                <th>Дата</th>
+                <th>Сумма</th>
+            </tr>
+
             @for (var index = 0; index < Model.Payments.Count; index++)
             {
                 var payment = Model.Payments[index];
-                if (payment.IsPaid)
-                {
-                    <p style="background-color: greenyellow">
-                        @index - оплачено @payment.Amount + @payment.Liability на дату @payment.PaidDate.Value.ToString("D")
-                    </p>
-                }
-                else
-                {
-                    <p style="background-color: lightcoral">
-                        @index - ожидается оплата @payment.Amount + @payment.Liability не позднее @payment.DueDate.ToString("D")
-                    </p>
-                }
+                <tr>
+                    <td>@index</td>
+
+                    @if (payment.IsPaid)
+                    {
+                        <td class="rating-Good">оплачено</td>
+                        <td>@payment.PaidDate.Value.Format()</td>
+                    }
+                    else
+                    {
+                        <td class="rating-Bad">ожидается оплата</td>
+                        <td>не позднее @payment.DueDate.Format()</td>
+                    }
+
+                    <td>
+                        @payment.Amount.Format() р.
+                        @if (payment.Liability > 0)
+                        {
+                            <span>+ payment.Liability.Format() р.</span>
+                        }
+                    </td>
+
+                </tr>
             }
-            @if (Model.IsCurrentUserOwner)
+        </table>
+        if (Model.IsCurrentUserOwner)
+        {
+            <hr/>
+            <h3>Ближайший платёж</h3>
+
+            if (Model.ExtraMoney > 0)
             {
-                if (Model.ExtraMoney > 0)
-                {
-                    <p>Следующий платёж погашен частично: @Model.ExtraMoney</p>
-                }
-                
-                var nearByPayment = Model.Payments.First(x => !x.IsPaid);
-
-                <h4>Надо выплачивать бабло челу</h4>
-                <p>Надо выплатить @(nearByPayment.Amount - Model.ExtraMoney + nearByPayment.Liability) не позднее @nearByPayment.DueDate.ToString("D")"</p>
-
-                <p>
-                    Visa: <a href="@Url.Action("VisaPayout", "Payment", new {dealId = Model.Deal.Id})">Оплатить</a>
-                </p>
+                <p>Следующий платёж погашен частично на <strong>@Model.ExtraMoney.Format() р.</strong></p>
             }
-        </div>
+                
+            var nearByPayment = Model.Payments.First(x => !x.IsPaid);
+
+            <p>
+                Надо выплатить <strong>@((nearByPayment.Amount - Model.ExtraMoney + nearByPayment.Liability).Format()) р.</strong>
+                не позднее <strong>@nearByPayment.DueDate.Format()</strong>
+            </p>
+
+            <p>
+                <a href="@Url.Action("VisaPayout", "Payment", new {dealId = Model.Deal.Id})" class="btn btn-primary btn-with-icon">
+                    <i class="glyphicon glyphicon-credit-card"></i>
+                    Оплатить
+                </a>
+            </p>
+        }
     }
 }
 
 @if (Model.Deal.DealStatus == DealStatus.Closed)
 {
+    <hr/>
     var paidCount = Model.Payments.Sum(x => x.Amount);
     var extraPaidCount = Model.Payments.Sum(x => x.Liability);
     var actualPeriod = (Model.Payments.Last().PaidDate - Model.PaymentPlanModel.CreateTime).Value.Days;
     if (Model.IsCurrentUserOwner)
     {
-        <p>Вы успешно завершили заем</p>
+        <p>Вы успешно выплатили займ кредитору.</p>
         <p>Взяв @Model.Deal.Amount рублей под @Model.Deal.InterestRate на @Model.Deal.DealPeriod день.</p>
         if (Model.Deal.DealPeriod >= actualPeriod)
         {
-            <p>Завершили в срок и выплатили @paidCount</p>
+            <p>Платежи были выплачены вовремя и сумма платежей составила <b>@paidCount.Format() р.</b></p>
         }
         else
         {
             <p>
-                Не успели выплатить вовремя и заплатили @paidCount,
-                из них @extraPaidCount было потрачено
-                на возмещение задержек выплат
+                Из-за того, что платежи не были выплачены вовремя, вы заплатили <b>@paidCount.Format() р.</b>,
+                из них <b>@extraPaidCount</b> р. было потрачено на возмещение задержек выплат.
             </p>
         }
-        <p>Вы потратили @(paidCount - Model.Deal.Amount) рублей.</p>
+        <p>Переплата от исходной необходимой суммы составила @(paidCount - Model.Deal.Amount) р.</p>
     }
     else if (Model.IsCurrentUserApprovedLender)
     {
-        <p>Вы заработали @(paidCount - Model.Deal.Amount) рублей за @Model.Deal.DealPeriod</p>
+        <p>В результате данной сделки вы заработали @((paidCount - Model.Deal.Amount).Format()) р.</p>
+        <p>Поздравляем!</p>
     }
+
+    <hr/>
+    <a href="@Url.Action("Index", "Deal")" class="btn btn-default">К списку заявок</a>
 }
 
 @section scripts {
     <script>
+        function loading(selector) {
+            var element = $(selector || ".body-content");
+            element.animate({ opacity: 0.2 }, 1000);
+            element.css("pointer-events", "none");
+        }
+
         $(document).ajaxStart(function() { loading(); });
 
         $(document).ajaxSuccess(function() { location.reload(); });
@@ -248,11 +290,19 @@
         }
 
         function deleteDeal() {
-            $.ajax({
-                url: '@Url.Action("Delete", "Deal")',
-                data: { dealId: @Model.Deal.Id },
-                method: 'POST',
-            });
+            if (confirm("Вы уверены что хотите удалить эту заявку?")) {
+                loading();
+                $.ajax({
+                    url: '@Url.Action("Delete", "Deal")',
+                    data: { dealId: @Model.Deal.Id },
+                    method: 'POST',
+                    global: false, //If $.ajax() is called with the global option set to false, the .ajaxSuccess() method will not fire.
+                    success: function() {
+                        location.href = '@Url.Action("Index", "Deal")';
+                    },
+                    error: function() { alert("упс, ошибочка"); location.reload(); }
+                });
+            }
         }
 
         function finishDeal() {
@@ -269,12 +319,6 @@
                 data: { dealId: @Model.Deal.Id },
                 method: 'POST',
             });
-        }
-
-        function loading(selector) {
-            var element = $(selector || ".body-content");
-            element.animate({ opacity: 0.2 }, 1000);
-            element.css("pointer-events", "none");
         }
     </script>
 }

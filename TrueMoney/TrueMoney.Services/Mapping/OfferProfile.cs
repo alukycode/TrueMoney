@@ -13,7 +13,10 @@
             CreateMap<Offer, OfferModel>()
                 .ForMember(
                     destination => destination.OffererFullName,
-                    member => member.ResolveUsing(x => $"{x.Offerer.FirstName} {x.Offerer.LastName}"));
+                    member => member.ResolveUsing(x => $"{x.Offerer.FirstName} {x.Offerer.LastName}"))
+                .ForMember(
+                destination => destination.Rating,
+                    member => member.ResolveUsing(x => x.Offerer.Rating));
 
             CreateMap<CreateOfferForm, Offer>()
                 .ForMember(

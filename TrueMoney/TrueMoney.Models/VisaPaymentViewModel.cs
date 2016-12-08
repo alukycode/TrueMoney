@@ -35,5 +35,7 @@ namespace TrueMoney.Models
         public string CvvCode { get; set; }
 
         public string FormAction { get; set; }
+
+        public string DealOwnerName { get; set; }
     }
 }

@@ -19,6 +19,12 @@ namespace TrueMoney.Services.Mapping
                     member => member
                         .ResolveUsing(
                             x => $"{x.Owner.FirstName} {x.Owner.LastName}"
+                        ))
+                .ForMember(
+                    destination => destination.Rating,
+                    member => member
+                        .ResolveUsing(
+                            x => x.Owner.Rating
                         ));
             CreateMap<Deal, DealDetailsViewModel>();
             CreateMap<CreateDealForm, Deal>()

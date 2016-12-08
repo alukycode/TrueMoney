@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Globalization;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -22,6 +23,10 @@ namespace TrueMoney.Web
 {
     public class MvcApplication : HttpApplication
     {
+        protected void Application_BeginRequest(object sender, EventArgs e)
+        {
+        }
+
         protected void Application_Error(object sender, EventArgs e)
         {
             var exception = Server.GetLastError();

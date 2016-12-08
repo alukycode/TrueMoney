@@ -1,26 +1,110 @@
-﻿@using TrueMoney.Models.Basic
+﻿@using Microsoft.AspNet.Identity
 @using TrueMoney.Common.Enums
-@using TrueMoney.Models.User
-@using Microsoft.AspNet.Identity
+@using TrueMoney.Common.Extensions
+@using TrueMoney.Models.Basic
+@model TrueMoney.Models.User.UserProfileModel
 
 @{
     ViewBag.Title = "Личный кабинет";
 }
 
+@section styles {
+    <style>
+        @@media ( min-width: 768px ) {
+            .user-info {margin-top: 20px;}
+            .user-info dt { width: 200px; }
+            .user-info dd { margin-left: 220px; }
+        }
+    </style>
+}
+
 <h2>@ViewBag.Title</h2>
-<div>
-    @Html.ActionLink("Редактировать личные данные", "Edit", new { id = User.Identity.GetUserId<int>() }, new { @class = "btn btn-primary" })
+<hr/>
+
+<h3>@*Информация о пользователе*@</h3>
+<div class="row">
+    <div class="col-md-6">
+        <dl class="user-info dl-horizontal">
+            <dt>ФИО</dt>
+            <dd>@Model.User.LastName @Model.User.FirstName @Model.User.MiddleName</dd>
+
+            <dt>Номер банковского счета</dt>
+            <dd>@Model.User.BankAccountNumber</dd>
+
+            <dt>Паспорт</dt>
+            <dd>№ @Model.Passport.Number, выдан @Model.Passport.DateOfIssuing.Format()</dd>
+            <dt>Место выдачи</dt>
+            <dd>@Model.Passport.GiveOrganization</dd>
+        </dl>
+    </div>
+
+    <div class="col-md-6">
+        <p><a href="@Url.Action("Edit", new {id = User.Identity.GetUserId<int>()})" class="btn btn-primary">Редактировать личные данные</a>
+        </p>
+        <p><a href="@Url.Action("EditPassport", new {userId = User.Identity.GetUserId<int>()})" class="btn btn-primary">Редактировать паспортные данные</a>
+        </p>
+        <p><a href="@Url.Action("ChangePassword", "Manage", new {id = User.Identity.GetUserId<int>()})" class="btn btn-primary">Изменить пароль</a>
+        </p>
+    </div>
 </div>
-<br />
-<div>
-    @Html.ActionLink("Редактировать паспортные данные", "EditPassport", new { userId = User.Identity.GetUserId<int>() }, new { @class = "btn btn-primary" })
-</div>
-<br />
-<div>
+
+<hr/>
+
+<h3>Информация о сделках</h3>
+
+<h3>Ваш активный займ:</h3>
+@RenderDeal(Model.Deals.FirstOrDefault(x => x.DealStatus != DealStatus.Closed))
+<hr />
+<h3>Ваши завершённые займы:</h3>
+@foreach (var item in Model.Deals.Where(x => x.DealStatus == DealStatus.Closed))
+{
+    @RenderDeal(item)
+}
+<hr />
+@if (Model.IsCurrentUserActive)
+{
+    if (!Model.HasOpenDeal)
+    {
+        @Html.ActionLink("Создать заявку", "Create", "Deal", routeValues: null, htmlAttributes: null)<br />
+    }
+    else
+    {
+        <p>Завершите текущий займ и сможете сделать ещё заявку</p>
+    }
+}
+else
+{
+    <p>Вы сможете создать заявку на займ, после того, как администратор подтвердит валидность ваших личных данных</p>
+}
+<hr />
+<h3>Ваши предложения:</h3>
+@foreach (var item in Model.Offers)
+{
+    @RenderOffer(item)
+}
+<hr />
+
+@helper RenderOffer(OfferModel offer)
+{
+    <b>
+        @Html.ActionLink($"Предложение №{offer.Id}", "Details", "Deal", routeValues: new { id = offer.DealId }, htmlAttributes: null)
+    </b>
+    <span> предложенная процентная ставка <b>@offer.InterestRate</b> %</span>
+    <br />
+}
+
+@helper RenderDeal(DealModel deal)
+{
+if (deal != null)
+{
+        <b>
+            @Html.ActionLink($"Займ №{deal.Id}", "Details", "Deal", routeValues: new { id = deal.Id }, htmlAttributes: null)
+        </b>
+        <span>- сумма: <b>@deal.Amount</b> р. - процентная ставка: <b>@deal.InterestRate</b> %</span>
+        <br />
+}
+}
+
+@*<div>
     @Html.ActionLink("Информация о займах", "UserActivity", null, new { @class = "btn btn-primary" })
-</div>
-<br />
-<div>
-    @Html.ActionLink("Изменить пароль", "ChangePassword", "Manage", null, new { @class = "btn btn-primary" })
-</div>
-<br />
+</div>*@

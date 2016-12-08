@@ -12,5 +12,10 @@ namespace TrueMoney.Common.Extensions
         {
             return dateTime.ToString(StringFormats.DateWithTime);
         }
+
+        public static string Format(this DateTime dateTime)
+        {
+            return dateTime.ToString(StringFormats.DateOnly);
+        }
     }
 }

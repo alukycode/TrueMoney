@@ -1,4 +1,5 @@
-﻿@model TrueMoney.Models.Offer.CreateOfferForm
+﻿@using TrueMoney.Common.Extensions
+@model TrueMoney.Models.Offer.CreateOfferForm
 
 @{
     ViewBag.Title = "Создать предложение на заявку";
@@ -15,7 +16,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <p>Вы собираетесь оставить своё предложение к заявке №@Model.DealId</p>
-        <p>Максимально допустимый процент для этой заявки: @Model.DealRate %</p>
+        <p>Максимально допустимый процент для этой заявки: @Model.DealRate.Format() %</p>
         @Html.HiddenFor(m => Model.DealId)
         @Html.HiddenFor(m => Model.OffererId)
         @Html.HiddenFor(m => Model.DealRate)

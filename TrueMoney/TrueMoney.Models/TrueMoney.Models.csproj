@@ -136,6 +136,7 @@
     <Compile Include="User\UserDetailsViewModel.cs" />
     <Compile Include="Deal\DealDetailsViewModel.cs" />
     <Compile Include="Deal\DealIndexViewModel.cs" />
+    <Compile Include="User\UserProfileModel.cs" />
     <Compile Include="VisaPaymentViewModel.cs" />
     <Compile Include="User\ProfileViewModel.cs" />
   </ItemGroup>

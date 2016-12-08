@@ -34,3 +34,26 @@ textarea {
 .with-right-border {
     border-right: 1px solid #EEE;
 }
+
+.status-Open           { color: blue; }
+.status-WaitForApprove { color: green; }
+.status-WaitForLoan    { color: yellowgreen; }
+.status-InProgress     { color: darkorange; }
+.status-Closed         { color: red; }
+
+.rating-Good { color: green; }
+.rating-Bad  { color: red; }
+
+.rating-background-Good { background-color: #eeffee; }
+.rating-background-Bad  { background-color: #ffeeee; }
+
+.btn-with-icon {
+    position: relative;
+    padding-left: 35px;
+}
+.btn-with-icon i {
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    font-size: 20px;
+}

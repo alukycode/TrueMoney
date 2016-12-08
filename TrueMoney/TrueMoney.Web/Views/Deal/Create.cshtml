@@ -7,7 +7,7 @@
 <h2>@ViewBag.Title</h2>
 <hr />
 
-@if (Model.IsCurrentUserActive)
+@if (Model.IsCurrentUserActive && !Model.HaveOpenDeal)
 {
     using (Html.BeginForm())
     {
@@ -66,14 +66,18 @@
         </div>
     }
 }
-else
+else if (!Model.IsCurrentUserActive)
 {
     <p>Вы должны дождаться подтверждения активации администратором сайта, прежде чем сможете создавать заявки на сайте.</p>
+}
+else if (Model.HaveOpenDeal)
+{
+    <p>У вас уже создана одна заявка. Удалите её, если хотите создать новую.</p>
 }
 
 <hr />
 <div>
-    @Html.ActionLink("Вернуться к списку заявок", "Index")
+    <a href="@Url.Action("Index")" class="btn btn-default">Вернуться к списку заявок</a>
 </div>
 
 @section scripts {

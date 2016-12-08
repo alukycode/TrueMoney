@@ -1,9 +1,23 @@
-﻿@using TrueMoney.Common
+﻿@using Microsoft.AspNet.Identity
+@using TrueMoney.Common
 @using TrueMoney.Common.Enums
 @using TrueMoney.Common.Extensions
 @model TrueMoney.Models.Deal.DealIndexViewModel
 @{
     ViewBag.Title = "Список открытых заявок";
+}
+
+@section styles {
+    <style>
+         td { vertical-align: middle !important; }
+        .current-user-deal {
+            border: 1px solid gray !important;
+        }
+        .current-user-deal td {
+            border-top:    1px solid gray !important;
+            border-bottom: 1px solid gray !important;
+        }
+    </style>
 }
 
 <h2>@ViewBag.Title</h2>
@@ -34,12 +48,12 @@
     </tr>
     @foreach (var deal in Model.Deals.Where(x => x.DealStatus == DealStatus.Open))
     {
-        <tr>
+        <tr class="@(deal.OwnerId == User.Identity.GetUserId<int>() ? "current-user-deal": "")">
             <td>@deal.Id</td>
-            <td>@deal.CreateDate.ToDateWithTime()</td>
-            <td>@deal.Amount р.</td>
-            <td>@deal.InterestRate %</td>
-            <td>@deal.OwnerFullName</td>
+            <td>@deal.CreateDate.Format()</td>
+            <td>@deal.Amount.Format() р.</td>
+            <td>@deal.InterestRate.Format() %</td>
+            <td class="@(deal.Rating > 0 ? "rating-Good" : deal.Rating < 0 ? "rating-Bad" : "")">@deal.OwnerFullName</td>
             <td>@deal.Description</td>
             <td>
                 <a href="@Url.Action("Details", new {id = deal.Id})" class="btn btn-primary">Детали</a>

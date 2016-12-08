@@ -17,7 +17,7 @@ namespace TrueMoney.Models.Manage
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Повторно введите новый пароль")]
+        [Display(Name = "Подтверждение пароля")]
         [Compare("NewPassword", ErrorMessage = "Пароли не совпадают.")]
         public string ConfirmPassword { get; set; }
     }
