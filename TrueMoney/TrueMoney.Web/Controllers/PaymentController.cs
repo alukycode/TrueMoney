@@ -31,8 +31,7 @@ namespace TrueMoney.Web.Controllers
                 View("Visa",
                     new VisaPaymentViewModel
                     {
-                        PaymentName = $"Вы переводите деньги заёмщику (<b>{deal.Deal.OwnerFullName}</b>)" +
-                                      $" в размере <b>{deal.Deal.Amount.Format()} р.</b> в контексте заявки <b>№ {deal.Deal.Id}</b>.",
+                        DealOwnerName = deal.Deal.OwnerFullName,
                         PaymentCount = deal.Deal.Amount,
                         DealId = dealId,
                         FormAction = "VisaLoan",
@@ -77,14 +76,11 @@ namespace TrueMoney.Web.Controllers
             var paymentCount = nearByPayment.Amount + nearByPayment.Liability - deal.ExtraMoney;
             var model = new VisaPaymentViewModel
             {
-                PaymentCount = paymentCount * (1 + NumericConstants.Tax),
+                PaymentCount = paymentCount,
                 DealId = dealId,
                 CanSetPaymentCount = true,
                 FormAction = "VisaPayout",
-                PaymentName = $"<p>Вы переводите деньги кредитору (<b>{deal.Offers.First(x => x.IsApproved).OffererFullName}</b>)"
-                              + $" в размере <b>{paymentCount.Format()} р.</b> в контексте заявки <b>№ {deal.Deal.Id}</b>.</p>"
-                              + "<p>Также с Вашего счёта будет списан налог за использования сервиса"
-                              + $" в размере <b>{(paymentCount * NumericConstants.Tax).Format()} р.</b></p>"
+                OffererFullName = deal.Offers.First(x => x.IsApproved).OffererFullName,
             };
 
             return View("Visa", model);

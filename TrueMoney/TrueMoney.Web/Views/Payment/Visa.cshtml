@@ -1,23 +1,39 @@
-﻿@model TrueMoney.Models.VisaPaymentViewModel
+﻿@using TrueMoney.Common.Extensions
+@using TrueMoney.Common
+@model TrueMoney.Models.VisaPaymentViewModel
 @{
     ViewBag.Title = "Оплата";
 }
 
 <h2>@ViewBag.Title</h2>
 <hr />
-
-<h4>@Html.Raw(Model.PaymentName)</h4>
-
+@if (Model.FormAction == "VisaLoan")
+{
+    <h4>Вы переводите деньги заёмщику (<b>@Model.DealOwnerName</b>) в размере <b>@Model.PaymentCount.Format() р.</b> в контексте заявки <b>№ @Model.DealId</b>.</h4>
+}
+else
+{
+    <h4>
+        <p>
+            Вы переводите деньги кредитору (<b>@Model.OffererFullName</b>) в размере <b>@Model.PaymentCount.Format() р.</b> в контексте заявки <b>№ @Model.DealId</b>.
+        </p>
+        <p>
+            Также с Вашего счёта будет списан налог за использования сервиса в размере <b>@((Model.PaymentCount * NumericConstants.Tax).Format()) р.</b>
+        </p>
+    </h4>
+}
 @using (Html.BeginForm(Model.FormAction, "Payment", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    
+    @Html.HiddenFor(model => model.FormAction)
     <div class="form-horizontal">
         
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(m=>m.DealId)
         @Html.HiddenFor(m=>m.CanSetPaymentCount)
+        @Html.HiddenFor(m => m.DealOwnerName)
+        @Html.HiddenFor(m => m.OffererFullName)
         @if (Model.CanSetPaymentCount)
         {
             <div class="form-group">
