@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using TrueMoney.Common
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,7 +7,7 @@
     <title>@ViewBag.Title - True Money</title>
     @Styles.Render("~/Styles/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    @RenderSection("styles", required: false)
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -17,26 +18,42 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <strong>@Html.ActionLink("True Money", "Index", "Home", null, new { @class = "navbar-brand" })</strong>
+                <strong>
+                    <a href="@Url.Action("Index", "Home")" class="navbar-brand">True Money</a>
+                </strong>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("О сервисе", "About", "Home")</li>
-                    <li><a href="@Url.Action("Lend", "Home")"><strong>Дать в долг</strong></a></li>
-                    <li><a href="@Url.Action("Borrow", "Home")"><strong>Взять в долг</strong></a></li>
-                    <li>@Html.ActionLink("Обратная связь", "Contact", "Home")</li>
-                    <li>@Html.ActionLink("Открытые предложения", "Index", "Deal", routeValues: null, htmlAttributes: null)</li>
+                    @if (User.IsInRole(RoleNames.Admin))
+                    {
+                        <li><a href="@Url.Action("InactiveUsers", "Admin")"><strong>Неактивные юзера</strong></a></li>
+                        <li><a href="@Url.Action("Index", "Deal")">Открытые предложения</a></li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("О сервисе", "About", "Home")</li>
+                        @*<li>@Html.ActionLink("Обратная связь", "Contact", "Home")</li>*@
+
+                        if (User.IsInRole(RoleNames.User))
+                        {
+                            <li><a href="@Url.Action("Index", "Deal")" title="Список заявок от других пользователей"><strong>Дать в долг</strong></a></li>
+                            <li><a href="@Url.Action("Create", "Deal")" title="Создать заявку"><strong>Взять в долг</strong></a></li>
+                        }
+                    }
                 </ul>
+
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
+    <div class="container">
+        <div class="body-content">
+            @RenderBody()
+        </div>
         <hr />
         <footer>
             &copy; @DateTime.Now.Year - True Money
-            &nbsp; &nbsp; <i class="glyphicon glyphicon-envelope"></i> <span>truemoney@gmail.com</span> 
+            &nbsp; &nbsp; <i class="glyphicon glyphicon-envelope"></i> <span>truemoney@gmail.com</span>
             &nbsp; &nbsp; <i class="glyphicon glyphicon-earphone"></i> <span>+375 44 1234567</span>
         </footer>
     </div>

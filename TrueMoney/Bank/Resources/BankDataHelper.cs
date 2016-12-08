@@ -1,39 +1,79 @@
 ﻿namespace Bank.Resources
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
     using System.Xml.Linq;
+    using System.Xml.Serialization;
+
+    using Bank.BankEntities;
+    using TrueMoney.Common;
 
     /// <summary>
     /// Generate default test data.
     /// </summary>
     public static class BankDataHelper
     {
-        public static string AccountKey = "account";
-        public static string IdAttrKey = "id";
-        public static string SecretAttrKey = "secret";
-        public static string AmountAttrKey = "amount";
+        private static string _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BankData.xml");
 
         public static void UpdateDataFile()
         {
-            var xDoc = new XDocument();
-            xDoc.Add(CreateAccount("1", "1111-0000-3333", 1000f));
-            xDoc.Add(CreateAccount("2", "2222-0000-3333", 2000f));
-            xDoc.Add(CreateAccount("3", "3333-0000-3333", 3000f));
-            xDoc.Add(CreateAccount("4", "4444-0000-3333", 4000f));
-            xDoc.Add(CreateAccount("5", "5555-0000-3333", 5000f));
-            xDoc.Add(CreateAccount("6", "6666-0000-3333", 6000f));
-            xDoc.Add(CreateAccount("7", "7777-0000-3333", 7000f));
+            //https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D1%87%D1%91%D1%82%D0%BD%D1%8B%D0%B9_%D1%81%D1%87%D1%91%D1%82
+            var accounts = new List<BankAccount>();
+            accounts.Add(new BankAccount
+            {
+                Id = 0,
+                BankAccountNumber = BankConstants.TrueMoneyAccountNumber,
+                Amount = 1000M,
+                VisaNumber = "-",
+                VisaName = "-",
+                VisaCcv = "-",
+                VisaDate = "-"
+            });
+            for (int i = 1; i < 11; i++)
+            {
+                var crutch = i - 1;
+                accounts.Add(
+                    new BankAccount
+                    {
+                        Id = i,
+                        BankAccountNumber = $"408.17.810.0.9991.{crutch.ToString("D6")}",
+                        Amount = i * 1000 + 5000,
+                        VisaNumber = crutch.ToString("D16"),
+                        VisaName = $"Test User{crutch}",
+                        VisaCcv = crutch.ToString("D3"),
+                        VisaDate = "01/18"
+                    });
+            }
 
-            xDoc.Save("BankData.xml");
+            SaveAccounts(accounts);
         }
 
-        public static XElement CreateAccount(string id, string secret, float amount)
+        public static List<BankAccount> GetAccounts()
         {
-            var xElement = new XElement(AccountKey);
-            xElement.Add(new XAttribute(IdAttrKey, id));
-            xElement.Add(new XAttribute(SecretAttrKey, secret));
-            xElement.Add(new XAttribute(AmountAttrKey, amount));
+            if (!File.Exists(_filePath))
+            {
+                UpdateDataFile();
+            }
 
-            return xElement;
+            List<BankAccount> accounts;
+            XmlSerializer formatter = new XmlSerializer(typeof(List<BankAccount>));
+            using (FileStream fs = new FileStream(_filePath, FileMode.Open))
+            {
+                accounts = (List<BankAccount>)formatter.Deserialize(fs);
+            }
+
+            return accounts;
+        }
+        
+        public static void SaveAccounts(List<BankAccount> accounts)
+        {
+            XmlSerializer formatter = new XmlSerializer(typeof(List<BankAccount>));
+            using (FileStream fs = new FileStream(_filePath, FileMode.Create))
+            {
+                formatter.Serialize(fs, accounts);
+            }
         }
     }
 }

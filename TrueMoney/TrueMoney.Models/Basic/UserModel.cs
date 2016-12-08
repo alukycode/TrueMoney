@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,16 +11,18 @@ namespace TrueMoney.Models.Basic
     {
         public int Id { get; set; }
 
+        [Display(Name = "Имя")]
         public string FirstName { get; set; }
 
+        [Display(Name = "Фамилия")]
         public string LastName { get; set; }
 
+        [Display(Name = "Отчество")]
         public string MiddleName { get; set; }
-
-        public string AspUserId { get; set; }
 
         public bool IsActive { get; set; }
 
+        [Display(Name = "Номер банковского счета")] //todo: нужна валидация
         public string BankAccountNumber { get; set; }
 
         public int Rating { get; set; }

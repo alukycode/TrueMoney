@@ -13,18 +13,10 @@ namespace TrueMoney.Data.Entities
     {
         public int OwnerId { get; set; }
 
-        [Required]
         public virtual User Owner { get; set; }
 
         [InverseProperty("Deal")]
         public virtual List<Offer> Offers { get; set; } = new List<Offer>();
-
-        public int? ResultOfferId { get; set; }
-
-        [ForeignKey("ResultOfferId")]
-        public virtual Offer ResultOffer { get; set; }
-
-        public int? PaymentPlanId { get; set; }
 
         public virtual PaymentPlan PaymentPlan { get; set; }
 

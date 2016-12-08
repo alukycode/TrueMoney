@@ -7,6 +7,7 @@ using AutoMapper;
 using TrueMoney.Data.Entities;
 using TrueMoney.Models.Account;
 using TrueMoney.Models.Basic;
+using TrueMoney.Models.User;
 
 namespace TrueMoney.Services.Mapping
 {
@@ -15,7 +16,10 @@ namespace TrueMoney.Services.Mapping
         public UserMappingProfile()
         {
             CreateMap<RegisterViewModel, User>();
+            CreateMap<UserModel, User>();
             CreateMap<User, UserModel>();
+            CreateMap<EditUserViewModel, User>();
+            CreateMap<User, EditUserViewModel>();
         }
     }
 }

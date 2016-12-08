@@ -4,18 +4,19 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity.EntityFramework;
 using TrueMoney.Data.Entities;
 
 namespace TrueMoney.Data
 {
-    public class TrueMoneyContext : DbContext, ITrueMoneyContext
+    public class TrueMoneyContext : IdentityDbContext<User, CustomRole, int, CustomUserLogin, CustomUserRole, CustomUserClaim>, ITrueMoneyContext
     {
         public TrueMoneyContext() : base("DefaultConnection")
         {
+            Database.CommandTimeout = 300;
+
             Database.SetInitializer(new TrueMoneyDbInitializer());
         }
-
-        public IDbSet<User> Users{ get; set; }
 
         public IDbSet<Passport> Passports { get; set; }
 
@@ -28,5 +29,16 @@ namespace TrueMoney.Data
         public IDbSet<Payment> Payments { get; set; }
 
         public IDbSet<BankTransaction> BankTransactions { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Deal>()
+                .HasOptional(x => x.PaymentPlan)
+                .WithRequired(x => x.Deal)
+                .WillCascadeOnDelete();
+            base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<IdentityUser>().ToTable("Users", "dbo");
+            //modelBuilder.Entity<User>        ().ToTable("Users", "dbo");
+        }
     }
 }

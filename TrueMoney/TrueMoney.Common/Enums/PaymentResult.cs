@@ -10,6 +10,8 @@
 
         EmptyData,
 
-        Error
+        Error,
+
+        LessThenMinAmount
     }
 }

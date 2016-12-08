@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TrueMoney.Data.Entities;
 using TrueMoney.Models;
 using TrueMoney.Models.Account;
+using TrueMoney.Models.Admin;
 using TrueMoney.Models.Basic;
 
 namespace TrueMoney.Services.Interfaces
@@ -11,22 +13,30 @@ namespace TrueMoney.Services.Interfaces
 
     public interface IUserService
     {
-        Task<UserDetailsViewModel> GetDetails(int currentUserId, int userId);
+        Task<UserDetailsViewModel> GetDetails(int userId);
 
-        Task Add(RegisterViewModel entity);
+        User GetMappedUserEnity(RegisterViewModel model);
 
         Task<IEnumerable<UserModel>> GetAll();
 
-        Task<UserModel> GetByAspId(string id);
-
-        Task<int> GetUserIdByAspId(string id);
-
         Task<UserModel> GetById(int id);
 
-        Task<UserModel> GetUserByName(string name);
+        Task<InactiveUsersViewModel> GetInactiveUsersViewModel();
 
-        Task<AdminListViewModel> GetAdminListModel();
+        //Task<UserActivityViewModel> GetProfileViewModel(int currentUserId);
 
         Task ActivateUser(int userId);
+
+        Task<EditUserViewModel> GetEditModel(int id);
+
+        Task<EditPassportViewModel> GetEditPassportModel(int userId);
+
+        Task Update(EditUserViewModel model);
+
+        Task UpdatePassport(EditPassportViewModel model);
+
+        Task<UserActivityViewModel> GetUserActivityModel(int userId);
+
+        Task<UserProfileModel> GetUserProfileModel(int userId);
     }
 }
