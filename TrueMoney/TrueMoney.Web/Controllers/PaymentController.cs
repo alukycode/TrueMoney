@@ -73,7 +73,7 @@ namespace TrueMoney.Web.Controllers
             var paymentCount = nearByPayment.Amount + nearByPayment.Liability - dealDetailsViewModel.ExtraMoney;
             var model = new VisaPaymentViewModel
             {
-                PaymentCount = paymentCount * (1 + NumericConstants.Tax),
+                PaymentCount = paymentCount,
                 DealId = dealId,
                 CanSetPaymentCount = true,
                 FormAction = "VisaPayout",
