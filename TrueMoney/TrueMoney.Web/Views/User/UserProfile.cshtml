@@ -87,9 +87,13 @@ else
 @helper RenderOffer(OfferModel offer)
 {
     <b>
-        @Html.ActionLink($"Предложение №{offer.Id}", "Details", "Deal", routeValues: new { id = offer.DealId }, htmlAttributes: null)
+        @Html.ActionLink($"Предложение №{offer.Id} для заявки на займ №{offer.DealId}.", "Details", "Deal", routeValues: new { id = offer.DealId }, htmlAttributes: null)
     </b>
-    <span> предложенная процентная ставка <b>@offer.InterestRate</b> %</span>
+    <div>Предложенная процентная ставка <b>@offer.InterestRate</b> %</div>
+    @*if (offer.IsApproved)
+	{
+		 <div class="important-information">Ваше предложение принято! Перейдите на страницу заявки, чтобы подтвердить перевод денег.</div>
+	}*@
     <br />
 }
 
