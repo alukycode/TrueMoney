@@ -14,6 +14,52 @@ namespace TrueMoney.Data
     {
         private static readonly Random _random = new Random(524287);
 
+        private static readonly List<string> _lastNames = new List<string>
+        {
+            "Мисюкевич",
+            "Жук",
+            "Волчек",
+            "Соловьёв",
+            "Буликов",
+            "Гончарик",
+            "Сманцер",
+            "Соболь",
+            "Романов",
+            "Ковальчук",
+            "Вакульчик",
+            "Хохлов",
+            "Обуховский",
+        };
+
+        private static readonly List<string> _firstNames = new List<string>
+        {
+            "Андрей",
+            "Антон",
+            "Андрей",
+            "Александр",
+            "Владислав",
+            "Алексей",
+            "Дмитрий",
+            "Андрей",
+            "Антон",
+            "Сергей",
+            "Роман",
+            "Артур",
+            "Евгений",
+        };
+
+        private static readonly List<string> _aims = new List<string>
+        {
+            "На квартиру",
+            "На машину",
+            "Для благотворительности",
+            "",
+            "Для развития бизнеса",
+            "На развитие стартапа",
+            "Для личных целей",
+            "На путешествия",
+        };
+
         protected override void Seed(TrueMoneyContext context)
         {
             base.Seed(context);
@@ -85,11 +131,7 @@ namespace TrueMoney.Data
                     FirstName = "Саша",
                     LastName = "Черногребель",
                     BankAccountNumber = "408.17.810.0.9991.000000",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "test",
-                    },
+                    Passport = GeneratePassport(0),
                     IsActive = true,
                     LockoutEnabled = true,
                     Rating = 0,
@@ -103,11 +145,7 @@ namespace TrueMoney.Data
                     FirstName = "Антон",
                     LastName = "Лукьянов",
                     BankAccountNumber = "408.17.810.0.9991.000001",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "test",
-                    },
+                    Passport = GeneratePassport(1),
                     IsActive = true,
                     LockoutEnabled = true,
                     Rating = 0,
@@ -121,11 +159,7 @@ namespace TrueMoney.Data
                     FirstName = "Дима",
                     LastName = "Артюх",
                     BankAccountNumber = "408.17.810.0.9991.000002",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "test",
-                    },
+                    Passport = GeneratePassport(2),
                     IsActive = true,
                     LockoutEnabled = true,
                     Rating = 0,
@@ -139,11 +173,7 @@ namespace TrueMoney.Data
                     FirstName = "Test",
                     LastName = "Example",
                     BankAccountNumber = "408.17.810.0.9991.000003",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "test",
-                    },
+                    Passport = GeneratePassport(3),
                     IsActive = true,
                     LockoutEnabled = true,
                 },
@@ -156,11 +186,7 @@ namespace TrueMoney.Data
                     FirstName = "Неактивный",
                     LastName = "Единственный",
                     BankAccountNumber = "408.17.810.0.9991.000004",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "test",
-                    },
+                    Passport = GeneratePassport(4),
                     LockoutEnabled = true,
                 },
             };
@@ -170,11 +196,24 @@ namespace TrueMoney.Data
             return users;
         }
 
+        private static Passport GeneratePassport(int number)
+        {
+            return new Passport
+            {
+                DateOfIssuing = new DateTime(
+                    1950 + _random.Next(60),
+                    _random.Next(1, 12),
+                    _random.Next(1, 20)),
+                Number = number.ToString("D6"),
+                GiveOrganization = "Ленинский РУВД г.Минска",
+            };
+        }
+
         private static IEnumerable<User> GenerateFakeUsers(string defaultPasswordHash)
         {
             List<User> users = new List<User>();
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < _firstNames.Count; i++)
             {
                 users.Add(new User
                 {
@@ -182,14 +221,10 @@ namespace TrueMoney.Data
                     UserName = $"fake{i}@money.dev",
                     PasswordHash = defaultPasswordHash,
                     SecurityStamp = Guid.NewGuid().ToString(),
-                    FirstName = $"Fake{i}",
-                    LastName = $"Fake",
+                    FirstName = _firstNames[i],
+                    LastName = _lastNames[i],
                     BankAccountNumber = $"408.17.810.0.9991.{(i + 5).ToString("D6")}",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "fake",
-                    },
+                    Passport = GeneratePassport(i + 5),
                     IsActive = true,
                     LockoutEnabled = true,
                     Rating = _random.Next(-3, 3)
@@ -213,13 +248,13 @@ namespace TrueMoney.Data
                     CreateTime = dealCreateDate.AddDays(2),
                     InterestRate = finalRate,
                     IsApproved = true,
-                    Offerer = offerers[0],
+                    Offerer = offerers[_random.Next(offerers.Count - 1)],
                 },
                 new Offer
                 {
                     CreateTime = dealCreateDate.AddDays(1),
                     InterestRate = finalRate,
-                    Offerer = offerers[1],
+                    Offerer = offerers[_random.Next(offerers.Count - 1)],
                 },
             };
 
@@ -237,13 +272,13 @@ namespace TrueMoney.Data
                 {
                     CreateTime = dealCreateDate.AddDays(2),
                     InterestRate = finalRate,
-                    Offerer = offerers[0],
+                    Offerer = offerers[_random.Next(offerers.Count - 1)],
                 },
                 new Offer
                 {
                     CreateTime = dealCreateDate.AddDays(3),
                     InterestRate = finalRate,
-                    Offerer = offerers[1],
+                    Offerer = offerers[_random.Next(offerers.Count - 1)],
                 },
             };
 
@@ -346,7 +381,7 @@ namespace TrueMoney.Data
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
                     Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
                 },
                 new Deal
                 {
@@ -361,7 +396,7 @@ namespace TrueMoney.Data
                     PaymentCount = 2,
                     DealStatus = DealStatus.InProgress,
                     Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
                 },
             };
 
@@ -389,7 +424,7 @@ namespace TrueMoney.Data
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
                     Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
                 },
                 new Deal
                 {
@@ -400,7 +435,7 @@ namespace TrueMoney.Data
                     PaymentCount = 2,
                     DealStatus = DealStatus.Open,
                     Offers = GenerateOffers(offerers, secondDealCreateDate, secondRate),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
                 },
             };
 
@@ -428,7 +463,7 @@ namespace TrueMoney.Data
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
                     Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
                 },
                 new Deal
                 {
@@ -439,7 +474,7 @@ namespace TrueMoney.Data
                     PaymentCount = 2,
                     DealStatus = DealStatus.WaitForApprove,
                     Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
                 },
             };
 
@@ -467,7 +502,7 @@ namespace TrueMoney.Data
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
                     Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
                 },
                 new Deal
                 {
@@ -478,7 +513,7 @@ namespace TrueMoney.Data
                     PaymentCount = 2,
                     DealStatus = DealStatus.WaitForLoan,
                     Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
                 },
             };
 
