@@ -14,6 +14,7 @@ using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Services.Services
 {
+    using Common.Enums;
     using TrueMoney.Common;
     using TrueMoney.Models.User;
 
@@ -128,15 +129,14 @@ namespace TrueMoney.Services.Services
         public async Task<UserProfileModel> GetUserProfileModel(int userId)
         {
             var user = await _context.Users.FirstAsync(x => x.Id == userId);
-
-            var offers = user.Offers;
-            var deals = user.Deals;
-
+            var offers = user.Offers.Where(x => 
+                x.Deal.DealStatus == DealStatus.Open
+                || x.IsApproved);
             var model = new UserProfileModel
             {
                 User = Mapper.Map<UserModel>(user),
                 Passport = Mapper.Map<PassportModel>(user.Passport),
-                Deals = Mapper.Map<List<DealModel>>(deals),
+                Deals = Mapper.Map<List<DealModel>>(user.Deals),
                 Offers = Mapper.Map<IList<OfferModel>>(offers),
                 IsCurrentUserActive = user.IsActive
             };

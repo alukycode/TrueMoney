@@ -48,8 +48,6 @@
     </div>
 </div>
 
-<hr/>
-
 <h3>Информация о сделках</h3>
 
 <h3>Ваш активный займ:</h3>
@@ -82,21 +80,40 @@ else
 {
     @RenderOffer(item)
 }
-<hr />
 
 @helper RenderOffer(OfferModel offer)
 {
     <b>
         @Html.ActionLink($"Предложение №{offer.Id} для заявки на займ №{offer.DealId}.", "Details", "Deal", routeValues: new { id = offer.DealId }, htmlAttributes: null)
     </b>
-    <div>Предложенная процентная ставка <b>@offer.InterestRate</b> %</div>
-    @*if (offer.IsApproved)
-	{
-		 <div class="important-information">Ваше предложение принято! Перейдите на страницу заявки, чтобы подтвердить перевод денег.</div>
-	}*@
-    <br />
+    <div>
+        Предложенная процентная ставка <b>@offer.InterestRate</b> %
+    </div>
+    switch (offer.DealStatus)
+    {
+        case DealStatus.Closed:
+            <div class="additional-information">
+                Сделка завершена.
+            </div>
+            break;
+        case DealStatus.WaitForApprove:
+            <div class="important-information">
+                Данное предложение принято! Перейдите на страницу заявки, чтобы подтвердить перевод денег.
+            </div>
+            break;
+        case DealStatus.WaitForLoan:
+            <div class="important-information">
+                Пользователь ожидает от вас перевода денег по данной заявке.
+            </div>
+            break;
+        case DealStatus.InProgress:
+            <div class="additional-information">
+                По окончании срока данной сделки заемщик вернет вам необходимую денежную сумму.
+            </div>
+        break;
+    }
+    <hr />
 }
-
 @helper RenderDeal(DealModel deal)
 {
 if (deal != null)

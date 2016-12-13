@@ -43,6 +43,8 @@ textarea {
 
 .rating-Good { color: green; }
 .rating-Bad  { color: red; }
+.important-information { color: red; }
+.additional-information { color: green; }
 
 .rating-background-Good { background-color: #eeffee; }
 .rating-background-Bad  { background-color: #ffeeee; }

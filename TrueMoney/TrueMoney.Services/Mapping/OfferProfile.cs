@@ -2,6 +2,7 @@
 {
     using System;
     using AutoMapper;
+    using Common.Enums;
     using Models.Offer;
     using TrueMoney.Data.Entities;
     using TrueMoney.Models.Basic;
@@ -15,8 +16,11 @@
                     destination => destination.OffererFullName,
                     member => member.ResolveUsing(x => $"{x.Offerer.FirstName} {x.Offerer.LastName}"))
                 .ForMember(
-                destination => destination.Rating,
-                    member => member.ResolveUsing(x => x.Offerer.Rating));
+                    destination => destination.Rating,
+                    member => member.ResolveUsing(x => x.Offerer.Rating))
+                .ForMember(
+                    destination => destination.DealStatus,
+                    member => member.ResolveUsing(x => x.Deal != null ? x.Deal.DealStatus : default(DealStatus)));
 
             CreateMap<CreateOfferForm, Offer>()
                 .ForMember(
