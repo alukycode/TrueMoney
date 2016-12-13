@@ -26,7 +26,7 @@
                     && x.VisaDate == bankTransaction.SenderValidBefore && 
                     x.VisaName == bankTransaction.SenderName);
             var receiverAccount = data.FirstOrDefault(
-                x => x.BankAccountNumber == bankTransaction.RecipientAccountNumber);
+                x => x.CardNumber == bankTransaction.RecipientAccountNumber);
             
             if (senderAccount == null)
             {
@@ -55,7 +55,7 @@
         {
             var accounts = BankDataHelper.GetAccounts();
 
-            return accounts.FirstOrDefault(x => x.BankAccountNumber == accountNumber)?.Amount;
+            return accounts.FirstOrDefault(x => x.CardNumber == accountNumber)?.Amount;
         }
     }
 }

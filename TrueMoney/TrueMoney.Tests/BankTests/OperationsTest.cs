@@ -28,7 +28,7 @@
                     new BankAccount
                     {
                         Id = i,
-                        BankAccountNumber = $"408.17.810.0.9991.{i.ToString("D6")}",
+                        CardNumber = $"408.17.810.0.9991.{i.ToString("D6")}",
                         Amount = Convert.ToDecimal(i * 1000),
                         VisaNumber = i.ToString("D16"),
                         VisaName = $"Test User{i}",
@@ -48,7 +48,7 @@
             var bankVisaTransaction1 = new BankVisaTransaction
             {
                 Amount = 1000,
-                RecipientAccountNumber = accounts[0].BankAccountNumber,
+                RecipientAccountNumber = accounts[0].CardNumber,
                 SenderCardNumber = accounts[1].VisaNumber,
                 SenderCcvCode = accounts[1].VisaCcv,
                 SenderName = accounts[1].VisaName,
@@ -76,7 +76,7 @@
             var bankVisaTransaction2 = new BankVisaTransaction
             {
                 Amount = 3050,
-                RecipientAccountNumber = accounts[0].BankAccountNumber,
+                RecipientAccountNumber = accounts[0].CardNumber,
                 SenderCardNumber = accounts[4].VisaNumber,
                 SenderCcvCode = accounts[4].VisaCcv,
                 SenderName = accounts[4].VisaName,
@@ -94,7 +94,7 @@
             var bankVisaTransaction3 = new BankVisaTransaction
             {
                 Amount = 3050,
-                RecipientAccountNumber = accounts[0].BankAccountNumber,
+                RecipientAccountNumber = accounts[0].CardNumber,
                 SenderCardNumber = accounts[4].VisaNumber,
                 SenderCcvCode = accounts[2].VisaCcv,
                 SenderName = accounts[3].VisaName,

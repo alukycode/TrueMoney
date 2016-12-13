@@ -22,8 +22,8 @@ namespace TrueMoney.Models.Basic
 
         public bool IsActive { get; set; }
 
-        [Display(Name = "Номер банковского счета")] //todo: нужна валидация
-        public string BankAccountNumber { get; set; }
+        [Display(Name = "Номер банковской карты")] //todo: нужна валидация
+        public string CardNumber { get; set; }
 
         public int Rating { get; set; }
 

@@ -37,7 +37,7 @@ namespace TrueMoney.Models.Account
 
         //[Required]
         //[RegularExpression("[0-9]{3}.[0-9]{2}.[0-9]{3}.[0-9]{1}.[0-9]{4}.[0-9]{7}")] // https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D1%81%D1%87%D1%91%D1%82%D0%BD%D1%8B%D0%B9_%D1%81%D1%87%D1%91%D1%82
-        [Display(Name="Номер банковского счёта")]
-        public string BankAccountNumber { get; set; }
+        [Display(Name="Номер банковской карты")]
+        public string CardNumber { get; set; }
     }
 }

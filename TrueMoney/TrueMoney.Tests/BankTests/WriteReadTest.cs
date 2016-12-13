@@ -27,7 +27,7 @@
                     new BankAccount
                         {
                             Id = i,
-                            BankAccountNumber = $"408.17.810.0.9991.{i.ToString("D6")}",
+                            CardNumber = $"408.17.810.0.9991.{i.ToString("D6")}",
                             Amount = Convert.ToDecimal(i * 1000),
                             VisaNumber = i.ToString("D16"),
                             VisaName = $"Test User{i}",

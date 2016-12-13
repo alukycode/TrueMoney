@@ -36,7 +36,7 @@ namespace TrueMoney.Data.Entities
         public bool IsActive { get; set; }
 
         [Required]
-        public string BankAccountNumber { get; set; }
+        public string CardNumber { get; set; }
 
         public int Rating { get; set; }
 

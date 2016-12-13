@@ -7,7 +7,7 @@
     {
         public BankAccount() { }
         public int Id { get; set; } 
-        public string BankAccountNumber { get; set; }
+        public string CardNumber { get; set; }
         public decimal Amount { get; set; }
         public string VisaNumber { get; set; }
         public string VisaName { get; set; }

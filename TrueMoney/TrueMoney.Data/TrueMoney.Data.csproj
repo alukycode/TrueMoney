@@ -88,6 +88,10 @@
     <Compile Include="Migrations\201611201321063_PassportEntityChanges.Designer.cs">
       <DependentUpon>201611201321063_PassportEntityChanges.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612131441046_Renamed_BankAccountNumber_To_CardNumber.cs" />
+    <Compile Include="Migrations\201612131441046_Renamed_BankAccountNumber_To_CardNumber.Designer.cs">
+      <DependentUpon>201612131441046_Renamed_BankAccountNumber_To_CardNumber.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrueMoneyDbInitializer.cs" />
     <Compile Include="Entities\Entity.cs" />
@@ -127,6 +131,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611201321063_PassportEntityChanges.resx">
       <DependentUpon>201611201321063_PassportEntityChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612131441046_Renamed_BankAccountNumber_To_CardNumber.resx">
+      <DependentUpon>201612131441046_Renamed_BankAccountNumber_To_CardNumber.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
