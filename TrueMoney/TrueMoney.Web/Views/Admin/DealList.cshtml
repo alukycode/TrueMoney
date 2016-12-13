@@ -14,7 +14,6 @@
         <th>@Html.DisplayNameFor(model => model.Deals.First().CreateDate)</th>
         <th>@Html.DisplayNameFor(model => model.Deals.First().Amount)</th>
         <th>@Html.DisplayNameFor(model => model.Deals.First().InterestRate)</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().OwnerFullName)</th>
         <th>@Html.DisplayNameFor(model => model.Deals.First().Description)</th>
         <th>Дата выдачи займа</th>
         <th>Дата погашения</th>
@@ -42,7 +41,6 @@
             <td>@deal.CreateDate.ToString("D")</td>
             <td>@deal.Amount р.</td>
             <td>@deal.InterestRate %</td>
-            <td>@deal.OwnerFullName</td>
             <td>@deal.Description</td>
             <td>@Html.Raw(paymentPlan != null ? paymentPlan.CreateTime.ToString("D") : "")</td>
             <td>@Html.Raw(paymentPlan != null ? payments.Last().DueDate.ToString("D") : "")</td>
