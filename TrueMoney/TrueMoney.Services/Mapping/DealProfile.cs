@@ -8,7 +8,6 @@ namespace TrueMoney.Services.Mapping
     using TrueMoney.Data.Entities;
     using TrueMoney.Models.Basic;
     using TrueMoney.Models.Deal;
-    using TrueMoney.Models.ViewModels;
 
     public class DealProfile : Profile
     {
@@ -20,6 +19,12 @@ namespace TrueMoney.Services.Mapping
                     member => member
                         .ResolveUsing(
                             x => $"{x.Owner.FirstName} {x.Owner.LastName}"
+                        ))
+                .ForMember(
+                    destination => destination.Rating,
+                    member => member
+                        .ResolveUsing(
+                            x => x.Owner.Rating
                         ));
             CreateMap<Deal, DealDetailsViewModel>();
             CreateMap<CreateDealForm, Deal>()

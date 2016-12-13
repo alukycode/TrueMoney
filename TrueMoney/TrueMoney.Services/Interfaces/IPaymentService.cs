@@ -8,5 +8,7 @@
     public interface IPaymentService
     {
         Task<PaymentResult> LendMoney(VisaPaymentViewModel visaPaymentViewModel, int userId);
+
+        Task<PaymentResult> Payout(VisaPaymentViewModel visaPaymentViewModel);
     }
 }

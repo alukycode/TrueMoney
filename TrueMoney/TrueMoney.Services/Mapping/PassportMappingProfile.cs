@@ -15,8 +15,8 @@ namespace TrueMoney.Services.Mapping
     {
         public PassportMappingProfile()
         {
-            CreateMap<PassportViewModel, Passport>();
             CreateMap<Passport, PassportModel>();
+            CreateMap<PassportModel, Passport>();
         }
     }
 }

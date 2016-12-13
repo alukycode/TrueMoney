@@ -1,4 +1,6 @@
-﻿namespace TrueMoney.Models.Deal
+﻿using TrueMoney.Common.Enums;
+
+namespace TrueMoney.Models.Deal
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -19,11 +21,17 @@
         {
             get
             {
-                return Offers != null && Offers.Any() && Offers.Any(x => x.OffererId == CurrentUserId);
+                return Offers != null && Offers.Any() && Offers.Any(x => x.OffererId == CurrentUserId );
             }
         }
 
-        public bool ShowOffers => IsCurrentUserOwner;
+        public bool IsCurrentUserApprovedLender
+        {
+            get
+            {
+                return Offers != null && Offers.Any() && Offers.Any(x => x.OffererId == CurrentUserId && x.IsApproved);
+            }
+        }
 
         public OfferModel CurrentUserOffer
         {
@@ -33,10 +41,14 @@
             }
         }
 
-        public IEnumerable<OfferModel> Offers { get; set; }
+        public IList<OfferModel> Offers { get; set; }
 
         public PaymentPlanModel PaymentPlanModel { get; set; }
 
-        public IEnumerable<PaymentModel> Payments { get; set; }
+        public IList<PaymentModel> Payments { get; set; }
+
+        public UserModel DealOwner { get; set; }
+
+        public decimal ExtraMoney { get; set; }
     }
 }

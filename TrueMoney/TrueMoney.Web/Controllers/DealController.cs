@@ -8,13 +8,15 @@ namespace TrueMoney.Web.Controllers
 {
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Microsoft.AspNet.Identity;
+    using Models.Offer;
     using Services.Interfaces;
 
+    using TrueMoney.Common;
     using TrueMoney.Models.Deal;
-    using TrueMoney.Models.ViewModels;
 
-    [Authorize]
-    public class DealController : BaseController
+    [Authorize(Roles = RoleNames.User)]
+    public class DealController : Controller
     {
         private readonly IDealService _dealService;
 
@@ -26,76 +28,27 @@ namespace TrueMoney.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Index()
         {
-            DealIndexViewModel model;
-            try
-            {
-                var currentUserId = await CurrentUserId();
-                model = await _dealService.GetAll(currentUserId);
-            }
-            catch (Exception)
-            {
-                model = await _dealService.GetAllForAnonymous();
-            }
-
+            var model = await _dealService.GetAll(User.Identity.GetUserId<int>());
             return View(model);
         }
 
         public async Task<ActionResult> Details(int id)
         {
-            var model = await _dealService.GetById(id, await CurrentUserId());
-            if (model != null)
-            {
-                return View(model);
-            }
-
-            return GoHome();
+            var model = await _dealService.GetById(id, User.Identity.GetUserId<int>());
+            return View(model);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken] 
-        public async Task<ActionResult> ApproveOffer(int offerId) 
+        public async Task FinishDeal(int dealId)
         {
-            await _dealService.ApproveOffer(offerId);
-
-            return null; // потом еще сделаем результат
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken] 
-        public async Task<ActionResult> CancelOfferApproval(int offerId)
-        {
-            await _dealService.CancelOfferApproval(offerId);
-
-            return null;
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RevertOffer(int offerId, int dealId) 
-        {
-            await _dealService.RevertOffer(offerId);
-
-            return RedirectToAction("Details", new { id = dealId });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> FinishDeal(int offerId, int dealId)
-        {
-            await _dealService.FinishDealStartLoan(await CurrentUserId(), offerId, dealId);
-
-            return RedirectToAction("Details", "Deal", new { id = dealId });
+            await _dealService.FinishDealStartLoan(dealId, User.Identity.GetUserId<int>());
         }
 
         public async Task<ActionResult> Create()
         {
-            var viewModel = await _dealService.GetCreateDealForm(await CurrentUserId());
-            if (viewModel.IsUserCanCreateDeal)
-            {
-                return View(new CreateDealForm());
-            }
+            var viewModel = await _dealService.GetCreateDealForm(User.Identity.GetUserId<int>());
 
-            return GoHome();
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -109,68 +62,18 @@ namespace TrueMoney.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var id = await _dealService.CreateDeal(model, await CurrentUserId());
+                var id = await _dealService.CreateDeal(User.Identity.GetUserId<int>(), model);
 
                 return RedirectToAction("Details", new { id = id });
             }
 
             return View(model);
         }
-
-        public async Task<ActionResult> CreateOffer(int dealId)
-        {
-            var formModel = await _dealService.GetCreateOfferForm(dealId, await CurrentUserId());
-            if (formModel.IsUserCanCreateOffer)
-            {
-                return View(formModel);
-            }
-
-            return GoHome();
-        }
-
+        
         [HttpPost]
-        public async Task<ActionResult> CreateOffer(CreateOfferForm model)
+        public async Task Delete(int dealId)
         {
-            if (model.DealRate < model.InterestRate)
-            {
-                ModelState.AddModelError("InterestRate", "Вы превысили маскимальнодопустимую процентную ставку.");
-            }
-
-            if (!model.IsUserCanCreateOffer)
-            {
-                ModelState.AddModelError("InterestRate", "Вы ещё не прошли подтверждение регистрации.");
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _dealService.CreateOffer(model, await CurrentUserId()); 
-                    return RedirectToAction("Details", new { id = model.DealId });// во, редирект, а не создание той же модели и отрисовка той же вьюшки!
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("InterestRate", "Что-то пошло не так.");
-                }
-            }
-
-            return View("CreateOffer", model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int dealId)
-        {
-            await _dealService.DeleteDeal(dealId, await CurrentUserId());
-
-            return GoHome();
-        }
-
-        public async Task<ActionResult> YourActivity() // для меня загадка, почему активностью юзера занимается контроллер сделок
-        {
-            var viewModel = await _dealService.GetYourActivityViewModel(await CurrentUserId());
-
-            return View(viewModel);
+            await _dealService.DeleteDeal(dealId, User.Identity.GetUserId<int>());
         }
     }
 }

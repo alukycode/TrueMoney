@@ -1,23 +1,24 @@
 using System.ComponentModel.DataAnnotations;
+using TrueMoney.Common;
 
 namespace TrueMoney.Models.Manage
 {
     public class ChangePasswordViewModel
     {
-        [Required]
+        [Required(ErrorMessage = ErrorMessages.Required)]
         [DataType(DataType.Password)]
-        [Display(Name = "Current password")]
+        [Display(Name = "Текущий пароль")]
         public string OldPassword { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = ErrorMessages.Required)]
+        [StringLength(100, ErrorMessage = "{0} должен быть минимум {2} символа.", MinimumLength = 1)] //TODO: как-то это надо совмещать с общеми правилами валидации пароля
         [DataType(DataType.Password)]
-        [Display(Name = "New password")]
+        [Display(Name = "Новый пароль")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Display(Name = "Подтверждение пароля")]
+        [Compare("NewPassword", ErrorMessage = "Пароли не совпадают.")]
         public string ConfirmPassword { get; set; }
     }
 }

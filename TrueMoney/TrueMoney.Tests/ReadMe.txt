@@ -3,3 +3,5 @@
 github Moq Quickstart: https://github.com/Moq/moq4/wiki/Quickstart
 
 AutoFixture: https://github.com/AutoFixture/AutoFixture#downloads (not used yet)
+
+common test naming convention: [Method_TestCase_ExpectedResult]

@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNet.Identity
+@model TrueMoney.Models.Admin.InactiveUsersViewModel
+
+@{
+    ViewBag.Title = "Список пользователей";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Model.Users != null && Model.Users.Any())
+{<h2>Список пользователей</h2>
+
+    <table class="table">
+        <tr>
+            <th>№</th>
+            <th>@Html.DisplayNameFor(model => model.Users.First().User.FirstName)</th>
+            <th>@Html.DisplayNameFor(model => model.Users.First().User.MiddleName)</th>
+            <th>@Html.DisplayNameFor(model => model.Users.First().User.LastName)</th>
+            <th>@Html.DisplayNameFor(model => model.Users.First().User.BankAccountNumber)</th>
+            <th>@Html.DisplayNameFor(model => model.Users.First().Passport.Number)</th>
+            <th>@Html.DisplayNameFor(model => model.Users.First().Passport.GiveOrganization)</th>
+            <th>@Html.DisplayNameFor(model => model.Users.First().Passport.DateOfIssuing)</th>
+            <th></th>
+            <th></th>
+        </tr>
+        @foreach (var deal in Model.Users.Where(x=>x.User.Id != User.Identity.GetUserId<int>()))
+        {
+            <tr>
+                <td>@deal.User.Id</td>
+                <td>@deal.User.FirstName</td>
+                <td>@deal.User.MiddleName</td>
+                <td>@deal.User.LastName</td>
+                <td>@deal.User.BankAccountNumber</td>
+                <td>@deal.Passport.Number</td>
+                <td>@deal.Passport.GiveOrganization</td>
+                <td>@deal.Passport.DateOfIssuing</td>
+                <td>
+                    @Html.ActionLink("Детали", "Details", "User",
+                       routeValues: new { id = deal.User.Id },
+                       htmlAttributes: null)
+            </td>
+            <td>
+                @if (!deal.User.IsActive)
+                {
+                    using (Html.BeginForm("Activate", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("userId", deal.User.Id)
+                        <div class="form-group">
+                            <input type="submit" value="Активировать" class="btn btn-default" />
+                        </div>
+                    }
+                }
+            </td>
+        </tr>
+        }
+    </table>
+}

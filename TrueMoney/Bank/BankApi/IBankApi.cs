@@ -6,6 +6,10 @@
 
     public interface IBankApi
     {
-        Task<BankResponse> Do(BankTransaction bankTransaction);
+        BankResponse Do(BankTransaction bankTransaction);
+
+        BankResponse DoWithVisa(BankVisaTransaction bankTransaction);
+
+        decimal? GetBalance(string accountNumber);
     }
 }

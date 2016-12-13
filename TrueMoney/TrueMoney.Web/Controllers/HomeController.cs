@@ -3,12 +3,8 @@ using TrueMoney.Services;
 
 namespace TrueMoney.Web.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController : Controller
     {
-        public HomeController()
-        {
-        }
-
         public ActionResult Index()
         {
             return View();
@@ -22,6 +18,11 @@ namespace TrueMoney.Web.Controllers
         public ActionResult Contact()
         {
             return View();
+        }
+
+        public ActionResult Rating()
+        {
+            return Redirect(Url.Action("About") + "#rating" );
         }
     }
 }

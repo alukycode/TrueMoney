@@ -23,10 +23,7 @@ namespace TrueMoney.DependencyInjection
                     .LifestylePerWebRequest());
 
             container.Register(
-                Classes.FromAssembly(typeof(BankApi).Assembly)
-                    .Where(type => type.Name.EndsWith("Api"))
-                    .WithService.DefaultInterfaces()
-                    .LifestylePerWebRequest());
+                Component.For<IBankApi>().ImplementedBy<SimpleBankApi>().LifestyleSingleton());
         }
     }
 }

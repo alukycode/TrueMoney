@@ -7,10 +7,7 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("Привет, " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-        </li>
-        <li>
-            @Html.ActionLink("Мои операции", "YourActivity", "Deal", routeValues: null, htmlAttributes: null)
+            <a href="@Url.Action("UserProfile", "User")" title = "Личный кабинет">@User.Identity.GetUserName()</a>
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
     </ul>

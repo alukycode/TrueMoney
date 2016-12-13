@@ -5,7 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Bank.BankApi;
+using Bank.Resources;
 using TrueMoney.Data;
+using TrueMoney.Data.Entities;
 using TrueMoney.Services.Mapping;
 
 namespace ForTesting
@@ -14,10 +17,8 @@ namespace ForTesting
     {
         static void Main(string[] args)
         {
-            using (var context = new TrueMoneyContext())
-            {
-                var temp = context.Users.FirstOrDefault();
-            }
+            var x = BankDataHelper.GetAccounts();
+            BankDataHelper.UpdateDataFile();
         }
     }
 }

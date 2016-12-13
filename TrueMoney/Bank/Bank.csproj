@@ -41,18 +41,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BankApi\BankApi.cs" />
+    <Compile Include="BankApi\SimpleBankApi.cs" />
+    <Compile Include="BankEntities\BankAccount.cs" />
     <Compile Include="BankEntities\BankAction.cs" />
     <Compile Include="BankEntities\BankData.cs" />
     <Compile Include="BankEntities\BankResponse.cs" />
     <Compile Include="BankEntities\BankTransaction.cs" />
     <Compile Include="BankApi\IBankApi.cs" />
+    <Compile Include="BankEntities\BankVisaTransaction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\BankDataHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\BankData.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <ProjectReference Include="..\TrueMoney.Common\TrueMoney.Common.csproj">
+      <Project>{edca40cd-bf8f-43c3-9320-6061379acf10}</Project>
+      <Name>TrueMoney.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

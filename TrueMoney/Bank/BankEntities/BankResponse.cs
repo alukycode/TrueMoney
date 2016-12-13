@@ -4,6 +4,7 @@
     {
         Success,
         NotEnoughtMoney,
-        Error
+        Error,
+        PermissionError,
     }
 }

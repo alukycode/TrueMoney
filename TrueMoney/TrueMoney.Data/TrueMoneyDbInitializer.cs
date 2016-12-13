@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using TrueMoney.Common;
 using TrueMoney.Common.Enums;
 using TrueMoney.Data.Entities;
 
@@ -9,6 +12,8 @@ namespace TrueMoney.Data
 {
     public class TrueMoneyDbInitializer : DropCreateDatabaseIfModelChanges<TrueMoneyContext>
     {
+        private static readonly Random _random = new Random(524287);
+
         protected override void Seed(TrueMoneyContext context)
         {
             base.Seed(context);
@@ -17,177 +22,468 @@ namespace TrueMoney.Data
 
         public static void InitializeData(TrueMoneyContext context)
         {
-            List<User> users = GenerateUsers();
-            foreach (var item in users)
+            // seed users and roles
+            // http://stackoverflow.com/questions/19280527/mvc5-seed-users-and-roles
+            var roleStore = new CustomRoleStore(context);
+            var roleManager = new RoleManager<CustomRole, int>(roleStore);
+
+            roleManager.Create(new CustomRole { Name = RoleNames.Admin });
+            roleManager.Create(new CustomRole { Name = RoleNames.User });
+
+            var userStore = new CustomUserStore(context);
+            var userManager = new UserManager<User, int>(userStore);
+
+            var users = GenerateUsers();
+            foreach (var user in users)
             {
-                context.Users.Add(item);
+                userManager.Create(user);
+                userManager.AddToRole(user.Id, RoleNames.User);
             }
+
+            var admin = new User
+            {
+                Email = "admin@money.dev",
+                UserName = "admin@money.dev",
+                PasswordHash = new PasswordHasher().HashPassword("123123"),
+                SecurityStamp = Guid.NewGuid().ToString(),
+                FirstName = "Admin",
+                LastName = "Администратор",
+                BankAccountNumber = "-",
+            };
+
+            userManager.Create(admin);
+            userManager.AddToRole(admin.Id, RoleNames.Admin);
             context.SaveChanges();
 
-            var user = users.First();
-            user.Deals = GenerateDeals();
-            context.SaveChanges();
+            // seed other stuff
 
-            GenerateOffers(context.Deals.ToList(), users.Skip(1).ToList());
+            users[0].Deals = GenerateDealsWithOneInProgress(users.Where(x => x != users[0] && x.IsActive).ToList());
+            users[1].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[1] && x.IsActive).ToList());
+            users[2].Deals = GenerateDealsWithOneWaitForApprove(users.Where(x => x != users[2] && x.IsActive).ToList());
+            users[3].Deals = GenerateDealsWithOneWaitForLoan(users.Where(x => x != users[3] && x.IsActive).ToList());
+
+            foreach (var item in users.Skip(5))
+            {
+                item.Deals = GenerateDealsWithOneOpen(users.Where(x => x != item).ToList());
+            }
+
             context.SaveChanges();
         }
 
-        private static void GenerateOffers(List<Deal> deals, List<User> offerers)
-        {
-            var offer = new Offer()
-            {
-                CreateTime = DateTime.Now,
-                InterestRate = 10,
-                IsApproved = true,
-                Offerer = offerers[0],
-            };
-            var deal = deals.First();
-            deal.Offers = new List<Offer>
-            {
-                offer,
-                new Offer
-                {
-                    CreateTime = DateTime.Now,
-                    InterestRate = 20,
-                    IsApproved = true,
-                    Offerer = offerers[0],
-                }
-            };
-            deal.ResultOffer = offer;
-            deal.DealStatus = DealStatus.InProgress;
-
-            deals[1].Offers = new List<Offer>()
-            {
-                new Offer
-                {
-                    CreateTime = DateTime.Now,
-                    InterestRate = 20,
-                    IsApproved = true,
-                    Offerer = offerers[0],
-                }
-            };
-
-            deals[2].Offers = new List<Offer>
-            {
-                new Offer
-                {
-                    Offerer = offerers[1],
-                    CreateTime = new DateTime(2016,10,09),
-                    InterestRate = 20
-                },
-                new Offer
-                {
-                    Offerer = offerers[0],
-                    CreateTime = new DateTime(2016,10,09),
-                    InterestRate = 21
-                }
-            };
-        }
-
+        #region Users generation
         private static List<User> GenerateUsers()
         {
-            return new List<User>
+            var defaultPasswordHash = new PasswordHasher().HashPassword("123123");
+            var users = new List<User>
             {
                 new User
                 {
+                    Email    = "facepalm@money.dev",
+                    UserName = "facepalm@money.dev",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Саша",
                     LastName = "Черногребель",
-                    AspUserId = "change it!",
-                    BankAccountNumber = "test",
-                    Passport = new Passport()
+                    BankAccountNumber = "408.17.810.0.9991.000000",
+                    Passport = new Passport
                     {
                         DateOfIssuing = DateTime.Now,
                         Number = "test",
-                        Series = "test",
-                    }
+                    },
+                    IsActive = true,
+                    LockoutEnabled = true,
+                    Rating = 0,
                 },
                 new User
                 {
+                    Email    = "anton@money.dev",
+                    UserName = "anton@money.dev",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Антон",
                     LastName = "Лукьянов",
-                    AspUserId = "change it!",
-                    BankAccountNumber = "test",
-                    Passport = new Passport()
+                    BankAccountNumber = "408.17.810.0.9991.000001",
+                    Passport = new Passport
                     {
                         DateOfIssuing = DateTime.Now,
                         Number = "test",
-                        Series = "test",
-                    }
+                    },
+                    IsActive = true,
+                    LockoutEnabled = true,
+                    Rating = 0,
                 },
                 new User
                 {
+                    Email    = "dimon@money.dev",
+                    UserName = "dimon@money.dev",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Дима",
                     LastName = "Артюх",
-                    AspUserId = "change it!",
-                    BankAccountNumber = "test",
-                }
-            };
-        }
-
-        private static PaymentPlan GeneratePlan()
-        {
-            return new PaymentPlan()
-            {
-                CreateTime = DateTime.Now,
-                Payments = new List<Payment>()
-                {
-                    new Payment()
+                    BankAccountNumber = "408.17.810.0.9991.000002",
+                    Passport = new Passport
                     {
-                        Amount = 10,
-                        DueDate = DateTime.Now,
+                        DateOfIssuing = DateTime.Now,
+                        Number = "test",
                     },
-                    new Payment()
+                    IsActive = true,
+                    LockoutEnabled = true,
+                    Rating = 0,
+                },
+                new User
+                {
+                    Email    = "test@example.com",
+                    UserName = "test@example.com",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    FirstName = "Test",
+                    LastName = "Example",
+                    BankAccountNumber = "408.17.810.0.9991.000003",
+                    Passport = new Passport
                     {
-                        Amount = 20,
-                        DueDate = DateTime.Now,
-                    }
-                }
+                        DateOfIssuing = DateTime.Now,
+                        Number = "test",
+                    },
+                    IsActive = true,
+                    LockoutEnabled = true,
+                },
+                new User
+                {
+                    Email    = "qwe@asd.zxc",
+                    UserName = "qwe@asd.zxc",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    FirstName = "Неактивный",
+                    LastName = "Единственный",
+                    BankAccountNumber = "408.17.810.0.9991.000004",
+                    Passport = new Passport
+                    {
+                        DateOfIssuing = DateTime.Now,
+                        Number = "test",
+                    },
+                    LockoutEnabled = true,
+                },
             };
+
+            users.AddRange(GenerateFakeUsers(defaultPasswordHash));
+
+            return users;
         }
 
-        private static List<Deal> GenerateDeals()
+        private static IEnumerable<User> GenerateFakeUsers(string defaultPasswordHash)
         {
-            var result = new List<Deal>()
+            List<User> users = new List<User>();
+
+            for (int i = 0; i < 10; i++)
             {
-                new Deal()
+                users.Add(new User
                 {
-                    Amount = 13,
-                    CreateDate = DateTime.Now,
-                    DealPeriod = 5000,
-                    InterestRate = 12,
-                    PaymentPlan = GeneratePlan()
+                    Email = $"fake{i}@money.dev",
+                    UserName = $"fake{i}@money.dev",
+                    PasswordHash = defaultPasswordHash,
+                    SecurityStamp = Guid.NewGuid().ToString(),
+                    FirstName = $"Fake{i}",
+                    LastName = $"Fake",
+                    BankAccountNumber = $"408.17.810.0.9991.{(i + 5).ToString("D6")}",
+                    Passport = new Passport
+                    {
+                        DateOfIssuing = DateTime.Now,
+                        Number = "fake",
+                    },
+                    IsActive = true,
+                    LockoutEnabled = true,
+                    Rating = _random.Next(-3, 3)
+                });
+            }
+
+            return users;
+        } 
+        #endregion
+
+        #region Offers generation
+        private static List<Offer> GenerateOffersWithOneApproved(
+            List<User> offerers,
+            DateTime dealCreateDate,
+            int finalRate)
+        {
+            var result = new List<Offer>
+            {
+                new Offer
+                {
+                    CreateTime = dealCreateDate.AddDays(2),
+                    InterestRate = finalRate,
+                    IsApproved = true,
+                    Offerer = offerers[0],
                 },
-                new Deal()
+                new Offer
                 {
-                    Amount = 123,
-                    CreateDate = DateTime.Now,
-                    DealPeriod = 60,
-                    InterestRate = 2,
+                    CreateTime = dealCreateDate.AddDays(1),
+                    InterestRate = finalRate,
+                    Offerer = offerers[1],
                 },
-                new Deal
-                {
-                    CreateDate = new DateTime(2016, 10, 09),
-                    InterestRate = 25,
-                    Description = "for business",
-                    Amount = 100
-                },
-                new Deal
-                {
-                    Amount = 200,
-                    CreateDate = new DateTime(2016, 10, 09),
-                    InterestRate = 25,
-                    Description = "to buy keyboard",                    
-                },
-                new Deal
-                {
-                    CreateDate = new DateTime(2016, 10, 09),
-                    InterestRate = 5,
-                    Description = "to rent a bitches",
-                    Amount = 300
-                }
             };
 
             return result;
         }
+
+        private static List<Offer> GenerateOffers(
+            List<User> offerers,
+            DateTime dealCreateDate,
+            int finalRate)
+        {
+            var result = new List<Offer>
+            {
+                new Offer
+                {
+                    CreateTime = dealCreateDate.AddDays(2),
+                    InterestRate = finalRate,
+                    Offerer = offerers[0],
+                },
+                new Offer
+                {
+                    CreateTime = dealCreateDate.AddDays(3),
+                    InterestRate = finalRate,
+                    Offerer = offerers[1],
+                },
+            };
+
+            return result;
+        }
+        #endregion
+
+        #region Payment plans generation
+        private static PaymentPlan GenerateOpenPlan(
+            DateTime planCreateDate,
+            decimal paymentsAmount,
+            int dealPeriod)
+        {
+            return new PaymentPlan
+            {
+                CreateTime = planCreateDate,
+                Payments = new List<Payment>
+                {
+                    new Payment
+                    {
+                        Amount = paymentsAmount / 2,
+                        DueDate = planCreateDate.AddDays(dealPeriod / 2),
+                    },
+                    new Payment
+                    {
+                        Amount = paymentsAmount / 2,
+                        DueDate = planCreateDate.AddDays(dealPeriod),
+                    }
+                }
+            };
+        }
+
+        private static PaymentPlan GenerateClosedPlan(DateTime planCreateDate, decimal paymentsAmount)
+        {
+            var payments = new List<Payment>
+            {
+                new Payment
+                {
+                    Amount = paymentsAmount / 2,
+                    DueDate = planCreateDate.AddDays(10),
+                    IsPaid = true,
+                    PaidDate = planCreateDate.AddDays(10),
+                },
+                new Payment
+                {
+                    Amount = paymentsAmount / 2,
+                    DueDate = planCreateDate.AddDays(20),
+                    IsPaid = true,
+                    PaidDate = planCreateDate.AddDays(10),
+                }
+            };
+
+            return new PaymentPlan
+            {
+                CreateTime = planCreateDate,
+                Payments = payments,
+                BankTransactions = GenerateBankTransactions(payments),
+            };
+        } 
+        #endregion
+
+        #region Transactions generation
+        private static List<BankTransaction> GenerateBankTransactions(List<Payment> payments)
+        {
+            var result = new List<BankTransaction>();
+            foreach (var item in payments)
+            {
+                result.Add(new BankTransaction
+                {
+                    Amount = item.Amount,
+                    DateOfPayment = item.DueDate,
+                });
+            }
+
+            return result;
+        } 
+        #endregion
+
+        #region Deals generation
+        private static List<Deal> GenerateDealsWithOneInProgress(List<User> offerers)
+        {
+            var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
+            var secondDealCreateDate = DateTime.Now.AddDays(-10);
+            var firstRate = _random.Next(1, 50);
+            var secondRate = _random.Next(1, 50);
+            decimal firstAmount = _random.Next(100, 5000);
+            decimal secondAmount = _random.Next(100, 5000);
+            var secondDealPeriod = 30;
+
+            var result = new List<Deal>
+            {
+                new Deal
+                {
+                    Amount = firstAmount,
+                    CreateDate = firstDealCreateDate,
+                    DealPeriod = 60,
+                    PaymentCount = 2,
+                    InterestRate = firstRate,
+                    DealStatus = DealStatus.Closed,
+                    PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
+                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    CloseDate = firstDealCreateDate.AddDays(60),
+                    Description = "Предзаполненная цель",
+                },
+                new Deal
+                {
+                    Amount = secondAmount,
+                    CreateDate = secondDealCreateDate,
+                    DealPeriod = secondDealPeriod,
+                    InterestRate = secondRate,
+                    PaymentPlan = GenerateOpenPlan(
+                        secondDealCreateDate.AddDays(3),
+                        secondAmount * (1 + (decimal)secondRate / 100),
+                        secondDealPeriod),
+                    PaymentCount = 2,
+                    DealStatus = DealStatus.InProgress,
+                    Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
+                    Description = "Предзаполненная цель",
+                },
+            };
+
+            return result;
+        }
+
+        private static List<Deal> GenerateDealsWithOneOpen(List<User> offerers)
+        {
+            var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
+            var secondDealCreateDate = firstDealCreateDate.AddYears(1);
+            var firstRate = _random.Next(1, 50);
+            var secondRate = _random.Next(1, 50);
+            decimal firstAmount = _random.Next(100, 5000);
+            decimal secondAmount = _random.Next(100, 5000);
+            var result = new List<Deal>
+            {
+                new Deal
+                {
+                    Amount = firstAmount,
+                    CreateDate = firstDealCreateDate,
+                    DealPeriod = 60,
+                    PaymentCount = 2,
+                    InterestRate = firstRate,
+                    DealStatus = DealStatus.Closed,
+                    PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
+                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    CloseDate = firstDealCreateDate.AddDays(60),
+                    Description = "Предзаполненная цель",
+                },
+                new Deal
+                {
+                    Amount = secondAmount,
+                    CreateDate = secondDealCreateDate,
+                    DealPeriod = 30,
+                    InterestRate = secondRate,
+                    PaymentCount = 2,
+                    DealStatus = DealStatus.Open,
+                    Offers = GenerateOffers(offerers, secondDealCreateDate, secondRate),
+                    Description = "Предзаполненная цель",
+                },
+            };
+
+            return result;
+        }
+
+        private static List<Deal> GenerateDealsWithOneWaitForApprove(List<User> offerers)
+        {
+            var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
+            var secondDealCreateDate = firstDealCreateDate.AddYears(1);
+            var firstRate = _random.Next(1, 50);
+            var secondRate = _random.Next(1, 50);
+            decimal firstAmount = _random.Next(100, 5000);
+            decimal secondAmount = _random.Next(100, 5000);
+            var result = new List<Deal>
+            {
+                new Deal
+                {
+                    Amount = firstAmount,
+                    CreateDate = firstDealCreateDate,
+                    DealPeriod = 60,
+                    PaymentCount = 2,
+                    InterestRate = firstRate,
+                    DealStatus = DealStatus.Closed,
+                    PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
+                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    CloseDate = firstDealCreateDate.AddDays(60),
+                    Description = "Предзаполненная цель",
+                },
+                new Deal
+                {
+                    Amount = secondAmount,
+                    CreateDate = secondDealCreateDate,
+                    DealPeriod = 30,
+                    InterestRate = secondRate,
+                    PaymentCount = 2,
+                    DealStatus = DealStatus.WaitForApprove,
+                    Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
+                    Description = "Предзаполненная цель",
+                },
+            };
+
+            return result;
+        }
+
+        private static List<Deal> GenerateDealsWithOneWaitForLoan(List<User> offerers)
+        {
+            var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
+            var secondDealCreateDate = firstDealCreateDate.AddYears(1);
+            var firstRate = _random.Next(1, 50);
+            var secondRate = _random.Next(1, 50);
+            decimal firstAmount = _random.Next(100, 5000);
+            decimal secondAmount = _random.Next(100, 5000);
+            var result = new List<Deal>
+            {
+                new Deal
+                {
+                    Amount = firstAmount,
+                    CreateDate = firstDealCreateDate,
+                    DealPeriod = 60,
+                    PaymentCount = 2,
+                    InterestRate = firstRate,
+                    DealStatus = DealStatus.Closed,
+                    PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
+                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    CloseDate = firstDealCreateDate.AddDays(60),
+                    Description = "Предзаполненная цель",
+                },
+                new Deal
+                {
+                    Amount = secondAmount,
+                    CreateDate = secondDealCreateDate,
+                    DealPeriod = 30,
+                    InterestRate = secondRate,
+                    PaymentCount = 2,
+                    DealStatus = DealStatus.WaitForLoan,
+                    Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
+                    Description = "Предзаполненная цель",
+                },
+            };
+
+            return result;
+        } 
+        #endregion
     }
 }

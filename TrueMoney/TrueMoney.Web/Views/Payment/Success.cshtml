@@ -1,10 +1,16 @@
-﻿@model TrueMoney.Models.VisaPaymentViewModel
+﻿@using TrueMoney.Common.Extensions
+@model TrueMoney.Models.VisaPaymentViewModel
 @{
-    Layout = "../Shared/_Layout.cshtml";
+    ViewBag.Title = "Платёж завершён";
 }
 
-<h2>Success</h2>
-<p> you paid @Model.PaymentCount to @Model.PayForId in context
-    @Model.PaymentName</p>
+<h2>@ViewBag.Title</h2>
+<hr />
 
-@Html.ActionLink("Детали займa", "Details", "Deal", routeValues: new { id = Model.DealId }, htmlAttributes: null)
+<p>Оплата успешно завершена!</p>
+<p>Вы перевели <b>@Model.PaymentCount.Format()</b> р. заемщику <b>@Model.DealOwnerName</b> в контексте заявки <b>№ @Model.DealId</b></p>
+
+<a href="@Url.Action("Details", "Deal", new {id = Model.DealId})" class="btn btn-primary btn-with-icon">
+    <i class="glyphicon glyphicon-arrow-left"></i>
+    Детали займа
+</a>

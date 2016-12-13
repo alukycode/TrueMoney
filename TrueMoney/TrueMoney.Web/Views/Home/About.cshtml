@@ -2,8 +2,61 @@
     ViewBag.Title = "О сервисе";
 }
 
-<h2>@ViewBag.Title.</h2>
+<h2>@ViewBag.Title</h2>
+
+<hr/>
 
 <p>Это всё легально! Бесплатно с регистрацией на высокой скорости!</p>
 <p>Мы не врём!</p>
 
+<hr />
+
+<h3>Часто задаваемые вопросы</h3>
+
+<ol id="contents">
+    <li><a href="#rating">Рейтинг</a></li>
+    <li><a href="#shit">Shit</a></li>
+</ol>
+
+<div id="rating" class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">Что такое рейтинг заемщика и как он определяется?</h4>
+    </div>
+    <div class="panel-body">
+        <p>Рейтинг показывает «степень надежности» каждого пользователя системы.</p>
+        <p>Каждый новый пользователь получает рейтинг 0. После активации он становится 1.</p>
+        <p>По мере пользования сервисом рейтинг будет увеличиваться или уменьшаться в зависимости от действий пользователя.</p>
+        <p>Влияние на рейтинг имеют следущие факторы:</p>
+        <ul>
+            <li>успешное завершение займа <strong>+5</strong></li>
+            <li>все выплаты по займу совершены заранее <strong>+2</strong></li>
+            <li>отмена подтверждения (заемодавец) <strong>-2</strong></li>
+            <li>просрочка платежа <strong>-2</strong></li>
+        </ul>
+    </div>
+</div>
+<div id="shit" class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">Some shit</h4>
+    </div>
+    <div class="panel-body">
+        <p>bla bla</p>
+        <p>тут нужно придумать ещё что-нибудь</p>
+        <p>Димон, твой выход </p>
+</div>
+</div>
+
+@section Scripts {
+    <script>
+        function highlightAnchor() {
+            var id = location.hash.substr(1); //Get the word after the hash from the url
+            if (id) {
+                $(".panel-success").removeClass("panel-success").addClass("panel-default");
+                $('#' + id).removeClass('panel-default').addClass('panel-success');
+            }
+        }
+
+        $(document).ready(highlightAnchor);
+        window.onhashchange = highlightAnchor;
+    </script>
+}

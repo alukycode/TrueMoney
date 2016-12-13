@@ -1,11 +1,15 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using TrueMoney.Common;
+using TrueMoney.Models.User;
 using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Web.Controllers
 {
-    public class UserController : BaseController
+    [Authorize]
+    public class UserController : Controller
     {
         private readonly IUserService _userService;
 
@@ -14,31 +18,71 @@ namespace TrueMoney.Web.Controllers
             _userService = userService;
         }
 
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            return RedirectToAction("Details", new { id = await CurrentUserId() });
+            return RedirectToAction("Details", new { id = User.Identity.GetUserId<int>() }); 
         }
 
-        // нормальный метод
         public async Task<ActionResult> Details(int id)
         {
-            var userModel = await _userService.GetDetails(await CurrentUserId(), id);
+            var userModel = await _userService.GetDetails(id);
 
             return View(userModel);
         }
 
-        //[Authorize(Roles = "Administrator")]
-        public async Task<ActionResult> AdminList()
+        [Authorize(Roles = RoleNames.User)]
+        public async Task<ActionResult> UserProfile()
         {
-            return View(await _userService.GetAdminListModel());
+            var model = await _userService.GetUserProfileModel(User.Identity.GetUserId<int>());
+
+            return View(model);
         }
 
-        //[Authorize(Roles = "Administrator")]
-        [HttpPost]
-        public async Task<ActionResult> Activate(int userId)
+        public async Task<ActionResult> Edit(int id)
         {
-            await _userService.ActivateUser(userId);
-            return RedirectToAction("AdminList");
+            var editModel = await _userService.GetEditModel(id);
+
+            return View(editModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Edit(EditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _userService.Update(model);
+
+                return RedirectToAction("UserProfile");
+            }
+
+            return View(model);
+        }
+
+        public async Task<ActionResult> EditPassport(int userId)
+        {
+            var editModel = await _userService.GetEditPassportModel(userId);
+
+            return View(editModel);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditPassport(EditPassportViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _userService.UpdatePassport(model);
+
+                return RedirectToAction("UserProfile");
+            }
+
+            return View(model);
+        }
+
+        public async Task<ActionResult> UserActivity()
+        {
+            var model = await _userService.GetUserActivityModel(User.Identity.GetUserId<int>());
+
+            return View(model);
         }
     }
 }
