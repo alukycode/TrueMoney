@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+п»їusing System.ComponentModel.DataAnnotations;
 using TrueMoney.Common;
 
 namespace TrueMoney.Models.Manage
@@ -7,18 +7,18 @@ namespace TrueMoney.Models.Manage
     {
         [Required(ErrorMessage = ErrorMessages.Required)]
         [DataType(DataType.Password)]
-        [Display(Name = "Текущий пароль")]
+        [Display(Name = "РўРµРєСѓС‰РёР№ РїР°СЂРѕР»СЊ")]
         public string OldPassword { get; set; }
 
         [Required(ErrorMessage = ErrorMessages.Required)]
-        [StringLength(100, ErrorMessage = "{0} должен быть минимум {2} символа.", MinimumLength = 1)] //TODO: как-то это надо совмещать с общеми правилами валидации пароля
+        [StringLength(100, ErrorMessage = "{0} РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РјРёРЅРёРјСѓРј {2} СЃРёРјРІРѕР»Р°.", MinimumLength = 1)] //TODO: РєР°Рє-С‚Рѕ СЌС‚Рѕ РЅР°РґРѕ СЃРѕРІРјРµС‰Р°С‚СЊ СЃ РѕР±С‰РµРјРё РїСЂР°РІРёР»Р°РјРё РІР°Р»РёРґР°С†РёРё РїР°СЂРѕР»СЏ
         [DataType(DataType.Password)]
-        [Display(Name = "Новый пароль")]
+        [Display(Name = "РќРѕРІС‹Р№ РїР°СЂРѕР»СЊ")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Подтверждение пароля")]
-        [Compare("NewPassword", ErrorMessage = "Пароли не совпадают.")]
+        [Display(Name = "РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ РїР°СЂРѕР»СЏ")]
+        [Compare("NewPassword", ErrorMessage = "РџР°СЂРѕР»Рё РЅРµ СЃРѕРІРїР°РґР°СЋС‚.")]
         public string ConfirmPassword { get; set; }
     }
 }
