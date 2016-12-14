@@ -92,9 +92,9 @@
     <Compile Include="Migrations\201612131441046_Renamed_BankAccountNumber_To_CardNumber.Designer.cs">
       <DependentUpon>201612131441046_Renamed_BankAccountNumber_To_CardNumber.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201612140123272_PassportPhoto.cs" />
-    <Compile Include="Migrations\201612140123272_PassportPhoto.Designer.cs">
-      <DependentUpon>201612140123272_PassportPhoto.cs</DependentUpon>
+    <Compile Include="Migrations\201612141056496_PassportPhoto.cs" />
+    <Compile Include="Migrations\201612141056496_PassportPhoto.Designer.cs">
+      <DependentUpon>201612141056496_PassportPhoto.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrueMoneyDbInitializer.cs" />
@@ -139,8 +139,8 @@
     <EmbeddedResource Include="Migrations\201612131441046_Renamed_BankAccountNumber_To_CardNumber.resx">
       <DependentUpon>201612131441046_Renamed_BankAccountNumber_To_CardNumber.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612140123272_PassportPhoto.resx">
-      <DependentUpon>201612140123272_PassportPhoto.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612141056496_PassportPhoto.resx">
+      <DependentUpon>201612141056496_PassportPhoto.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
