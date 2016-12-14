@@ -19,14 +19,25 @@
                     <span class="icon-bar"></span>
                 </button>
                 <strong>
-                    <a href="@Url.Action("Index", "Home")" class="navbar-brand">True Money</a>
+
+                    <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+                        @if (User.IsInRole(RoleNames.Admin))
+                        {
+                            <i class="glyphicon glyphicon-fire" style="color: red"></i>
+                        }
+                        else
+                        {
+                            <i class="glyphicon glyphicon-ruble" style="color: green"></i>
+                        }
+                        True Money
+                    </a>
                 </strong>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @if (User.IsInRole(RoleNames.Admin))
                     {
-                        <li><a href="@Url.Action("InactiveUsers", "Admin")"><strong>Неактивные юзера</strong></a></li>
+                        <li><a href="@Url.Action("InactiveUsers", "Admin")">Неактивные пользователи</a></li>
                         <li><a href="@Url.Action("Index", "Deal")">Открытые предложения</a></li>
                     }
                     else

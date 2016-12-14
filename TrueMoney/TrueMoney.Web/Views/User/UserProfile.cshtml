@@ -46,6 +46,7 @@
         <p><a href="@Url.Action("ChangePassword", "Manage", new {id = User.Identity.GetUserId<int>()})" class="btn btn-primary">Изменить пароль</a>
         </p>
     </div>
+    <img src="@Model.Passport.ImagePath"/>
 </div>
 
 <h3>Информация о сделках</h3>

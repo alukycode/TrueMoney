@@ -99,11 +99,14 @@ namespace TrueMoney.Services.Services
         //    };
         //}
 
-        public async Task ActivateUser(int userId)
+        public async Task ActivateUser(int userId, bool makeActive)
         {
             var user = await _context.Users.FirstAsync(x => x.Id == userId);
-            user.IsActive = true;
-            user.Rating = Rating.StartRating;
+            user.IsActive = makeActive;
+            if (makeActive && user.Rating == 0)
+            {
+                user.Rating = Rating.StartRating;
+            }
             await _context.SaveChangesAsync();
         }
 

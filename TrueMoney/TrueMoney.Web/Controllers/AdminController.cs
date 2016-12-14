@@ -31,9 +31,9 @@ namespace TrueMoney.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Activate(int userId)
+        public async Task<ActionResult> Activate(int userId, bool makeActive)
         {
-            await _userService.ActivateUser(userId);
+            await _userService.ActivateUser(userId, makeActive);
             return RedirectToAction("InactiveUsers");
         }
 

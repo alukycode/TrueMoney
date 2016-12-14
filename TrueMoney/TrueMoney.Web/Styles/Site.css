@@ -26,6 +26,13 @@ textarea {
 
 /* custom global styles*/
 
+.navbar-brand {
+    padding: 12px;
+}
+.navbar-brand i {
+    margin-right: 4px;
+}
+
 .nav > li > a {
     padding-right: 12px;
     padding-left: 12px;

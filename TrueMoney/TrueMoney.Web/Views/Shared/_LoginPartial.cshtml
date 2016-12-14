@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@using TrueMoney.Common
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -7,7 +8,14 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <a href="@Url.Action("UserProfile", "User")" title = "Личный кабинет">@User.Identity.GetUserName()</a>
+            @if (User.IsInRole(RoleNames.Admin))
+            {
+                <a href="@Url.Action("InactiveUsers", "Admin")" title="Личный кабинет">@User.Identity.GetUserName()</a>
+            }
+            else
+            {
+                <a href="@Url.Action("UserProfile", "User")" title="Личный кабинет">@User.Identity.GetUserName()</a>
+            }
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
     </ul>

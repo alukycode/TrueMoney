@@ -7,7 +7,7 @@
 
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
@@ -105,6 +105,23 @@
             </div>
         </div>
 
+        <hr/>
+
+        <div class="form-group">
+            <label for="photo" class="control-label col-sm-6">Загрузите страницу паспорта, на которой видна ваша фотография</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <label class="input-group-btn">
+                        <span class="btn btn-primary">
+                            Загрузить <input type="file" id="photo" name="Photo" accept=".jpg,.png"  style="display: none" />
+                        </span>
+                    </label>
+                    <input type="text" name="PhotoFilename" id="filename" class="form-control" readonly="">
+                </div>
+                @Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
         <hr />
 
         <div class="form-group">
@@ -114,5 +131,21 @@
 }
 
 @section Scripts {
+    <script>
+        $(document).on('change', ':file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+        $(document).ready(function () {
+            $(':file').on('fileselect', function (event, numFiles, label) {
+                $("#filename").val(label);
+            });
+        });
+
+    </script>
+
     @Scripts.Render("~/bundles/jqueryval")
 }

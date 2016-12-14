@@ -226,6 +226,13 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\Uploads\1.jpg" />
+    <Content Include="Images\Uploads\2.jpg" />
+    <Content Include="Images\Uploads\3.jpg" />
+    <Content Include="Images\Uploads\4.jpg" />
+    <Content Include="Images\Uploads\5.png" />
+    <Content Include="Images\Uploads\6.jpg" />
+    <Content Include="Images\Uploads\8.png" />
     <Content Include="Scripts\lib\knockout.mapping-latest.debug.js" />
     <Content Include="Scripts\lib\knockout.mapping-latest.js" />
     <Content Include="Scripts\lib\knockout-3.4.0.js" />
@@ -325,7 +332,7 @@
     <Content Include="Views\Admin\DealList.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\Uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

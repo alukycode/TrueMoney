@@ -1,57 +1,87 @@
 ﻿@using Microsoft.AspNet.Identity
+@using TrueMoney.Common.Extensions
 @model TrueMoney.Models.Admin.InactiveUsersViewModel
 
 @{
     ViewBag.Title = "Список пользователей";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles
+{
+    <style>
+        a.glyphicon { cursor: pointer; text-decoration: none !important; font-size: 24px; margin-right: 5px;}
+        .glyphicon-thumbs-down { color: red !important; }
+        td { vertical-align: middle !important; }
+    </style>
 }
 
 @if (Model.Users != null && Model.Users.Any())
 {<h2>Список пользователей</h2>
 
-    <table class="table">
+    <table class="table table-striped">
         <tr>
             <th>№</th>
-            <th>@Html.DisplayNameFor(model => model.Users.First().User.FirstName)</th>
-            <th>@Html.DisplayNameFor(model => model.Users.First().User.MiddleName)</th>
-            <th>@Html.DisplayNameFor(model => model.Users.First().User.LastName)</th>
+            <th>ФИО (и рейтинг)</th>
             <th>@Html.DisplayNameFor(model => model.Users.First().User.CardNumber)</th>
-            <th>@Html.DisplayNameFor(model => model.Users.First().Passport.Number)</th>
-            <th>@Html.DisplayNameFor(model => model.Users.First().Passport.GiveOrganization)</th>
-            <th>@Html.DisplayNameFor(model => model.Users.First().Passport.DateOfIssuing)</th>
-            <th></th>
-            <th></th>
+            <th>Паспорт</th>
+            <th>Действия</th>
         </tr>
-        @foreach (var deal in Model.Users.Where(x=>x.User.Id != User.Identity.GetUserId<int>()))
+        @foreach (var item in Model.Users.Where(x=>x.User.Id != User.Identity.GetUserId<int>()))
         {
             <tr>
-                <td>@deal.User.Id</td>
-                <td>@deal.User.FirstName</td>
-                <td>@deal.User.MiddleName</td>
-                <td>@deal.User.LastName</td>
-                <td>@deal.User.CardNumber</td>
-                <td>@deal.Passport.Number</td>
-                <td>@deal.Passport.GiveOrganization</td>
-                <td>@deal.Passport.DateOfIssuing</td>
+                <td>@item.User.Id</td>
+                <td  class="@(@item.User.Rating > 0 ? "rating-Good" : @item.User.Rating < 0 ? "rating-Bad" : "")">
+                    @item.User.LastName @item.User.FirstName @item.User.MiddleName 
+                    <strong>(@item.User.Rating)</strong>
+                </td>
+                <td>@item.User.CardNumber</td>
                 <td>
-                    @Html.ActionLink("Детали", "Details", "User",
-                       routeValues: new { id = deal.User.Id },
-                       htmlAttributes: null)
-            </td>
-            <td>
-                @if (!deal.User.IsActive)
-                {
-                    using (Html.BeginForm("Activate", "Admin", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    <strong>№ @item.Passport.Number</strong>,
+                    выдан @item.Passport.DateOfIssuing.Format()
+                    <br/>@item.Passport.GiveOrganization
+                </td>
+                <td>
+                    @if (item.Passport.ImagePath != null)
                     {
-                        @Html.AntiForgeryToken()
-                        @Html.Hidden("userId", deal.User.Id)
-                        <div class="form-group">
-                            <input type="submit" value="Активировать" class="btn btn-default" />
-                        </div>
+                        <a href="@item.Passport.ImagePath" class="glyphicon glyphicon-eye-open" title="Фото паспорта"></a>
                     }
-                }
-            </td>
+
+                    @if (!item.User.IsActive)
+                    {
+                        <a onclick="activate(@item.User.Id, true)" class="glyphicon glyphicon-thumbs-up" title="Активировать"></a>
+                    }
+                    else
+                    {
+                        <a onclick="activate(@item.User.Id, false)" class="glyphicon glyphicon-thumbs-down" title="Деактивировать"></a>
+                    }
+                </td>
         </tr>
         }
     </table>
+}
+
+
+@section scripts {
+    <script>
+        function loading(selector) {
+            var element = $(selector || ".body-content");
+            element.animate({ opacity: 0.2 }, 1000);
+            element.css("pointer-events", "none");
+        }
+
+        $(document).ajaxStart(function() { loading(); });
+
+        $(document).ajaxSuccess(function() { location.reload(); });
+
+        $(document).ajaxError(function() { alert("упс, ошибочка"); location.reload(); });
+
+        function activate(userId, makeActive) {
+            $.ajax({
+                url: '@Url.Action("Activate", "Admin")',
+                data: { userId: userId, makeActive : makeActive },
+                method: 'POST'
+            });
+            return false;
+        }
+    </script>
 }

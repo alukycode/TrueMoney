@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Web;
 using TrueMoney.Common;
 using TrueMoney.Models.Basic;
 
@@ -35,9 +36,14 @@ namespace TrueMoney.Models.Account
 
         public PassportModel Passport { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = ErrorMessages.Required)]
         [RegularExpression("^[0-9]{16}$", ErrorMessage = "Номер карты состоит из 16 цифр.")]
         [Display(Name="Номер банковской карты")]
         public string CardNumber { get; set; }
+
+        [Required(ErrorMessage = "Без фотографии паспорта мы вас к нам не пустим, а с плохой фотографией - не активируем")]
+        public HttpPostedFileBase Photo { get; set; }
+
+        public string PhotoFilename { get; set; }
     }
 }
