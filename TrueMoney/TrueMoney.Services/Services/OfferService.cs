@@ -75,6 +75,12 @@ namespace TrueMoney.Services.Services
         public async Task<CreateOfferForm> GetCreateOfferForm(int dealId, int currentUserId)
         {
             var deal = await _context.Deals.FirstAsync(x => x.Id == dealId);
+            var user = await _context.Users.FirstAsync(x => x.Id == currentUserId);
+            if (!user.IsActive)
+            {
+                throw new AccessViolationException("User can't create offer until he is active.");
+            }
+
             return new CreateOfferForm
             {
                 DealRate = deal.InterestRate,

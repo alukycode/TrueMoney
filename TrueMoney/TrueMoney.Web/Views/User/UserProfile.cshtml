@@ -39,11 +39,11 @@
     </div>
 
     <div class="col-md-6">
-        <p><a href="@Url.Action("Edit", new {id = User.Identity.GetUserId<int>()})" class="btn btn-primary">Редактировать личные данные</a>
+        <p><a href="@Url.Action("Edit")" class="btn btn-primary">Редактировать личные данные</a>
         </p>
-        <p><a href="@Url.Action("EditPassport", new {userId = User.Identity.GetUserId<int>()})" class="btn btn-primary">Редактировать паспортные данные</a>
+        <p><a href="@Url.Action("EditPassport")" class="btn btn-primary">Редактировать паспортные данные</a>
         </p>
-        <p><a href="@Url.Action("ChangePassword", "Manage", new {id = User.Identity.GetUserId<int>()})" class="btn btn-primary">Изменить пароль</a>
+        <p><a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-primary">Изменить пароль</a>
         </p>
     </div>
     <img src="@Model.Passport.ImagePath"/>

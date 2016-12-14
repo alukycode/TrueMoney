@@ -38,9 +38,9 @@ namespace TrueMoney.Web.Controllers
             return View(model);
         }
 
-        public async Task<ActionResult> Edit(int id)
+        public async Task<ActionResult> Edit()
         {
-            var editModel = await _userService.GetEditModel(id);
+            var editModel = await _userService.GetEditModel(User.Identity.GetUserId<int>());
 
             return View(editModel);
         }
@@ -58,9 +58,9 @@ namespace TrueMoney.Web.Controllers
             return View(model);
         }
 
-        public async Task<ActionResult> EditPassport(int userId)
+        public async Task<ActionResult> EditPassport()
         {
-            var editModel = await _userService.GetEditPassportModel(userId);
+            var editModel = await _userService.GetEditPassportModel(User.Identity.GetUserId<int>());
 
             return View(editModel);
         }

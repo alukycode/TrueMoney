@@ -90,7 +90,7 @@ namespace TrueMoney.Services.Services
         public async Task<CreateDealForm> GetCreateDealForm(int currentUserId)
         {
             var currentUser = await _context.Users.FirstAsync(x => x.Id == currentUserId);
-            var haveOpenDeal = await _context.Deals.AnyAsync(x => x.OwnerId == currentUserId && x.DealStatus == DealStatus.Open);
+            var haveOpenDeal = currentUser.Deals.Any(x => x.DealStatus == DealStatus.Open);
             var res = new CreateDealForm
             {
                 IsCurrentUserActive = currentUser.IsActive,
