@@ -42,5 +42,11 @@ namespace TrueMoney.Web.Controllers
             var model = await _dealService.GetDealListViewModel();
             return View(model);
         }
+
+        public async Task<ActionResult> DeleteDeal(int dealId, int userId)
+        {
+            await _dealService.DeleteDeal(dealId, userId);
+            return RedirectToAction("DealList");
+        }
     }
 }

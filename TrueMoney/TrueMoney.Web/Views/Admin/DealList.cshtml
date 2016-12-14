@@ -1,10 +1,10 @@
 ﻿@using System.Globalization
 @model TrueMoney.Models.Admin.DealListViewModel
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Все заявки";
 }
 
-<h2>Все заявки</h2>
+<h2>@ViewBag.Title</h2>
 <hr />
 
 <table class="table">
@@ -64,8 +64,7 @@
                        htmlAttributes: null)
             </td>
             <td>
-                @Html.ActionLink("Детали", "Details", "Deal",
-                    routeValues: new { id = deal.OwnerId }, htmlAttributes: null)
+                 <a href="@Url.Action("DeleteDeal", "Admin", new { dealId = deal.Id, userId = deal.OwnerId} )">Удалить</a>
             </td>
         </tr>
     }

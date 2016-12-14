@@ -38,7 +38,7 @@
                     @if (User.IsInRole(RoleNames.Admin))
                     {
                         <li><a href="@Url.Action("InactiveUsers", "Admin")">Неактивные пользователи</a></li>
-                        <li><a href="@Url.Action("Index", "Deal")">Открытые предложения</a></li>
+                        <li><a href="@Url.Action("DealList", "Admin")">Все заявки</a></li>
                     }
                     else
                     {
