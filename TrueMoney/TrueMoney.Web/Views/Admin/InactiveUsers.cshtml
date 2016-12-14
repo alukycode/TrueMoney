@@ -9,8 +9,10 @@
 @section styles
 {
     <style>
-        a.glyphicon { cursor: pointer; text-decoration: none !important; font-size: 24px; margin-right: 5px;}
+        table .glyphicon { cursor: pointer; text-decoration: none !important; font-size: 24px; margin-right: 5px;}
         .glyphicon-thumbs-down { color: red !important; }
+        .glyphicon-thumbs-up { color: green !important; }
+        .glyphicon-eye-close { visibility: hidden }
         td { vertical-align: middle !important; }
     </style>
 }
@@ -30,8 +32,8 @@
         {
             <tr>
                 <td>@item.User.Id</td>
-                <td  class="@(@item.User.Rating > 0 ? "rating-Good" : @item.User.Rating < 0 ? "rating-Bad" : "")">
-                    @item.User.LastName @item.User.FirstName @item.User.MiddleName 
+                <td class="@(@item.User.Rating > 0 ? "rating-Good" : @item.User.Rating < 0 ? "rating-Bad" : "")">
+                    @item.User.LastName @item.User.FirstName @item.User.MiddleName
                     <strong>(@item.User.Rating)</strong>
                 </td>
                 <td>@item.User.CardNumber</td>
@@ -45,6 +47,12 @@
                     {
                         <a href="@item.Passport.ImagePath" class="glyphicon glyphicon-eye-open" title="Фото паспорта"></a>
                     }
+                    else
+                    {
+                        <i class="glyphicon glyphicon-eye-close"></i>
+                    }
+
+                    <a class="glyphicon glyphicon-envelope" href="mailto:@item.User.Email" title="Отправить письмо"></a>
 
                     @if (!item.User.IsActive)
                     {

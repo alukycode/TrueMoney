@@ -130,7 +130,7 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Саша",
                     LastName = "Черногребель",
-                    CardNumber = "408.17.810.0.9991.000000",
+                    CardNumber = GenerateCardNumber(),
                     Passport = GeneratePassport(0),
                     IsActive = true,
                     LockoutEnabled = true,
@@ -144,7 +144,7 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Антон",
                     LastName = "Лукьянов",
-                    CardNumber = "408.17.810.0.9991.000001",
+                    CardNumber = GenerateCardNumber(),
                     Passport = GeneratePassport(1),
                     IsActive = true,
                     LockoutEnabled = true,
@@ -158,7 +158,7 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Дима",
                     LastName = "Артюх",
-                    CardNumber = "408.17.810.0.9991.000002",
+                    CardNumber = GenerateCardNumber(),
                     Passport = GeneratePassport(2),
                     IsActive = true,
                     LockoutEnabled = true,
@@ -172,7 +172,7 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Test",
                     LastName = "Example",
-                    CardNumber = "408.17.810.0.9991.000003",
+                    CardNumber = GenerateCardNumber(),
                     Passport = GeneratePassport(3),
                     IsActive = true,
                     LockoutEnabled = true,
@@ -185,7 +185,7 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Неактивный",
                     LastName = "Единственный",
-                    CardNumber = "408.17.810.0.9991.000004",
+                    CardNumber = GenerateCardNumber(),
                     Passport = GeneratePassport(4),
                     LockoutEnabled = true,
                 },
@@ -196,6 +196,12 @@ namespace TrueMoney.Data
             return users;
         }
 
+        private static string GenerateCardNumber()
+        {
+            return
+                $"{_random.Next(0, 9999).ToString("D4")} {_random.Next(0, 9999).ToString("D4")} {_random.Next(0, 9999).ToString("D4")} {_random.Next(0, 9999).ToString("D4")}";
+        }
+
         private static Passport GeneratePassport(int number)
         {
             return new Passport
@@ -204,15 +210,16 @@ namespace TrueMoney.Data
                     1950 + _random.Next(60),
                     _random.Next(1, 12),
                     _random.Next(1, 20)),
-                Number = number.ToString("D6"),
-                GiveOrganization = "Ленинский РУВД г.Минска",
+                Number = "KB" + (number).ToString("D6"),
+                GiveOrganization = number <= 7 ? "Первомайский ГОВД г. Бобруйска" : "Ленинский РУВД г.Минска",
+                ImagePath = number >= 1 && number <= 7 ? "/Images/Passport/" + number + ".jpg" : null
             };
         }
 
         private static IEnumerable<User> GenerateFakeUsers(string defaultPasswordHash)
         {
             List<User> users = new List<User>();
-
+            
             for (int i = 0; i < _firstNames.Count; i++)
             {
                 users.Add(new User
@@ -223,11 +230,11 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = _firstNames[i],
                     LastName = _lastNames[i],
-                    CardNumber = $"408.17.810.0.9991.{(i + 5).ToString("D6")}",
+                    CardNumber = GenerateCardNumber(),
                     Passport = GeneratePassport(i + 5),
                     IsActive = true,
                     LockoutEnabled = true,
-                    Rating = _random.Next(-3, 3)
+                    Rating = _random.Next(-3, 3),
                 });
             }
 

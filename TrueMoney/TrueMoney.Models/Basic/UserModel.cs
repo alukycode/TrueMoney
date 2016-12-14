@@ -28,5 +28,7 @@ namespace TrueMoney.Models.Basic
         public int Rating { get; set; }
 
         public int? PassportId { get; set; }
+
+        public string Email { get; set; }
     }
 }
