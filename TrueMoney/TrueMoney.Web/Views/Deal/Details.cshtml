@@ -1,4 +1,5 @@
-﻿@using TrueMoney.Common.Enums
+﻿@using TrueMoney.Common
+@using TrueMoney.Common.Enums
 @using TrueMoney.Common.Extensions
 @using TrueMoney.Models.Deal
 @model DealDetailsViewModel
@@ -229,29 +230,32 @@
 @if (Model.Deal.DealStatus == DealStatus.Closed)
 {
     <hr/>
-    var paidCount = Model.Payments.Sum(x => x.Amount);
-    var extraPaidCount = Model.Payments.Sum(x => x.Liability);
-    var actualPeriod = (Model.Payments.Last().PaidDate - Model.PaymentPlanModel.CreateTime).Value.Days;
+    var paidForDeal = Model.Payments.Sum(x => x.Amount);
+    var paidLiabilityForDeal = Model.Payments.Sum(x => x.Liability);
+    var paidAllForDeal = paidForDeal + paidLiabilityForDeal;
+    var paidForService = paidAllForDeal * NumericConstants.Tax;
+    var allPaidInTime = Model.Payments.All(x => x.PaidDate <= x.DueDate);
     if (Model.IsCurrentUserOwner)
     {
         <p>Вы успешно выплатили займ кредитору.</p>
         <p>Взяв @Model.Deal.Amount.Format() рублей под @Model.Deal.InterestRate.Format() % на @Model.Deal.DealPeriod день.</p>
-        if (Model.Deal.DealPeriod >= actualPeriod)
+        if (allPaidInTime)
         {
-            <p>Платежи были выплачены вовремя и сумма платежей составила <b>@paidCount.Format() р.</b></p>
+            <p>Платежи были выплачены вовремя и сумма платежей составила <b>@paidForDeal.Format() р.</b></p>
         }
         else
         {
             <p>
-                Из-за того, что платежи не были выплачены вовремя, вы заплатили <b>@paidCount.Format() р.</b>,
-                из них <b>@extraPaidCount</b> р. было потрачено на возмещение задержек выплат.
+                Из-за того, что платежи не были выплачены вовремя, вы выплатили <b>@paidAllForDeal.Format() р.</b>,
+                из них <b>@paidLiabilityForDeal</b> р. было потрачено на возмещение задержек выплат.
             </p>
         }
-        <p>Переплата от исходной необходимой суммы составила @((paidCount - Model.Deal.Amount).Format()) р.</p>
+        <p>Переплата от исходной необходимой суммы составила @((paidForDeal + paidLiabilityForDeal - Model.Deal.Amount).Format()) р.</p>
+        @*<p>В тоже время за услуги сервиса было уплачено @paidForService.Format() р., что равно @(NumericConstants.Tax * 100)% от всей суммы.</p>*@
     }
     else if (Model.IsCurrentUserApprovedLender)
     {
-        <p>В результате данной сделки вы заработали @((paidCount - Model.Deal.Amount).Format()) р.</p>
+        <p>В результате данной сделки вы заработали @((paidForDeal + paidLiabilityForDeal - Model.Deal.Amount).Format()) р.</p>
         <p>Поздравляем!</p>
     }
 
