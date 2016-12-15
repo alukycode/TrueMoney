@@ -118,7 +118,7 @@ namespace TrueMoney.Web.Controllers
             viewModel.CanSetPaymentCount = true;
             viewModel.FormAction = "VisaPayout";
             viewModel.OffererFullName = deal.Offers.First(x => x.IsApproved).OffererFullName;
-            viewModel.CardNumber = deal.DealOwner.CardNumber;
+            viewModel.CardNumber = deal.DealOwner.CardNumber.Replace(" ", "");
         }
 
         private async Task UpdateDataForVisaLoan(VisaPaymentViewModel viewModel, int dealId)
@@ -134,7 +134,7 @@ namespace TrueMoney.Web.Controllers
             viewModel.PaymentCount = deal.Deal.Amount;
             viewModel.DealId = dealId;
             viewModel.FormAction = "VisaLoan";
-            viewModel.CardNumber = currentUser.CardNumber;
+            viewModel.CardNumber = currentUser.CardNumber.Replace(" ", "");
         }
     }
 }
