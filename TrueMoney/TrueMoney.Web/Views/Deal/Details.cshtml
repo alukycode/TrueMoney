@@ -65,7 +65,7 @@
 
             <h3>Доступные предложения от других пользователей</h3>
 
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover table-bordered">
                 <tr>
                     <th>Имя пользователя</th>
                     <th>Рейтинг</th>
@@ -163,7 +163,7 @@
         <hr />
         <h3>План платежей от заёмщика кредитору</h3>
 
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover table-bordered">
             <tr>
                 <th>№</th>
                 <th>Действие</th>
@@ -235,7 +235,7 @@
     if (Model.IsCurrentUserOwner)
     {
         <p>Вы успешно выплатили займ кредитору.</p>
-        <p>Взяв @Model.Deal.Amount рублей под @Model.Deal.InterestRate на @Model.Deal.DealPeriod день.</p>
+        <p>Взяв @Model.Deal.Amount.Format() рублей под @Model.Deal.InterestRate.Format() % на @Model.Deal.DealPeriod день.</p>
         if (Model.Deal.DealPeriod >= actualPeriod)
         {
             <p>Платежи были выплачены вовремя и сумма платежей составила <b>@paidCount.Format() р.</b></p>
@@ -247,7 +247,7 @@
                 из них <b>@extraPaidCount</b> р. было потрачено на возмещение задержек выплат.
             </p>
         }
-        <p>Переплата от исходной необходимой суммы составила @(paidCount - Model.Deal.Amount) р.</p>
+        <p>Переплата от исходной необходимой суммы составила @((paidCount - Model.Deal.Amount).Format()) р.</p>
     }
     else if (Model.IsCurrentUserApprovedLender)
     {

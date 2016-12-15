@@ -25,7 +25,9 @@ namespace TrueMoney.Services.Interfaces
 
         //Task<UserActivityViewModel> GetProfileViewModel(int currentUserId);
 
-        Task ActivateUser(int userId, bool makeActive);
+        Task ActivateUser(int userId);
+
+        Task DeactivateUser(int userId);
 
         Task<EditUserViewModel> GetEditModel(int id);
 

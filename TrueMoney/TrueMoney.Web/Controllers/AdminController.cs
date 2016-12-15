@@ -15,13 +15,14 @@ namespace TrueMoney.Web.Controllers
     public class AdminController : Controller
     {
         private readonly IUserService _userService;
-
         private readonly IDealService _dealService;
+        private readonly IPaymentService _paymentService;
 
-        public AdminController(IUserService userService, IDealService dealService)
+        public AdminController(IUserService userService, IDealService dealService, IPaymentService paymentService)
         {
             _userService = userService;
             _dealService = dealService;
+            _paymentService = paymentService;
         }
 
         public async Task<ActionResult> InactiveUsers()
@@ -31,11 +32,19 @@ namespace TrueMoney.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Activate(int userId, bool makeActive)
+        public async Task<ActionResult> Activate(int userId)
         {
-            await _userService.ActivateUser(userId, makeActive);
+            await _userService.ActivateUser(userId);
             return RedirectToAction("InactiveUsers");
         }
+
+        [HttpPost]
+        public async Task<ActionResult> Deactivate(int userId)
+        {
+            await _userService.DeactivateUser(userId);
+            return RedirectToAction("InactiveUsers");
+        }
+
 
         public async Task<ActionResult> DealList()
         {

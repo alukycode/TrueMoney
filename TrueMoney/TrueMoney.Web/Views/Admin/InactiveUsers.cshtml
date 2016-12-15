@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@using TrueMoney.Common
 @using TrueMoney.Common.Extensions
 @model TrueMoney.Models.Admin.InactiveUsersViewModel
 
@@ -20,12 +21,15 @@
 @if (Model.Users != null && Model.Users.Any())
 {<h2>Список пользователей</h2>
 
-    <table class="table table-striped">
+    <hr/>
+    <table class="table table-bordered table-striped">
         <tr>
             <th>№</th>
             <th>ФИО (и рейтинг)</th>
             <th>@Html.DisplayNameFor(model => model.Users.First().User.CardNumber)</th>
             <th>Паспорт</th>
+            <th>Количество заявок <br/>и предложений
+            </th>
             <th>Действия</th>
         </tr>
         @foreach (var item in Model.Users.Where(x=>x.User.Id != User.Identity.GetUserId<int>()))
@@ -40,7 +44,13 @@
                 <td>
                     <strong>№ @item.Passport.Number</strong>,
                     выдан @item.Passport.DateOfIssuing.Format()
-                    <br/>@item.Passport.GiveOrganization
+                    <br />@item.Passport.GiveOrganization
+                </td>
+                <td>
+                       <span title="кол-во незакрытых заявок"                style="@(item.CountOfAllDeals        == 0 ? "color:gray" : "font-weight: bold") ">@item.CountOfAllDeals</span>
+                     / <span title="кол-во заявок в ожидании или в процессе" style="@(item.CountOfDealsInProgress == 0 ? "color:gray" : "font-weight: bold") ">@item.CountOfDealsInProgress</span>
+                     - <span title="кол-во предложений"                      style="@(item.CountOfAllOffers       == 0 ? "color:gray" : "font-weight: bold") ">@item.CountOfAllOffers</span>
+                     / <span title="кол-во подтвержденных предложений"       style="@(item.CountOfApprovedOffers  == 0 ? "color:gray" : "font-weight: bold") ">@item.CountOfApprovedOffers</span>
                 </td>
                 <td>
                     @if (item.Passport.ImagePath != null)
@@ -54,13 +64,16 @@
 
                     <a class="glyphicon glyphicon-envelope" href="mailto:@item.User.Email" title="Отправить письмо"></a>
 
-                    @if (!item.User.IsActive)
+                    @if (item.User.IsActive)
                     {
-                        <a onclick="activate(@item.User.Id, true)" class="glyphicon glyphicon-thumbs-up" title="Активировать"></a>
+                        if (item.IsUserCanBeDeactivated)
+                        {
+                            <a onclick="deactivate(@item.User.Id)" class="glyphicon glyphicon-thumbs-down" title="Деактивировать"></a>
+                        }
                     }
                     else
                     {
-                        <a onclick="activate(@item.User.Id, false)" class="glyphicon glyphicon-thumbs-down" title="Деактивировать"></a>
+                        <a onclick="activate(@item.User.Id)" class="glyphicon glyphicon-thumbs-up" title="Активировать пользователя"></a>
                     }
                 </td>
         </tr>
@@ -81,14 +94,30 @@
 
         $(document).ajaxSuccess(function() { location.reload(); });
 
-        $(document).ajaxError(function() { alert("упс, ошибочка"); location.reload(); });
+        $(document).ajaxError(function (response) { alert("упс, ошибочка"); location.reload(); });
 
-        function activate(userId, makeActive) {
+        function activate(userId) {
             $.ajax({
                 url: '@Url.Action("Activate", "Admin")',
-                data: { userId: userId, makeActive : makeActive },
+                data: { userId: userId },
                 method: 'POST'
             });
+            return false;
+        }
+
+        function deactivate(userId) {
+            if (confirm("Вы уверены, что хотите деактивировать пользователя?" +
+                "\nВсе его заявки будут закрыты, предложения - удалены," +
+                "\nположительный рейтинг - изменен на @Rating.AfterDeactivation!")) {
+                $.ajax({
+                    url: '@Url.Action("Deactivate", "Admin")',
+                    data: { userId: userId },
+                    method: 'POST'
+                });
+            }
+            
+
+            
             return false;
         }
     </script>
