@@ -71,17 +71,8 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> VisaPayout(int dealId)
         {
-            var deal = await _dealService.GetById(dealId, User.Identity.GetUserId<int>());
-            var nearByPayment = deal.Payments.FirstOrDefault(x => !x.IsPaid);
-            var paymentCount = nearByPayment.Amount + nearByPayment.Liability - deal.ExtraMoney;
-            var model = new VisaPaymentViewModel
-            {
-                PaymentCount = paymentCount,
-                DealId = dealId,
-                CanSetPaymentCount = true,
-                FormAction = "VisaPayout",
-                OffererFullName = deal.Offers.First(x => x.IsApproved).OffererFullName,
-            };
+            var model = new VisaPaymentViewModel();
+            await UpdateDataForVisaPayout(model, dealId);
 
             return View("Visa", model);
         }
@@ -114,7 +105,20 @@ namespace TrueMoney.Web.Controllers
                 }
             }
 
+            await UpdateDataForVisaPayout(formModel, formModel.DealId);
             return View("Visa", formModel);
+        }
+
+        private async Task UpdateDataForVisaPayout(VisaPaymentViewModel viewModel, int dealId)
+        {
+            var deal = await _dealService.GetById(dealId, User.Identity.GetUserId<int>());
+            var nearByPayment = deal.Payments.FirstOrDefault(x => !x.IsPaid);
+            var paymentCount = nearByPayment.Amount + nearByPayment.Liability - deal.ExtraMoney;
+            viewModel.PaymentCount = paymentCount;
+            viewModel.DealId = dealId;
+            viewModel.CanSetPaymentCount = true;
+            viewModel.FormAction = "VisaPayout";
+            viewModel.OffererFullName = deal.Offers.First(x => x.IsApproved).OffererFullName;
         }
     }
 }
