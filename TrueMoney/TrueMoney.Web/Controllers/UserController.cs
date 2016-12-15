@@ -48,7 +48,7 @@ namespace TrueMoney.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(EditUserViewModel model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && model.Id == User.Identity.GetUserId<int>())
             {
                 await _userService.Update(model);
 

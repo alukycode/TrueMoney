@@ -212,7 +212,7 @@ namespace TrueMoney.Data
                     _random.Next(1, 20)),
                 Number = "KB" + (number).ToString("D6"),
                 GiveOrganization = number <= 7 ? "Первомайский ГОВД г. Бобруйска" : "Ленинский РУВД г.Минска",
-                ImagePath = number >= 1 && number <= 7 ? "/Images/Passport/" + number + ".jpg" : null
+                ImagePath = number >= 0 && number <= 7 ? "/Images/Passport/" + number + ".jpg" : null
             };
         }
 

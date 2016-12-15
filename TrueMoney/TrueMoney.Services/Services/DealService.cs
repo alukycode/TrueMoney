@@ -118,9 +118,8 @@ namespace TrueMoney.Services.Services
 
         public async Task FinishDealStartLoan(int dealId, int currentUserId) 
         {
-            // todo validate userId
             var deal = await _context.Deals.FirstAsync(x => x.Id == dealId);
-            var offer = await _context.Offers.FirstAsync(x => x.IsApproved && x.DealId == dealId);
+            var offer = await _context.Offers.FirstAsync(x => x.IsApproved && x.DealId == dealId && x.OffererId == currentUserId);
             deal.DealStatus = DealStatus.WaitForLoan;
             deal.InterestRate = offer.InterestRate;
 

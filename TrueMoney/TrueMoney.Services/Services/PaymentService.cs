@@ -46,6 +46,10 @@ namespace TrueMoney.Services.Services
                 .FirstAsync(x => x.Id == visaPaymentViewModel.DealId);
             var recipient = deal.Owner;
             var sender = await _context.Users.FirstAsync(x => x.Id == currentUserId);
+            if (!sender.Offers.Exists(x => x.IsApproved && x.DealId == deal.Id))
+            {
+                throw new AccessViolationException();
+            }
 
             if (Math.Abs(deal.Amount - visaPaymentViewModel.PaymentCount) > NumericConstants.Eps)
             {

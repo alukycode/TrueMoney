@@ -56,7 +56,6 @@ namespace TrueMoney.Services.Services
 
         public async Task RevertOffer(int dealId, int currentUserId)
         {
-            // todo: validate if currentUserId allowed to perform this action
             var offer = await _context.Offers.FirstAsync(x => x.DealId == dealId && x.OffererId == currentUserId);
             var deal = await _context.Deals.FirstOrDefaultAsync(x => x.Id == dealId);
             if (offer.IsApproved)
