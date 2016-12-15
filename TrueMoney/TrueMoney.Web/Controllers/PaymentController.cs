@@ -6,6 +6,7 @@ using TrueMoney.Services;
 
 namespace TrueMoney.Web.Controllers
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNet.Identity;
@@ -17,25 +18,21 @@ namespace TrueMoney.Web.Controllers
     {
         private readonly IPaymentService _paymentService;
         private readonly IDealService _dealService;
+        private readonly IUserService _userServicee;
 
-        public PaymentController(IPaymentService paymentService, IDealService dealService)
+        public PaymentController(IPaymentService paymentService, IDealService dealService, IUserService userService)
         {
             _paymentService = paymentService;
             _dealService = dealService;
+            _userServicee = userService;
         }
 
         public async Task<ActionResult> VisaLoan(int dealId)
         {
-            var deal = await _dealService.GetById(dealId, User.Identity.GetUserId<int>());
-            return
-                View("Visa",
-                    new VisaPaymentViewModel
-                    {
-                        DealOwnerName = deal.Deal.OwnerFullName,
-                        PaymentCount = deal.Deal.Amount,
-                        DealId = dealId,
-                        FormAction = "VisaLoan",
-                    });
+            var model = new VisaPaymentViewModel();
+            await UpdateDataForVisaLoan(model, dealId);
+
+            return View("Visa", model);
         }
 
         [HttpPost]
@@ -65,6 +62,8 @@ namespace TrueMoney.Web.Controllers
                         break;
                 }
             }
+
+            await UpdateDataForVisaLoan(formModel, formModel.DealId);
 
             return View("Visa", formModel);
         }
@@ -119,6 +118,23 @@ namespace TrueMoney.Web.Controllers
             viewModel.CanSetPaymentCount = true;
             viewModel.FormAction = "VisaPayout";
             viewModel.OffererFullName = deal.Offers.First(x => x.IsApproved).OffererFullName;
+            viewModel.CardNumber = deal.DealOwner.CardNumber;
+        }
+
+        private async Task UpdateDataForVisaLoan(VisaPaymentViewModel viewModel, int dealId)
+        {
+            var deal = await _dealService.GetById(dealId, User.Identity.GetUserId<int>());
+            var currentUser = await _userServicee.GetById(User.Identity.GetUserId<int>());
+            if (!deal.IsCurrentUserLender)
+            {
+                throw new AccessViolationException($"User can't loan deal with id = {dealId}.");
+            }
+
+            viewModel.DealOwnerName = deal.Deal.OwnerFullName;
+            viewModel.PaymentCount = deal.Deal.Amount;
+            viewModel.DealId = dealId;
+            viewModel.FormAction = "VisaLoan";
+            viewModel.CardNumber = currentUser.CardNumber;
         }
     }
 }
