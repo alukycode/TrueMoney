@@ -37,7 +37,7 @@
                 <ul class="nav navbar-nav">
                     @if (User.IsInRole(RoleNames.Admin))
                     {
-                        <li><a href="@Url.Action("InactiveUsers", "Admin")">Неактивные пользователи</a></li>
+                        <li><a href="@Url.Action("InactiveUsers", "Admin")">Все пользователи</a></li>
                         <li><a href="@Url.Action("DealList", "Admin")">Все заявки</a></li>
                     }
                     else
@@ -49,6 +49,7 @@
                         {
                             <li><a href="@Url.Action("Index", "Deal")" title="Список заявок от других пользователей"><strong>Дать в долг</strong></a></li>
                             <li><a href="@Url.Action("Create", "Deal")" title="Создать заявку"><strong>Взять в долг</strong></a></li>
+                            <li><a href="@Url.Action("Hui", "Pizda")" title="Создать заявку"><strong>Мои сделки</strong> <span class="badge">протестируйте дил дитейлс блять!</span></a></li>
                         }
                     }
                 </ul>

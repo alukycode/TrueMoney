@@ -28,7 +28,7 @@
             <dt>ФИО</dt>
             <dd>@Model.User.LastName @Model.User.FirstName @Model.User.MiddleName</dd>
 
-            <dt>Номер банковской карты</dt>
+            <dt>№ банковской карты</dt>
             <dd>@Model.User.CardNumber</dd>
 
             <dt>Паспорт</dt>
@@ -36,17 +36,26 @@
             <dt>Место выдачи</dt>
             <dd>@Model.Passport.GiveOrganization</dd>
         </dl>
+        <div style="text-align: center; margin-top:40px;">
+            <p><a href="@Url.Action("Edit")" class="btn btn-primary">Редактировать личные данные</a></p>
+            <p><a href="@Url.Action("EditPassport")" class="btn btn-primary">Редактировать паспортные данные</a></p>
+            <p><a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-primary">Изменить пароль</a></p>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <p><a href="@Url.Action("Edit")" class="btn btn-primary">Редактировать личные данные</a>
-        </p>
-        <p><a href="@Url.Action("EditPassport")" class="btn btn-primary">Редактировать паспортные данные</a>
-        </p>
-        <p><a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-primary">Изменить пароль</a>
-        </p>
+    <div class="col-md-3">
+        @if (Model.Passport.ImagePath != null)
+        {
+            <a href="@Model.Passport.ImagePath" class="thumbnail">
+                <img src="@Model.Passport.ImagePath" title="Фото паспорта" alt="Фото паспорта"/>
+            </a>
+        }
     </div>
-    <img src="@Model.Passport.ImagePath"/>
+
+    <div class="col-md-3">
+
+    </div>
+
 </div>
 
 <h3>Информация о сделках</h3>

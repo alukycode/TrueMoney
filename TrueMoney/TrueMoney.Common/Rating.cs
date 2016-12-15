@@ -4,6 +4,8 @@
     {
         public static readonly int StartRating = 0;
 
+        public static readonly int AfterDeactivation = -1;
+
         public static readonly int AfterActivation = 1;
 
         public static readonly int SuccessFinishDeal = 5;

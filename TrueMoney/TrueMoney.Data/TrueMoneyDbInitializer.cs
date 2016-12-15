@@ -199,7 +199,7 @@ namespace TrueMoney.Data
         private static string GenerateCardNumber()
         {
             return
-                $"{_random.Next(0, 9999).ToString("D4")} {_random.Next(0, 9999).ToString("D4")} {_random.Next(0, 9999).ToString("D4")} {_random.Next(0, 9999).ToString("D4")}";
+                $"{_random.Next(0, 9999).ToString("D4")}{_random.Next(0, 9999).ToString("D4")}{_random.Next(0, 9999).ToString("D4")}{_random.Next(0, 9999).ToString("D4")}";
         }
 
         private static Passport GeneratePassport(int number)
