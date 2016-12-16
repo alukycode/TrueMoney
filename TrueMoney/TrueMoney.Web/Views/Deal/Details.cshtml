@@ -193,7 +193,7 @@
                         @payment.Amount.Format() р.
                         @if (payment.Liability > 0)
                         {
-                            <span>+ @payment.Liability.Format() р.</span>
+                            <span>+ @payment.Liability.Format() р. за просрочку платежа</span>
                         }
                     </td>
 
@@ -203,6 +203,7 @@
         if (Model.IsCurrentUserOwner)
         {
             <hr/>
+            <h3>В общей сумме вам нужно выплатить еще @((Model.Payments.Where(x => !x.IsPaid).Sum(x => x.Amount + x.Liability) - Model.ExtraMoney).Format()) р.</h3>
             <h3>Ближайший платёж</h3>
 
             if (Model.ExtraMoney > 0)
