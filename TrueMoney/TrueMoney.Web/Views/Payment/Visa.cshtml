@@ -15,10 +15,13 @@ else
 {
     <h4>
         <p>
-            Вы переводите деньги кредитору (<b>@Model.OffererFullName</b>) в размере <b>@Model.PaymentCount.Format() р.</b> в контексте заявки <b>№ @Model.DealId</b>.
+            Перевод денег кредитору (<b>@Model.OffererFullName</b>) в контексте заявки <b>№ @Model.DealId</b>. 
         </p>
         <p>
-            Также с Вашего счёта будет списан налог за использования сервиса в размере <b>@((Model.PaymentCount * NumericConstants.Tax).Format()) р.</b>
+            Минимальная сумма платежа составляет <b>@Model.PaymentCount.Format() р.</b>
+        </p>
+        <p>
+            Также с Вашего счёта будет списан налог за использования сервиса в размере <b>@((100 * NumericConstants.Tax).Format())% </b>от суммы платежа.
         </p>
     </h4>
 }
@@ -39,7 +42,7 @@ else
             <div class="form-group">
                 @Html.LabelFor(model => model.PaymentCount, htmlAttributes: new { @class = "control-label col-sm-3" })
                 <div class="col-sm-9">
-                    @Html.EditorFor(model => model.PaymentCount, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.PaymentCount, new { htmlAttributes = new { @id = "paymentCount", @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.PaymentCount, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -79,7 +82,9 @@ else
                 @Html.ValidationMessageFor(model => model.CvvCode, "", new { @class = "text-danger" })
             </div>
         </div>
-                
+        <div class="form-group important-information" id="finalPaymentCountBlock" style="display: none">
+            Сумма с учетом комиссии составит <strong id="finalPaymentCount"></strong> р.
+        </div>
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-9">
                 <input type="submit" value="Оплатить" class="btn btn-primary"/>
@@ -87,4 +92,21 @@ else
             </div>
         </div>
     </div>
+}
+
+@section scripts {
+    <script>
+        $("#paymentCount").change(calculateFinalAmount);
+        calculateFinalAmount();
+        function calculateFinalAmount() {
+            var paymentCount = $("#paymentCount").val();
+            if (paymentCount > 0) {
+                var resultAmount = (paymentCount * (1 + @NumericConstants.Tax));
+                $("#finalPaymentCount").text(+resultAmount.toFixed(2));
+                $("#finalPaymentCountBlock").show();
+            } else {
+                $("#finalPaymentCountBlock").hide();
+            }
+        }
+    </script>
 }
