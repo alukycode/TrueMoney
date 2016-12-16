@@ -60,14 +60,14 @@
             else if (Model.IsCurrentUserLender)
             {
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-sm-8">
                         @using (Html.BeginForm("FinishDeal", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.Hidden("offerId", Model.CurrentUserOffer.Id)
                             @Html.Hidden("dealId", Model.Deal.Id)
                             <div class="form-group">
-                                <div class="col-md-offset-2 col-md-10">
+                                <div class="col-sm-offset-2 col-sm-10">
                                     <input type="submit" value="Дать взаймы" class="btn btn-default" />
                                 </div>
                             </div>
@@ -194,14 +194,14 @@
 @helper ShowRevertOfferForm()
 {
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-sm-8">
             @using (Html.BeginForm("RevertOffer", "Offer", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.Hidden("offerId", Model.CurrentUserOffer.Id)
                 @Html.Hidden("dealId", Model.Deal.Id)
                 <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
+                    <div class="col-sm-offset-2 col-sm-10">
                         <input type="submit" value="Отменить предложение" class="btn btn-default" />
                     </div>
                 </div>
@@ -215,7 +215,7 @@ foreach (var offer in Model.Offers)
 {
         <p>@offer.OffererFullName предлагает зайем под @offer.InterestRate %</p>
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-sm-8">
                 @using (Ajax.BeginForm(
         "ApproveOffer",
         "Offer",
@@ -236,7 +236,7 @@ foreach (var offer in Model.Offers)
                     @Html.AntiForgeryToken()
                     @Html.Hidden("offerId", offer.Id)
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
+                        <div class="col-sm-offset-2 col-sm-10">
                             <input type="submit" value="Подтвердить предложение" class="btn btn-default" />
                         </div>
                     </div>
@@ -261,7 +261,7 @@ foreach (var offer in Model.Offers)
                     @Html.AntiForgeryToken()
                     @Html.Hidden("offerId", offer.Id)
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
+                        <div class="col-sm-offset-2 col-sm-10">
                             <input type="submit" value="Отменить предложение" class="btn btn-default" />
                         </div>
                     </div>
@@ -273,13 +273,13 @@ foreach (var offer in Model.Offers)
 @helper ShowDeleteDealForm()
 {
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-sm-8">
             @using (Html.BeginForm("Delete", "Deal", null, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.Hidden("dealId", Model.Deal.Id)
                 <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
+                    <div class="col-sm-offset-2 col-sm-10">
                         <input type="submit" value="Удалить заявку" class="btn btn-default" />
                     </div>
                 </div>

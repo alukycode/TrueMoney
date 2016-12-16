@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -70,6 +72,15 @@ namespace TrueMoney.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.Photo != null)
+                {
+                    //System.IO.File.Delete(Server.MapPath(model.Passport.ImagePath));
+
+                    var filepath = "/Images/Passport/" + Guid.NewGuid() + Path.GetExtension(model.PhotoFilename);
+                    model.Passport.ImagePath = filepath;
+                    model.Photo.SaveAs(Server.MapPath(filepath));
+                }
+
                 await _userService.UpdatePassport(model);
 
                 return RedirectToAction("UserProfile");

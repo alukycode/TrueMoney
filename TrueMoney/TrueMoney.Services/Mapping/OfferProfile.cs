@@ -20,7 +20,10 @@
                     member => member.ResolveUsing(x => x.Offerer.Rating))
                 .ForMember(
                     destination => destination.DealStatus,
-                    member => member.ResolveUsing(x => x.Deal != null ? x.Deal.DealStatus : default(DealStatus)));
+                    member => member.ResolveUsing(x => x.Deal != null? x.Deal.DealStatus : default(DealStatus)))
+                .ForMember(
+                    destination => destination.DealAmount,
+                    member => member.ResolveUsing(x => x.Deal != null ? x.Deal.Amount : 0));
 
             CreateMap<CreateOfferForm, Offer>()
                 .ForMember(

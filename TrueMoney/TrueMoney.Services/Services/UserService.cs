@@ -162,16 +162,23 @@ namespace TrueMoney.Services.Services
         public async Task<UserProfileModel> GetUserProfileModel(int userId)
         {
             var user = await _context.Users.FirstAsync(x => x.Id == userId);
-            var offers = user.Offers.Where(x => 
-                x.Deal.DealStatus == DealStatus.Open
-                || x.IsApproved);
+            var offers = user.Offers.Where(x => x.Deal.DealStatus == DealStatus.Open || x.IsApproved);
+
+            var activeDeal = user.Deals.FirstOrDefault(x => x.DealStatus != DealStatus.Closed);
+            var dealInfo = activeDeal == null ? null : new DealInfoModel
+            {
+                OffersCount = activeDeal.Offers.Count,
+                BestOfferPercent = activeDeal.Offers.OrderBy(x => x.InterestRate).FirstOrDefault()?.InterestRate ?? 0
+            };
+
             var model = new UserProfileModel
             {
                 User = Mapper.Map<UserModel>(user),
                 Passport = Mapper.Map<PassportModel>(user.Passport),
                 Deals = Mapper.Map<List<DealModel>>(user.Deals),
                 Offers = Mapper.Map<IList<OfferModel>>(offers),
-                IsCurrentUserActive = user.IsActive
+                IsCurrentUserActive = user.IsActive,
+                ActiveDealInfo = dealInfo
             };
 
             return model;

@@ -40,13 +40,27 @@ namespace TrueMoney.Services.Services
         public async Task<DealIndexViewModel> GetAll(int currentUserId)
         {
             var currentUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == currentUserId);
+
+            var deals = await _context.Deals.Include(x => x.Offers).ToListAsync();
+
+            var dealIdsWithOffers = new HashSet<int>();
+
+            foreach (var deal in deals)
+            {
+                if (deal.Offers.Any(x => x.OffererId == currentUserId))
+                {
+                    dealIdsWithOffers.Add(deal.Id);
+                }
+            }
+
             return new DealIndexViewModel
             {
-                Deals = Mapper.Map<IList<DealModel>>(await _context.Deals.ToListAsync()), //.OrderByDescending(x => x.CreateDate).ToList(),
+                Deals = Mapper.Map<IList<DealModel>>(deals).OrderByDescending(x => x.CreateDate).ToList(),
                 UserCanCreateDeal =
                     currentUser != null
                     && currentUser.IsActive
-                    && currentUser.Deals.All(x => x.DealStatus == DealStatus.Closed)
+                    && currentUser.Deals.All(x => x.DealStatus == DealStatus.Closed),
+                DealIdsWithOfferFromCurrentUser = dealIdsWithOffers
             };
         }
 

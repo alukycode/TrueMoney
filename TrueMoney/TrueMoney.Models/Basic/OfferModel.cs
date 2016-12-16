@@ -23,5 +23,7 @@ namespace TrueMoney.Models.Basic
         public int Rating { get; set; }
 
         public DealStatus DealStatus { get; set; }
+
+        public decimal DealAmount { get; set; }
     }
 }

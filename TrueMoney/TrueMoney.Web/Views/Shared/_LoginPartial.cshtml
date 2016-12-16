@@ -14,7 +14,11 @@
             }
             else
             {
-                <a href="@Url.Action("UserProfile", "User")" title="Личный кабинет">@User.Identity.GetUserName()</a>
+
+                <a href="@Url.Action("UserProfile", "User")" title="Личный кабинет">
+                    <span class="badge" title="количество предложений">hui</span>
+                    @User.Identity.GetUserName()
+                </a>
             }
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
