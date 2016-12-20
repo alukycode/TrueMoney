@@ -12,6 +12,7 @@ namespace TrueMoney.Web
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/lib/modernizr-*"));
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include("~/Scripts/lib/bootstrap.js", "~/Scripts/lib/respond.js"));
             bundles.Add(new ScriptBundle("~/bundles/knockout") .Include("~/Scripts/lib/knockout-{version}.js", "~/Scripts/lib/knockout.mapping-latest.js"));
+            bundles.Add(new ScriptBundle("~/bundles/scripts") .Include("~/Scripts/desableButtons.js"));
 
             bundles.Add(new StyleBundle("~/Styles/css").Include(
                       "~/Styles/lib/bootstrap.lumen.css",
