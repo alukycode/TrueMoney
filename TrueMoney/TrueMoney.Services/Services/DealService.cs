@@ -7,34 +7,23 @@ namespace TrueMoney.Services.Services
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Data.Entity.Validation;
     using System.Linq;
     using System.Threading.Tasks;
 
     using AutoMapper;
     using Data;
     using Interfaces;
-    using Models.Offer;
-    using TrueMoney.Models;
     using TrueMoney.Models.Admin;
     using TrueMoney.Models.Deal;
-    using TrueMoney.Models.User;
     using TrueMoney.Services.Extensions;
 
     public class DealService : IDealService
     {
-        private readonly IUserService _userService;
-        private readonly IOfferService _offerService;
         private readonly ITrueMoneyContext _context;
 
-        public DealService(
-            IUserService userService,
-            ITrueMoneyContext context,
-            IOfferService offerService)
+        public DealService(ITrueMoneyContext context)
         {
             _context = context;
-            _userService = userService;
-            _offerService = offerService;
         }
 
         public async Task<DealIndexViewModel> GetAll(int currentUserId)
@@ -104,7 +93,8 @@ namespace TrueMoney.Services.Services
         public async Task<CreateDealForm> GetCreateDealForm(int currentUserId)
         {
             var currentUser = await _context.Users.FirstAsync(x => x.Id == currentUserId);
-            var haveOpenDeal = !currentUser.Deals.All(x => x.DealStatus == DealStatus.Closed);
+            var haveOpenDeal = currentUser.Deals.Any(x => x.DealStatus != DealStatus.Closed);
+
             var res = new CreateDealForm
             {
                 IsCurrentUserActive = currentUser.IsActive,
@@ -134,6 +124,17 @@ namespace TrueMoney.Services.Services
         {
             var deal = await _context.Deals.FirstAsync(x => x.Id == dealId);
             var offer = await _context.Offers.FirstAsync(x => x.IsApproved && x.DealId == dealId && x.OffererId == currentUserId);
+
+            if (offer.OffererId != currentUserId)
+            {
+                throw new AccessViolationException("User try to finish deal and start loan for foreign deal.");
+            }
+
+            if (deal.DealStatus != DealStatus.WaitForApprove)
+            {
+                throw new AccessViolationException("User try to finish deal and start loan for deal with wrong status.");
+            }
+
             deal.DealStatus = DealStatus.WaitForLoan;
             deal.InterestRate = offer.InterestRate;
 
@@ -142,6 +143,14 @@ namespace TrueMoney.Services.Services
 
         public async Task<int> CreateDeal(int userId, CreateDealForm model)
         {
+            var currentUser = await _context.Users.FirstAsync(x => x.Id == userId);
+            var haveOpenDeal = currentUser.Deals.Any(x => x.DealStatus != DealStatus.Closed);
+
+            if (haveOpenDeal)
+            {
+                throw new AccessViolationException("User try to create the 2nd open deal.");
+            }
+
             var deal = Mapper.Map<Deal>(model);
             deal.OwnerId = userId;
             _context.Deals.Add(deal);
@@ -153,6 +162,7 @@ namespace TrueMoney.Services.Services
         public async Task DeleteDeal(int dealId, int currentUserId)
         {
             var deal = await _context.Deals.FirstAsync(x => x.Id == dealId && x.OwnerId == currentUserId);
+
             _context.Deals.Remove(deal);
 
             await _context.SaveChangesAsync();
