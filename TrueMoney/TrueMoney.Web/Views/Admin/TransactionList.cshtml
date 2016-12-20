@@ -1,0 +1,23 @@
+﻿@model TrueMoney.Models.Admin.BankTransactionListViewModel
+
+@{
+    ViewBag.Title = "Транзакции";
+}
+
+<h2>Транзакции</h2>
+@if (Model != null && Model.Transactions != null && Model.Transactions.Any())
+{
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Дата</th>
+            <th>Сумма</th>
+        </tr>
+        @foreach (var transaction in Model.Transactions.Reverse())
+        {
+            <tr>
+                <td>@transaction.DateOfPayment</td>
+                <td>@transaction.Amount</td>
+            </tr>
+        }
+    </table>
+}

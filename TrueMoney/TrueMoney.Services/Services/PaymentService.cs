@@ -11,11 +11,14 @@ namespace TrueMoney.Services.Services
     using System.Threading.Tasks;
     using System.Xml;
 
+    using AutoMapper;
+
     using Bank.BankApi;
     using Bank.BankEntities;
     using Common;
     using Data;
     using TrueMoney.Models;
+    using TrueMoney.Models.Admin;
     using TrueMoney.Services.Extensions;
     using TrueMoney.Services.Interfaces;
 
@@ -190,6 +193,18 @@ namespace TrueMoney.Services.Services
                 default:
                     return PaymentResult.Error;
             }
+        }
+
+        public async Task<BankTransactionListViewModel> GetBankTransactions()
+        {
+            return new BankTransactionListViewModel
+                       {
+                           Transactions =
+                               Mapper.Map<IList<BankTransactionModel>>(
+                                   await
+                                   _context.BankTransactions.OrderBy(x => x.DateOfPayment)
+                                       .ToListAsync())
+                       };
         }
 
         private PaymentPlan GeneratePlan(Deal deal)
