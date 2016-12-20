@@ -234,6 +234,7 @@
     <Content Include="Images\Passport\5.jpg" />
     <Content Include="Images\Passport\6.jpg" />
     <Content Include="Images\Passport\7.jpg" />
+    <Content Include="Scripts\desableButtons.js" />
     <Content Include="Scripts\lib\knockout.mapping-latest.debug.js" />
     <Content Include="Scripts\lib\knockout.mapping-latest.js" />
     <Content Include="Scripts\lib\knockout-3.4.0.js" />
