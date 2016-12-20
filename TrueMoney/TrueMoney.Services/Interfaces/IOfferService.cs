@@ -9,14 +9,14 @@ namespace TrueMoney.Services.Interfaces
     {
         Task<IList<OfferModel>> GetByUser(int userId);
 
-        Task ApproveOffer(int offerId);
+        Task ApproveOffer(int offerId, int currentUserId);
 
-        Task CancelOfferApproval(int offerId);
+        Task CancelOfferApproval(int offerId, int currentUserId);
 
         Task RevertOffer(int dealId, int currentUserId);
 
         Task<CreateOfferForm> GetCreateOfferForm(int dealId, int currentUserId);
 
-        Task CreateOffer(CreateOfferForm createOfferForm);
+        Task CreateOffer(CreateOfferForm createOfferForm, int currentUserId);
     }
 }
