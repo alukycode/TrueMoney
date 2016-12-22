@@ -1,0 +1,30 @@
+﻿@using TrueMoney.Common
+@using TrueMoney.Common.Extensions
+@model List<TrueMoney.Models.Admin.TransactionAdminModel>
+
+@{
+    ViewBag.Title = "Транзакции";
+}
+
+<h2>Транзакции</h2>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Дата</th>
+            <th>Сумма</th>
+            <th>From (email)</th>
+            <th>From (ID)</th>
+            <th>To (email)</th>
+            <th>To (ID)</th>
+        </tr>
+        @foreach (var transactionModel in Model)
+        {
+            <tr>
+                <td>@transactionModel.Transaction.DateOfPayment.ToString(StringFormats.DateWithTime)</td>
+                <td>@transactionModel.Transaction.Amount.Format() р.</td>
+                <td>@transactionModel.From.Email</td>
+                <td>@transactionModel.From.Id</td>
+                <td>@transactionModel.To.Email </td>
+                <td>@transactionModel.To.Id</td>
+            </tr>
+        }
+    </table>

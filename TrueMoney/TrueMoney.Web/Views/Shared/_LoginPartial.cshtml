@@ -1,4 +1,8 @@
 ﻿@using Microsoft.AspNet.Identity
+@using TrueMoney.Common
+@using TrueMoney.Common.Enums
+@using TrueMoney.Common.Extensions
+@using TrueMoney.Services.Helpers
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -7,7 +11,103 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            <a href="@Url.Action("UserProfile", "User")" title = "Личный кабинет">@User.Identity.GetUserName()</a>
+            @if (User.IsInRole(RoleNames.Admin))
+            {
+                <a href="@Url.Action("InactiveUsers", "Admin")" title="Личный кабинет">@User.Identity.GetUserName()</a>
+            }
+            else
+            {
+
+                <a href="@Url.Action("UserProfile", "User")" title="Личный кабинет">
+
+
+
+
+                    @{ var info = GlobalHelper.Get(User.Identity.GetUserId<int>()); }
+
+                    @*<div style="position: fixed; right: 5px; bottom: 5px;">
+                        <div>IsActive                    - @info.IsActive                  </div>
+                        <div>ActiveDealStatus            - @info.ActiveDealStatus          </div>
+                        <div>ActiveDealBestOfferPercent  - @info.ActiveDealBestOfferPercent</div>
+                        <div>ActiveDealOffersCount       - @info.ActiveDealOffersCount     </div>
+                        <div>OffersInWaitCount           - @info.OffersInWaitCount         </div>
+                        <div>OffersInProgressCount - @info.OffersInProgressCount </div>
+                    </div>*@
+
+                    @if (info.IsActive)
+                    {
+                        if (info.ActiveDealStatus != null)
+                        {
+                            var status = info.ActiveDealStatus.Value;
+                            switch (status)
+                            {
+                                case DealStatus.Open:
+                                    <span class="badge status-background-@status" title="Количество предложений по открытой заявке и наилучший процент">
+                                        <i class="glyphicon glyphicon-send"></i>&nbsp;
+                                        @info.ActiveDealOffersCount.Value | @if (info.ActiveDealBestOfferPercent != null)
+                                                                            {
+                                                                                <span>@info.ActiveDealBestOfferPercent.Value.Format() %</span>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span>-</span>
+                                                                            }
+                                    </span>
+                                    break;
+
+                                case DealStatus.WaitForApprove:
+                                    <span class="badge status-background-@status" title="Активная заявка: @status.GetDescription()">
+                                        <i class="glyphicon glyphicon-time"></i>&nbsp; wait
+                                    </span>
+                                    break;
+
+                                case DealStatus.WaitForLoan:
+                                    <span class="badge status-background-@status" title="Активная заявка: @status.GetDescription()">
+                                        <i class="glyphicon glyphicon-time"></i>&nbsp; wait
+                                    </span>
+                                    break;
+
+                                case DealStatus.InProgress:
+                                    <span class="badge status-background-@status" title="Активная заявка: @status.GetDescription()">
+                                        <i class="glyphicon glyphicon-flag"></i>&nbsp; progress
+                                    </span>
+                                    break;
+
+                                case DealStatus.Closed:
+                                    <span class="badge status-background-@status" title="Все ваши заявки закрыты">
+                                        <i class="glyphicon glyphicon-off"></i>&nbsp; closed
+                                    </span>
+                                    break;
+                            }
+
+                            if (info.OffersInProgressCount + info.OffersInWaitCount > 0)
+                            {
+                                <span>|</span>
+                            }
+                        }
+
+                        if (info.OffersInWaitCount > 0)
+                        {
+                            <span class="badge" style="background-color: red" title="Количество займов, по которым от вас ожидается подтверждение и перевод денег">
+                                @info.OffersInWaitCount
+                            </span>
+                        }
+                        
+                        if (info.OffersInProgressCount > 0)
+                        {
+                            <span class="badge" style="background-color: green" title="Количество займов, которые вам выплачивают заёмщики">
+                                @info.OffersInProgressCount
+                            </span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="badge" title="Администратор ещё не проверил ваш аккаунт">inactive</span>
+                    }
+                    &nbsp;
+                    @User.Identity.GetUserName()
+                </a>
+            }
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
     </ul>

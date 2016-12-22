@@ -35,5 +35,7 @@ namespace TrueMoney.Data.Entities
         public decimal InterestRate { get; set; }
 
         public int PaymentCount { get; set; }
+
+        public CreditTransaction CreditTransaction { get; set; }
     }
 }

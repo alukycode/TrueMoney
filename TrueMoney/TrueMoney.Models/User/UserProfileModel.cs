@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TrueMoney.Common.Enums;
@@ -13,6 +14,8 @@ namespace TrueMoney.Models.User
 
         public IList<DealModel> Deals { get; set; } = new List<DealModel>();
 
+        public DealInfoModel ActiveDealInfo {get;set;}
+
         public IList<OfferModel> Offers { get; set; } = new List<OfferModel>();
 
         public bool IsCurrentUserActive { get; set; }
@@ -24,5 +27,12 @@ namespace TrueMoney.Models.User
                 return Deals.Any(x => x.DealStatus != DealStatus.Closed);
             }
         }
+    }
+
+    public class DealInfoModel
+    {
+        public int OffersCount { get; set; }
+        
+        public decimal BestOfferPercent { get; set; }
     }
 }

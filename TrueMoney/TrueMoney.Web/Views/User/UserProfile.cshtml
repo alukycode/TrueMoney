@@ -11,7 +11,7 @@
 @section styles {
     <style>
         @@media ( min-width: 768px ) {
-            .user-info {margin-top: 20px;}
+            .user-info {margin-top: 10px;}
             .user-info dt { width: 200px; }
             .user-info dd { margin-left: 220px; }
         }
@@ -21,15 +21,18 @@
 <h2>@ViewBag.Title</h2>
 <hr/>
 
-<h3>@*Информация о пользователе*@</h3>
+@*<h3>Информация о пользователе</h3>*@
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-sm-6">
         <dl class="user-info dl-horizontal">
             <dt>ФИО</dt>
             <dd>@Model.User.LastName @Model.User.FirstName @Model.User.MiddleName</dd>
 
-            <dt>Номер банковского счета</dt>
-            <dd>@Model.User.BankAccountNumber</dd>
+            <dt>Рейтинг</dt>
+            <dd><b class="@(Model.User.Rating > 0 ? "rating-Good" : Model.User.Rating < 0 ? "rating-Bad" : "")">@Model.User.Rating</b></dd>
+
+            <dt>№ банковской карты</dt>
+            <dd>@Model.User.CardNumber</dd>
 
             <dt>Паспорт</dt>
             <dd>№ @Model.Passport.Number, выдан @Model.Passport.DateOfIssuing.Format()</dd>
@@ -38,77 +41,131 @@
         </dl>
     </div>
 
-    <div class="col-md-6">
-        <p><a href="@Url.Action("Edit", new {id = User.Identity.GetUserId<int>()})" class="btn btn-primary">Редактировать личные данные</a>
+    <div class="col-sm-6">
+        <p><a href="@Url.Action("Edit")" class="btn btn-default btn-with-icon"><i class="glyphicon glyphicon-pencil"></i>Редактировать личные данные</a>
         </p>
-        <p><a href="@Url.Action("EditPassport", new {userId = User.Identity.GetUserId<int>()})" class="btn btn-primary">Редактировать паспортные данные</a>
+        <p><a href="@Url.Action("EditPassport")" class="btn btn-default btn-with-icon"><i class="glyphicon glyphicon-user"></i>Редактировать паспортные данные</a>
         </p>
-        <p><a href="@Url.Action("ChangePassword", "Manage", new {id = User.Identity.GetUserId<int>()})" class="btn btn-primary">Изменить пароль</a>
+        <p style="margin-bottom: 0"><a href="@Url.Action("ChangePassword", "Manage")" class="btn btn-default btn-with-icon"><i class="glyphicon glyphicon-asterisk"></i>Изменить пароль</a>
         </p>
     </div>
 </div>
 
-<hr/>
+<hr style="margin-bottom: 0;"/>
 
-<h3>Информация о сделках</h3>
+<div class="row">
+    <div class="col-sm-6">
+        <h3>Ваши заявки</h3>
+        <hr />
 
-<h3>Ваш активный займ:</h3>
-@RenderDeal(Model.Deals.FirstOrDefault(x => x.DealStatus != DealStatus.Closed))
-<hr />
-<h3>Ваши завершённые займы:</h3>
-@foreach (var item in Model.Deals.Where(x => x.DealStatus == DealStatus.Closed))
-{
-    @RenderDeal(item)
-}
-<hr />
-@if (Model.IsCurrentUserActive)
-{
-    if (!Model.HasOpenDeal)
-    {
-        @Html.ActionLink("Создать заявку", "Create", "Deal", routeValues: null, htmlAttributes: null)<br />
-    }
-    else
-    {
-        <p>Завершите текущий займ и сможете сделать ещё заявку</p>
-    }
-}
-else
-{
-    <p>Вы сможете создать заявку на займ, после того, как администратор подтвердит валидность ваших личных данных</p>
-}
-<hr />
-<h3>Ваши предложения:</h3>
-@foreach (var item in Model.Offers)
-{
-    @RenderOffer(item)
-}
-<hr />
+        <h4><i style="color: red" class="glyphicon glyphicon-flag"></i> Активная заявка</h4>
+        @if (Model.IsCurrentUserActive)
+        {
 
-@helper RenderOffer(OfferModel offer)
-{
-    <b>
-        @Html.ActionLink($"Предложение №{offer.Id} для заявки на займ №{offer.DealId}.", "Details", "Deal", routeValues: new { id = offer.DealId }, htmlAttributes: null)
-    </b>
-    <div>Предложенная процентная ставка <b>@offer.InterestRate</b> %</div>
-    @*if (offer.IsApproved)
-	{
-		 <div class="important-information">Ваше предложение принято! Перейдите на страницу заявки, чтобы подтвердить перевод денег.</div>
-	}*@
-    <br />
-}
+            if (Model.HasOpenDeal)
+            {
+                var deal = Model.Deals.First(x => x.DealStatus != DealStatus.Closed);
 
-@helper RenderDeal(DealModel deal)
-{
-if (deal != null)
-{
-        <b>
-            @Html.ActionLink($"Займ №{deal.Id}", "Details", "Deal", routeValues: new { id = deal.Id }, htmlAttributes: null)
-        </b>
-        <span>- сумма: <b>@deal.Amount</b> р. - процентная ставка: <b>@deal.InterestRate</b> %</span>
-        <br />
-}
-}
+                <div>
+                    <p>
+                        У вас есть <b><a href="@Url.Action("Details", "Deal", new {id = deal.Id})">активная заявка на займ №@deal.Id</a></b>.
+                    </p>
+                    <p>
+                        Заявка на займ создана @deal.CreateDate.Format()
+                        <br />Вы попросили <b>@deal.Amount.Format()</b> р. под <b>@deal.InterestRate.Format()</b> % на <b>@deal.DealPeriod</b> дней
+                        <br /><i>@deal.Description</i>
+                    </p>
+                    <p>Статус займа: <span class="status-@deal.DealStatus" title="@deal.DealStatus">@deal.DealStatus.GetDescription()</span></p>
 
-@*<div>
-    @Html.ActionLink("Информация о займах", "UserActivity", null, new { @class = "btn btn-primary" })
-</div>*@
+                    @if (deal.DealStatus == DealStatus.Open)
+                    {
+                        <p>
+                            Количество заявок от других пользователей: @Model.ActiveDealInfo.OffersCount
+                            @if (Model.ActiveDealInfo.OffersCount > 0)
+                            {
+                                <span><br />Лучшее предложение: @Model.ActiveDealInfo.BestOfferPercent.Format() %</span>
+                            }
+                        </p>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <p>
+                    У вас может быть только одна активная заявка на займ и сколько угодно закрытых.
+                    <br />На данный момент у вас нет ни одной.
+                    <br />Самое время её создать!
+                </p>
+                <p><a href="@Url.Action("Create", "Deal")" class="btn btn-primary">Создать заявку</a></p>
+            }
+        }
+        else
+        {
+            <p>
+                Администратор ещё не проверил валидность ваших паспортных данных.
+                <br />Вы сможете создать заявку сразу же после того, как администратор активирует ваш аккаунт.
+            </p>
+        }
+
+        <hr />
+        <h4><i class="glyphicon glyphicon-off"></i> Завершённые займы</h4>
+        @if (Model.Deals.All(x => x.DealStatus != DealStatus.Closed))
+        {
+            <p>
+                У вас нет ни одного завершенного займа.
+                <br/>Всё ещё впереди :)
+            </p>
+        }
+        @foreach (var deal in Model.Deals.Where(x => x.DealStatus == DealStatus.Closed))
+        {
+            <p>
+                <b>
+                    @Html.ActionLink($"Займ №{deal.Id}", "Details", "Deal", new { id = deal.Id }, null)
+                </b>
+                <span>на сумму <b>@deal.Amount.Format()</b> р. под <b>@deal.InterestRate.Format()</b> %</span>
+            </p>
+        }
+    </div>
+    <div class="col-sm-6">
+        <h3>Ваши предложения</h3>
+        <hr />
+
+        <h4><i class="glyphicon glyphicon-check"></i> Подтвержденные предложения</h4>
+        @if (Model.Offers.All(x => !x.IsApproved))
+        {
+            <p>
+                Пока что никто не принял ваших предложений.
+                <br/>Не нужно расстраиваться!
+            </p>
+        }
+        @foreach (var offer in Model.Offers.Where(x => x.IsApproved))
+        {
+            <p>                                                                                                  
+                Вы предложили <b>@offer.DealAmount.Format()</b> р. под <b>@offer.InterestRate.Format()</b> % для <a href="@Url.Action("Details", "Deal", new {id = offer.DealId})"><b>заявки на займ №@offer.DealId</b></a>
+                <br/>Статус займа: <span class="status-@offer.DealStatus" title="@offer.DealStatus">@offer.DealStatus.GetDescription()</span>
+                @if (offer.DealStatus == DealStatus.WaitForApprove || offer.DealStatus == DealStatus.WaitForLoan)
+                {
+                    <br/><b>Заёмщик ожидает ваших действий!</b> 
+                }
+            </p>
+        }
+
+        <hr/>
+
+        <h4><i class="glyphicon glyphicon-time"></i> Ваши неподтвержденные предложения</h4>
+        @if (Model.Offers.All(x => x.IsApproved))
+        {
+            <p>
+                У вас нет ни одного предложения к заявкам.
+                <br/>Возможно пора открыть список заявок и оставить несколько? ;)
+            </p>
+        }
+        @foreach (var offer in Model.Offers.Where(x => !x.IsApproved))
+        {
+            <p>
+                Вы предложили <b>@offer.DealAmount.Format()</b> р. под  <b>@offer.InterestRate.Format()</b> % для <b>@Html.ActionLink($"заявки на займ №{offer.DealId}", "Details", "Deal", new { id = offer.DealId }, null)</b>
+            </p>
+        }
+    </div>
+</div>

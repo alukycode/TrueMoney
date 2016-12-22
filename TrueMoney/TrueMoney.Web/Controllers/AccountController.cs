@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -123,6 +125,10 @@ namespace TrueMoney.Web.Controllers
             if (ModelState.IsValid)
             {
                 var user = _userService.GetMappedUserEnity(model);
+
+                var filepath = "/Images/Passport/" + Guid.NewGuid() + Path.GetExtension(model.PhotoFilename);
+                user.Passport.ImagePath = filepath;
+                model.Photo.SaveAs(Server.MapPath(filepath));
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

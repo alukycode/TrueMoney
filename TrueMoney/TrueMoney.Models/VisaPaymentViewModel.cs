@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using TrueMoney.Common;
 
 namespace TrueMoney.Models
 {
@@ -13,21 +14,21 @@ namespace TrueMoney.Models
 
         public int DealId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = ErrorMessages.Required)]
         [Display(Name = "Номер карты")]
         [RegularExpression("^[0-9]{16}$", ErrorMessage = "Номер карты состоит из 16 цифр.")]
-        public string CardNumber { get; set; } 
+        public string CardNumber { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = ErrorMessages.Required)]
         [RegularExpression("^[0-9]{2}[/][0-9]{2}$", ErrorMessage = "Формат должен быть **/**")]
         [Display(Name = "Срок действия")]
         public string ValidBefore { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = ErrorMessages.Required)]
         [Display(Name = "Держатель карты")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = ErrorMessages.Required)]
         [RegularExpression("^[0-9]{3}$", ErrorMessage = "Формат должен быть ***")]
         [Display(Name = "Секретный код карты CVV")]
         public string CvvCode { get; set; }

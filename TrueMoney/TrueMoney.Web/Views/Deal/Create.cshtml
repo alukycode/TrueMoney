@@ -17,51 +17,51 @@
         <div class="form-horizontal">
             @Html.ValidationSummary(true, "", new {@class = "text-danger"})
             <div class="form-group">
-                @Html.LabelFor(model => model.Amount, htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-8">
+                @Html.LabelFor(model => model.Amount, htmlAttributes: new {@class = "control-label col-sm-3"})
+                <div class="col-sm-8">
                     @Html.EditorFor(model => model.Amount, new {htmlAttributes = new {@id = "amount", @class = "form-control"}})
                     @Html.ValidationMessageFor(model => model.Amount, "", new {@class = "text-danger"})
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.PaymentCount, htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-8">
+                @Html.LabelFor(model => model.PaymentCount, htmlAttributes: new {@class = "control-label col-sm-3"})
+                <div class="col-sm-8">
                     @Html.EditorFor(model => model.PaymentCount, new {htmlAttributes = new {@class = "form-control"}})
                     @Html.ValidationMessageFor(model => model.PaymentCount, "", new {@class = "text-danger"})
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.InterestRate, htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-8">
+                @Html.LabelFor(model => model.InterestRate, htmlAttributes: new {@class = "control-label col-sm-3"})
+                <div class="col-sm-8">
                     @Html.EditorFor(model => model.InterestRate, new {htmlAttributes = new {@id = "interestRate", @class = "form-control"}})
                     @Html.ValidationMessageFor(model => model.InterestRate, "", new {@class = "text-danger"})
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.DealPeriod, htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-8">
+                @Html.LabelFor(model => model.DealPeriod, htmlAttributes: new {@class = "control-label col-sm-3"})
+                <div class="col-sm-8">
                     @Html.EditorFor(model => model.DealPeriod, new {htmlAttributes = new {@class = "form-control"}})
                     @Html.ValidationMessageFor(model => model.DealPeriod, "", new {@class = "text-danger"})
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Description, htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-9">
+                @Html.LabelFor(model => model.Description, htmlAttributes: new {@class = "control-label col-sm-3"})
+                <div class="col-sm-9">
                     @Html.TextAreaFor(model => model.Description, new {@class = "form-control", rows = 4})
                     @Html.ValidationMessageFor(model => model.Description, "", new {@class = "text-danger"})
                 </div>
             </div>
 
-            <div class="form-group" id="finalAmountBlock" style="display: none">
+            <div class="form-group important-information" id="finalAmountBlock" style="display: none">
                 Общий объем выплат с учетом процентной ставки и комиссии составит <strong id="finalAmount"></strong> р.
             </div>
 
             <div class="form-group">
-                <div class="col-md-offset-3 col-md-9">
+                <div class="col-sm-offset-3 col-sm-9">
                     <button type="submit" class="btn btn-primary">Создать</button>
                 </div>
             </div>
@@ -75,6 +75,7 @@ else if (!Model.IsCurrentUserActive)
 else if (Model.HaveOpenDeal)
 {
     <p>У вас уже создана одна заявка. Удалите её, если хотите создать новую.</p>
+    <a href="@Url.Action("Details", "Deal", new {id = Model.OpenDealId})" class="btn btn-primary">Перейти к заявке</a>
 }
 
 <hr />

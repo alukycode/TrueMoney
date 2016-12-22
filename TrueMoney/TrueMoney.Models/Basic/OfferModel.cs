@@ -1,4 +1,6 @@
-﻿namespace TrueMoney.Models.Basic
+﻿using TrueMoney.Common.Enums;
+
+namespace TrueMoney.Models.Basic
 {
     public class OfferModel
     {
@@ -19,5 +21,9 @@
         public bool IsApproved { get; set; }
 
         public int Rating { get; set; }
+
+        public DealStatus DealStatus { get; set; }
+
+        public decimal DealAmount { get; set; }
     }
 }

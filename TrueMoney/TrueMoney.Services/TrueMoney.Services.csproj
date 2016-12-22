@@ -93,6 +93,7 @@
     <Compile Include="Helpers\PaymentHelper.cs" />
     <Compile Include="IdentityManagers\ApplicationSignInManager.cs" />
     <Compile Include="IdentityManagers\ApplicationUserManager.cs" />
+    <Compile Include="Helpers\GlobalHelper.cs" />
     <Compile Include="Services\IdentityMessageServices.cs" />
     <Compile Include="Interfaces\IOfferService.cs" />
     <Compile Include="Mapping\OfferProfile.cs" />

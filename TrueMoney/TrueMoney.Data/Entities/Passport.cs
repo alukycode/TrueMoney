@@ -16,5 +16,7 @@ namespace TrueMoney.Data.Entities
         public DateTime? DateOfIssuing { get; set; }
 
         public string GiveOrganization { get; set; }
+
+        public string ImagePath { get; set; }
     }
 }

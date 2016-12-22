@@ -22,5 +22,7 @@
         [Required(ErrorMessage = ErrorMessages.Required)]
         [Display(Name = "Орган, выдавший паспорт")]
         public string GiveOrganization { get; set; }
+
+        public string ImagePath { get; set; }
     }
 }

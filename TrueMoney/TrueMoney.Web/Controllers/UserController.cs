@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
@@ -38,9 +40,9 @@ namespace TrueMoney.Web.Controllers
             return View(model);
         }
 
-        public async Task<ActionResult> Edit(int id)
+        public async Task<ActionResult> Edit()
         {
-            var editModel = await _userService.GetEditModel(id);
+            var editModel = await _userService.GetEditModel(User.Identity.GetUserId<int>());
 
             return View(editModel);
         }
@@ -48,7 +50,7 @@ namespace TrueMoney.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(EditUserViewModel model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && model.Id == User.Identity.GetUserId<int>())
             {
                 await _userService.Update(model);
 
@@ -58,9 +60,9 @@ namespace TrueMoney.Web.Controllers
             return View(model);
         }
 
-        public async Task<ActionResult> EditPassport(int userId)
+        public async Task<ActionResult> EditPassport()
         {
-            var editModel = await _userService.GetEditPassportModel(userId);
+            var editModel = await _userService.GetEditPassportModel(User.Identity.GetUserId<int>());
 
             return View(editModel);
         }
@@ -70,6 +72,15 @@ namespace TrueMoney.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.Photo != null)
+                {
+                    //System.IO.File.Delete(Server.MapPath(model.Passport.ImagePath));
+
+                    var filepath = "/Images/Passport/" + Guid.NewGuid() + Path.GetExtension(model.PhotoFilename);
+                    model.Passport.ImagePath = filepath;
+                    model.Photo.SaveAs(Server.MapPath(filepath));
+                }
+
                 await _userService.UpdatePassport(model);
 
                 return RedirectToAction("UserProfile");

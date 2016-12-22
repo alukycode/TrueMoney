@@ -14,6 +14,7 @@ using TrueMoney.Services.Interfaces;
 
 namespace TrueMoney.Services.Services
 {
+    using Common.Enums;
     using TrueMoney.Common;
     using TrueMoney.Models.User;
 
@@ -63,25 +64,28 @@ namespace TrueMoney.Services.Services
 
         public async Task<InactiveUsersViewModel> GetInactiveUsersViewModel()
         {
-            var users = Mapper.Map<IList<UserModel>>(await _context.Users.ToListAsync());
+            var users = await _context.Users.Where(x => x.PassportId != null).Include(x => x.Offers).Include(x => x.Deals).ToListAsync();
             var passports = Mapper.Map<IList<PassportModel>>(await _context.Passports.ToListAsync());
 
-            return new InactiveUsersViewModel
-                       {
-                           Users =
-                               users.Where(x => x.PassportId.HasValue)
-                               .Select(
-                                   x =>
-                                   new UserAndPassportViewModel
-                                       {
-                                           User = x,
-                                           Passport =
-                                               passports.FirstOrDefault(
-                                                   y =>
-                                                   y.Id == x.PassportId.Value)
-                                       })
-                               .ToList()
-                       };
+            var model = new InactiveUsersViewModel { Users = new List<UserAndPassportViewModel>() };
+
+            foreach (var user in users)
+            {
+                var userAndPassportModel = new UserAndPassportViewModel
+                {
+                    IsUserCanBeDeactivated = user.IsActive && user.Deals.All(d => d.DealStatus == DealStatus.Open || d.DealStatus == DealStatus.Closed) && user.Offers.All(o => !o.IsApproved || o.Deal.DealStatus == DealStatus.Closed),
+                    CountOfAllDeals = user.Deals.Count(d => d.DealStatus != DealStatus.Closed),
+                    CountOfDealsInProgress = user.Deals.Count(d => d.DealStatus != DealStatus.Closed && d.DealStatus != DealStatus.Open),
+                    CountOfAllOffers = user.Offers.Count(o => o.Deal.DealStatus != DealStatus.Closed),
+                    CountOfApprovedOffers = user.Offers.Count(o => o.Deal.DealStatus != DealStatus.Closed && o.IsApproved),
+                    User = Mapper.Map<UserModel>(user),
+                    Passport = passports.First(y => y.Id == user.PassportId.Value)
+                };
+
+                model.Users.Add(userAndPassportModel);
+            }
+
+            return model;
         }
 
         //public async Task<UserActivityViewModel> GetProfileViewModel(int currentUserId)
@@ -102,7 +106,37 @@ namespace TrueMoney.Services.Services
         {
             var user = await _context.Users.FirstAsync(x => x.Id == userId);
             user.IsActive = true;
-            user.Rating = Rating.StartRating;
+            user.Rating = Rating.AfterActivation;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeactivateUser(int userId)
+        {
+            var user = await _context.Users.Include(x => x.Offers).Include(x => x.Deals).FirstAsync(x => x.Id == userId);
+
+            var isUserCanBeDeactivated =
+                user.Deals.All(d => d.DealStatus == DealStatus.Open || d.DealStatus == DealStatus.Closed) &&
+                user.Offers.All(o => !o.IsApproved || o.Deal.DealStatus == DealStatus.Closed);
+
+            if (isUserCanBeDeactivated)
+            {
+                user.IsActive = false;
+                if (user.Rating >= 0)
+                {
+                    user.Rating = Rating.AfterDeactivation;
+                }
+
+                foreach (var offer in user.Offers.ToList())
+                {
+                    _context.Offers.Remove(offer);
+                }
+
+                foreach (var deal in user.Deals.ToList())
+                {
+                    _context.Deals.Remove(deal);
+                }
+            }
+            
             await _context.SaveChangesAsync();
         }
 
@@ -128,17 +162,23 @@ namespace TrueMoney.Services.Services
         public async Task<UserProfileModel> GetUserProfileModel(int userId)
         {
             var user = await _context.Users.FirstAsync(x => x.Id == userId);
+            var offers = user.Offers.Where(x => x.Deal.DealStatus == DealStatus.Open || x.IsApproved);
 
-            var offers = user.Offers;
-            var deals = user.Deals;
+            var activeDeal = user.Deals.FirstOrDefault(x => x.DealStatus != DealStatus.Closed);
+            var dealInfo = activeDeal == null ? null : new DealInfoModel
+            {
+                OffersCount = activeDeal.Offers.Count,
+                BestOfferPercent = activeDeal.Offers.OrderBy(x => x.InterestRate).FirstOrDefault()?.InterestRate ?? 0
+            };
 
             var model = new UserProfileModel
             {
                 User = Mapper.Map<UserModel>(user),
                 Passport = Mapper.Map<PassportModel>(user.Passport),
-                Deals = Mapper.Map<List<DealModel>>(deals),
+                Deals = Mapper.Map<List<DealModel>>(user.Deals),
                 Offers = Mapper.Map<IList<OfferModel>>(offers),
-                IsCurrentUserActive = user.IsActive
+                IsCurrentUserActive = user.IsActive,
+                ActiveDealInfo = dealInfo
             };
 
             return model;

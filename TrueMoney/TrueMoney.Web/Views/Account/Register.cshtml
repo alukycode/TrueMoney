@@ -7,14 +7,14 @@
 
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            <div class="col-md-6 with-right-border">
+            <div class="col-sm-6 with-right-border">
                 <div class="form-group">
                     @Html.LabelFor(model => model.Email, htmlAttributes: new {@class = "control-label col-sm-4"})
                     <div class="col-sm-8">
@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 <div class="form-group">
                     @Html.LabelFor(model => model.LastName, htmlAttributes: new {@class = "control-label col-sm-4"})
                     <div class="col-sm-8">
@@ -69,7 +69,7 @@
         <hr />
 
         <div class="form-group">
-            <div class="col-md-6 with-right-border">
+            <div class="col-sm-6 with-right-border">
                 <div class="form-group">
                     @Html.LabelFor(model => model.Passport.Number, htmlAttributes: new {@class = "control-label col-sm-4"})
                     <div class="col-sm-8">
@@ -94,14 +94,31 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-sm-6">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.BankAccountNumber, htmlAttributes: new { @class = "control-label col-sm-4" })
+                    @Html.LabelFor(model => model.CardNumber, htmlAttributes: new { @class = "control-label col-sm-4" })
                     <div class="col-sm-8">
-                        @Html.EditorFor(model => model.BankAccountNumber, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.BankAccountNumber, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.CardNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CardNumber, "", new { @class = "text-danger" })
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="form-group">
+            <label for="photo" class="control-label col-sm-6">Загрузите страницу паспорта, на которой видна ваша фотография</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <label class="input-group-btn">
+                        <span class="btn btn-default">
+                            Загрузить <input type="file" id="photo" name="Photo" accept=".jpg,.png"  style="display: none" />
+                        </span>
+                    </label>
+                    <input type="text" name="PhotoFilename" id="filename" class="form-control" readonly="">
+                </div>
+                @Html.ValidationMessageFor(model => model.Photo, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -114,5 +131,21 @@
 }
 
 @section Scripts {
+    <script>
+        $(document).on('change', ':file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+        $(document).ready(function () {
+            $(':file').on('fileselect', function (event, numFiles, label) {
+                $("#filename").val(label);
+            });
+        });
+
+    </script>
+
     @Scripts.Render("~/bundles/jqueryval")
 }

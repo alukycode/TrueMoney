@@ -9,14 +9,9 @@
 
 @section styles {
     <style>
-         td { vertical-align: middle !important; }
-        .current-user-deal {
-            border: 1px solid gray !important;
-        }
-        .current-user-deal td {
-            border-top:    1px solid gray !important;
-            border-bottom: 1px solid gray !important;
-        }
+         td, th { vertical-align: middle !important;text-align: center; }
+        .current-user-deal { font-weight: bold; }
+        .current-user-offer { font-style: italic; }
     </style>
 }
 
@@ -33,7 +28,7 @@
     <hr/>
 }
 
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover table-bordered">
     @{
         var firstDeal = Model.Deals.First();
     }
@@ -48,7 +43,8 @@
     </tr>
     @foreach (var deal in Model.Deals.Where(x => x.DealStatus == DealStatus.Open))
     {
-        <tr class="@(deal.OwnerId == User.Identity.GetUserId<int>() ? "current-user-deal": "")">
+        <tr class="@(deal.OwnerId == User.Identity.GetUserId<int>() ? "current-user-deal" : Model.DealIdsWithOfferFromCurrentUser.Contains(deal.Id) ? "current-user-offer" : "")"
+            title="@(deal.OwnerId == User.Identity.GetUserId<int>() ? "это ваша заявка"   : Model.DealIdsWithOfferFromCurrentUser.Contains(deal.Id) ? "вы оставили предложение к этой заявке" : "")">
             <td>@deal.Id</td>
             <td>@deal.CreateDate.Format()</td>
             <td>@deal.Amount.Format() р.</td>

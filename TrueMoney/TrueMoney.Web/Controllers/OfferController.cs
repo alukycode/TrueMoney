@@ -25,13 +25,13 @@ namespace TrueMoney.Web.Controllers
         [HttpPost]
         public async Task ApproveOffer(int offerId)
         {
-            await _offerService.ApproveOffer(offerId);
+            await _offerService.ApproveOffer(offerId, User.Identity.GetUserId<int>());
         }
 
         [HttpPost]
         public async Task CancelOfferApproval(int offerId)
         {
-            await _offerService.CancelOfferApproval(offerId);
+            await _offerService.CancelOfferApproval(offerId, User.Identity.GetUserId<int>());
         }
 
         [HttpPost]
@@ -56,7 +56,7 @@ namespace TrueMoney.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                await _offerService.CreateOffer(model);
+                await _offerService.CreateOffer(model, User.Identity.GetUserId<int>());
                 return RedirectToAction("Details", "Deal", new { id = model.DealId });
             }
 

@@ -11,11 +11,14 @@ namespace TrueMoney.Services.Services
     using System.Threading.Tasks;
     using System.Xml;
 
+    using AutoMapper;
+
     using Bank.BankApi;
     using Bank.BankEntities;
     using Common;
     using Data;
     using TrueMoney.Models;
+    using TrueMoney.Models.Admin;
     using TrueMoney.Services.Extensions;
     using TrueMoney.Services.Interfaces;
 
@@ -46,6 +49,10 @@ namespace TrueMoney.Services.Services
                 .FirstAsync(x => x.Id == visaPaymentViewModel.DealId);
             var recipient = deal.Owner;
             var sender = await _context.Users.FirstAsync(x => x.Id == currentUserId);
+            if (!sender.Offers.Exists(x => x.IsApproved && x.DealId == deal.Id))
+            {
+                throw new AccessViolationException();
+            }
 
             if (Math.Abs(deal.Amount - visaPaymentViewModel.PaymentCount) > NumericConstants.Eps)
             {
@@ -56,7 +63,7 @@ namespace TrueMoney.Services.Services
                 new BankVisaTransaction
                 {
                     Amount = visaPaymentViewModel.PaymentCount,
-                    RecipientAccountNumber = recipient.BankAccountNumber,
+                    RecipientAccountNumber = recipient.CardNumber,
                     SenderCardNumber = visaPaymentViewModel.CardNumber,
                     SenderCcvCode = visaPaymentViewModel.CvvCode,
                     SenderName = visaPaymentViewModel.Name,
@@ -68,6 +75,7 @@ namespace TrueMoney.Services.Services
                 case BankResponse.Success:
                     deal.DealStatus = DealStatus.InProgress;
                     deal.PaymentPlan = GeneratePlan(deal);
+                    deal.CreditTransaction = GenerateCreditTransaction(sender, recipient, visaPaymentViewModel.PaymentCount);
                     await _context.SaveChangesAsync();
                     return PaymentResult.Success;
 
@@ -107,7 +115,7 @@ namespace TrueMoney.Services.Services
 
             var result = BankResponse.NotEnoughtMoney;
             var resultMoneyAmount = visaPaymentViewModel.PaymentCount * (1 + NumericConstants.Tax);
-            var userBalance = _bankApi.GetBalance(deal.Owner.BankAccountNumber);
+            var userBalance = _bankApi.GetBalance(deal.Owner.CardNumber);
             if (!userBalance.HasValue)
             {
                 return PaymentResult.Error;
@@ -119,7 +127,7 @@ namespace TrueMoney.Services.Services
                         new BankVisaTransaction
                         {
                             Amount = visaPaymentViewModel.PaymentCount,
-                            RecipientAccountNumber = recipient.BankAccountNumber,
+                            RecipientAccountNumber = recipient.CardNumber,
                             SenderCardNumber = visaPaymentViewModel.CardNumber,
                             SenderCcvCode = visaPaymentViewModel.CvvCode,
                             SenderName = visaPaymentViewModel.Name,
@@ -188,15 +196,47 @@ namespace TrueMoney.Services.Services
             }
         }
 
-        private PaymentPlan GeneratePlan(Deal deal)
+        public async Task<List<TransactionAdminModel>> AdminGetTransactions()
         {
-            var paymentPlan = new PaymentPlan
-            {
-                CreateTime = DateTime.Now,
-                Payments = CalculatePayments(deal),
-            };
+            var transactions = await _context.BankTransactions.ToListAsync();
 
-            return paymentPlan;
+            var creditTransactions = await _context.CreditTransactions.ToListAsync();
+
+            var result = new List<TransactionAdminModel>();
+
+            foreach (var transaction in transactions)
+            {
+                var userFrom = transaction.PaymentPlan.Deal.Owner;
+                var userTo = transaction.PaymentPlan.Deal.Offers.Single(x => x.IsApproved).Offerer;
+                var model = new TransactionAdminModel
+                {
+                    Transaction = Mapper.Map<BankTransactionModel>(transaction),
+                    From = Mapper.Map<UserModel>(userFrom),
+                    To = Mapper.Map<UserModel>(userTo),
+                };
+
+                result.Add(model);
+            }
+
+            foreach (var transaction in creditTransactions)
+            {
+                var userFrom = transaction.Sender;
+                var userTo = transaction.Recipient;
+                var model = new TransactionAdminModel
+                {
+                    Transaction = new BankTransactionModel
+                        {
+                            Amount = transaction.Amount,
+                            DateOfPayment = transaction.DateOfPayment
+                        },
+                    From = Mapper.Map<UserModel>(userFrom),
+                    To = Mapper.Map<UserModel>(userTo),
+                };
+
+                result.Add(model);
+            }
+
+            return result.OrderByDescending(x => x.Transaction.DateOfPayment).ToList();
         }
 
         public List<Payment> CalculatePayments(Deal deal)
@@ -250,6 +290,28 @@ namespace TrueMoney.Services.Services
             {
                 deal.Owner.Rating += Rating.SuccessPayments;
             }
+        }
+
+        private PaymentPlan GeneratePlan(Deal deal)
+        {
+            var paymentPlan = new PaymentPlan
+            {
+                CreateTime = DateTime.Now,
+                Payments = CalculatePayments(deal),
+            };
+
+            return paymentPlan;
+        }
+
+        private static CreditTransaction GenerateCreditTransaction(User sender, User recipient, decimal amount)
+        {
+            return new CreditTransaction
+            {
+                Recipient = recipient,
+                Sender = sender,
+                Amount = amount,
+                DateOfPayment = DateTime.Now,
+            };
         }
     }
 }

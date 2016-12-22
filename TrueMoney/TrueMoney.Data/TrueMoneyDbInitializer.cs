@@ -14,6 +14,52 @@ namespace TrueMoney.Data
     {
         private static readonly Random _random = new Random(524287);
 
+        private static readonly List<string> _lastNames = new List<string>
+        {
+            "Мисюкевич",
+            "Жук",
+            "Волчек",
+            "Соловьёв",
+            "Буликов",
+            "Гончарик",
+            "Сманцер",
+            "Соболь",
+            "Романов",
+            "Ковальчук",
+            "Вакульчик",
+            "Хохлов",
+            "Обуховский",
+        };
+
+        private static readonly List<string> _firstNames = new List<string>
+        {
+            "Андрей",
+            "Антон",
+            "Андрей",
+            "Александр",
+            "Владислав",
+            "Алексей",
+            "Дмитрий",
+            "Андрей",
+            "Антон",
+            "Сергей",
+            "Роман",
+            "Артур",
+            "Евгений",
+        };
+
+        private static readonly List<string> _aims = new List<string>
+        {
+            "На квартиру",
+            "На машину",
+            "Для благотворительности",
+            "",
+            "Для развития бизнеса",
+            "На развитие стартапа",
+            "Для личных целей",
+            "На путешествия",
+        };
+
         protected override void Seed(TrueMoneyContext context)
         {
             base.Seed(context);
@@ -48,7 +94,7 @@ namespace TrueMoney.Data
                 SecurityStamp = Guid.NewGuid().ToString(),
                 FirstName = "Admin",
                 LastName = "Администратор",
-                BankAccountNumber = "-",
+                CardNumber = "-",
             };
 
             userManager.Create(admin);
@@ -57,14 +103,14 @@ namespace TrueMoney.Data
 
             // seed other stuff
 
-            users[0].Deals = GenerateDealsWithOneInProgress(users.Where(x => x != users[0] && x.IsActive).ToList());
-            users[1].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[1] && x.IsActive).ToList());
-            users[2].Deals = GenerateDealsWithOneWaitForApprove(users.Where(x => x != users[2] && x.IsActive).ToList());
-            users[3].Deals = GenerateDealsWithOneWaitForLoan(users.Where(x => x != users[3] && x.IsActive).ToList());
+            users[0].Deals = GenerateDealsWithOneOverdueInProgress(users.Where(x => x != users[0] && x.IsActive).ToList(), users[0]);
+            users[1].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[1] && x.IsActive).ToList(), users[1]);
+            users[2].Deals = GenerateDealsWithOneWaitForApprove(users.Where(x => x != users[2] && x.IsActive).ToList(), users[2]);
+            users[3].Deals = GenerateDealsWithOneWaitForLoan(users.Where(x => x != users[3] && x.IsActive).ToList(), users[3]);
 
             foreach (var item in users.Skip(5))
             {
-                item.Deals = GenerateDealsWithOneOpen(users.Where(x => x != item).ToList());
+                item.Deals = GenerateDealsWithOneOpen(users.Where(x => x != item).ToList(), item);
             }
 
             context.SaveChanges();
@@ -84,12 +130,8 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Саша",
                     LastName = "Черногребель",
-                    BankAccountNumber = "408.17.810.0.9991.000000",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "test",
-                    },
+                    CardNumber = GenerateCardNumber(),
+                    Passport = GeneratePassport(0),
                     IsActive = true,
                     LockoutEnabled = true,
                     Rating = 0,
@@ -102,12 +144,8 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Антон",
                     LastName = "Лукьянов",
-                    BankAccountNumber = "408.17.810.0.9991.000001",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "test",
-                    },
+                    CardNumber = GenerateCardNumber(),
+                    Passport = GeneratePassport(1),
                     IsActive = true,
                     LockoutEnabled = true,
                     Rating = 0,
@@ -120,47 +158,35 @@ namespace TrueMoney.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Дима",
                     LastName = "Артюх",
-                    BankAccountNumber = "408.17.810.0.9991.000002",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "test",
-                    },
+                    CardNumber = GenerateCardNumber(),
+                    Passport = GeneratePassport(2),
                     IsActive = true,
                     LockoutEnabled = true,
                     Rating = 0,
                 },
                 new User
                 {
-                    Email    = "test@example.com",
-                    UserName = "test@example.com",
+                    Email    = "test@money.dev",
+                    UserName = "test@money.dev",
                     PasswordHash = defaultPasswordHash,
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Test",
                     LastName = "Example",
-                    BankAccountNumber = "408.17.810.0.9991.000003",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "test",
-                    },
+                    CardNumber = GenerateCardNumber(),
+                    Passport = GeneratePassport(3),
                     IsActive = true,
                     LockoutEnabled = true,
                 },
                 new User
                 {
-                    Email    = "qwe@asd.zxc",
-                    UserName = "qwe@asd.zxc",
+                    Email    = "inactive@money.dev",
+                    UserName = "inactive@money.dev",
                     PasswordHash = defaultPasswordHash,
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Неактивный",
                     LastName = "Единственный",
-                    BankAccountNumber = "408.17.810.0.9991.000004",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "test",
-                    },
+                    CardNumber = GenerateCardNumber(),
+                    Passport = GeneratePassport(4),
                     LockoutEnabled = true,
                 },
             };
@@ -170,11 +196,31 @@ namespace TrueMoney.Data
             return users;
         }
 
+        private static string GenerateCardNumber()
+        {
+            return
+                $"{_random.Next(0, 9999).ToString("D4")}{_random.Next(0, 9999).ToString("D4")}{_random.Next(0, 9999).ToString("D4")}{_random.Next(0, 9999).ToString("D4")}";
+        }
+
+        private static Passport GeneratePassport(int number)
+        {
+            return new Passport
+            {
+                DateOfIssuing = new DateTime(
+                    1950 + _random.Next(60),
+                    _random.Next(1, 12),
+                    _random.Next(1, 20)),
+                Number = "KB" + (number).ToString("D6"),
+                GiveOrganization = number <= 7 ? "Первомайский ГОВД г. Бобруйска" : "Ленинский РУВД г.Минска",
+                ImagePath = number >= 0 && number <= 7 ? "/Images/Passport/" + number + ".jpg" : null
+            };
+        }
+
         private static IEnumerable<User> GenerateFakeUsers(string defaultPasswordHash)
         {
             List<User> users = new List<User>();
-
-            for (int i = 0; i < 10; i++)
+            
+            for (int i = 0; i < _firstNames.Count; i++)
             {
                 users.Add(new User
                 {
@@ -182,17 +228,13 @@ namespace TrueMoney.Data
                     UserName = $"fake{i}@money.dev",
                     PasswordHash = defaultPasswordHash,
                     SecurityStamp = Guid.NewGuid().ToString(),
-                    FirstName = $"Fake{i}",
-                    LastName = $"Fake",
-                    BankAccountNumber = $"408.17.810.0.9991.{(i + 5).ToString("D6")}",
-                    Passport = new Passport
-                    {
-                        DateOfIssuing = DateTime.Now,
-                        Number = "fake",
-                    },
+                    FirstName = _firstNames[i],
+                    LastName = _lastNames[i],
+                    CardNumber = GenerateCardNumber(),
+                    Passport = GeneratePassport(i + 5),
                     IsActive = true,
                     LockoutEnabled = true,
-                    Rating = _random.Next(-3, 3)
+                    Rating = _random.Next(-3, 3),
                 });
             }
 
@@ -213,13 +255,13 @@ namespace TrueMoney.Data
                     CreateTime = dealCreateDate.AddDays(2),
                     InterestRate = finalRate,
                     IsApproved = true,
-                    Offerer = offerers[0],
+                    Offerer = offerers[_random.Next(offerers.Count - 1)],
                 },
                 new Offer
                 {
                     CreateTime = dealCreateDate.AddDays(1),
                     InterestRate = finalRate,
-                    Offerer = offerers[1],
+                    Offerer = offerers[_random.Next(offerers.Count - 1)],
                 },
             };
 
@@ -237,13 +279,13 @@ namespace TrueMoney.Data
                 {
                     CreateTime = dealCreateDate.AddDays(2),
                     InterestRate = finalRate,
-                    Offerer = offerers[0],
+                    Offerer = offerers[_random.Next(offerers.Count - 1)],
                 },
                 new Offer
                 {
                     CreateTime = dealCreateDate.AddDays(3),
                     InterestRate = finalRate,
-                    Offerer = offerers[1],
+                    Offerer = offerers[_random.Next(offerers.Count - 1)],
                 },
             };
 
@@ -323,7 +365,7 @@ namespace TrueMoney.Data
         #endregion
 
         #region Deals generation
-        private static List<Deal> GenerateDealsWithOneInProgress(List<User> offerers)
+        private static List<Deal> GenerateDealsWithOneInProgress(List<User> offerers, User owner)
         {
             var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
             var secondDealCreateDate = DateTime.Now.AddDays(-10);
@@ -332,6 +374,8 @@ namespace TrueMoney.Data
             decimal firstAmount = _random.Next(100, 5000);
             decimal secondAmount = _random.Next(100, 5000);
             var secondDealPeriod = 30;
+            var offersForFirst = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate);
+            var offersForSecond = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate);
 
             var result = new List<Deal>
             {
@@ -344,9 +388,14 @@ namespace TrueMoney.Data
                     InterestRate = firstRate,
                     DealStatus = DealStatus.Closed,
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
-                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForFirst.First(x => x.IsApproved).Offerer,
+                        owner,
+                        firstAmount,
+                        firstDealCreateDate.AddDays(3)),
                 },
                 new Deal
                 {
@@ -360,22 +409,31 @@ namespace TrueMoney.Data
                         secondDealPeriod),
                     PaymentCount = 2,
                     DealStatus = DealStatus.InProgress,
-                    Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
-                    Description = "Предзаполненная цель",
+                    Offers = offersForSecond,
+                    Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForSecond.First(x => x.IsApproved).Offerer, 
+                        owner, 
+                        secondAmount,
+                        secondDealCreateDate.AddDays(3)),
                 },
             };
 
             return result;
         }
 
-        private static List<Deal> GenerateDealsWithOneOpen(List<User> offerers)
+        private static List<Deal> GenerateDealsWithOneOverdueInProgress(List<User> offerers, User owner)
         {
             var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
-            var secondDealCreateDate = firstDealCreateDate.AddYears(1);
+            var secondDealCreateDate = DateTime.Now.AddYears(-1);
             var firstRate = _random.Next(1, 50);
             var secondRate = _random.Next(1, 50);
             decimal firstAmount = _random.Next(100, 5000);
             decimal secondAmount = _random.Next(100, 5000);
+            var secondDealPeriod = 30;
+            var offersForFirst = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate);
+            var offersForSecond = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate);
+
             var result = new List<Deal>
             {
                 new Deal
@@ -387,9 +445,69 @@ namespace TrueMoney.Data
                     InterestRate = firstRate,
                     DealStatus = DealStatus.Closed,
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
-                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForFirst.First(x => x.IsApproved).Offerer, 
+                        owner, 
+                        firstAmount, 
+                        firstDealCreateDate.AddDays(3)),
+                },
+                new Deal
+                {
+                    Amount = secondAmount,
+                    CreateDate = secondDealCreateDate,
+                    DealPeriod = secondDealPeriod,
+                    InterestRate = secondRate,
+                    PaymentPlan = GenerateOpenPlan(
+                        secondDealCreateDate.AddDays(3),
+                        secondAmount * (1 + (decimal)secondRate / 100),
+                        secondDealPeriod),
+                    PaymentCount = 2,
+                    DealStatus = DealStatus.InProgress,
+                    Offers = offersForSecond,
+                    Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForSecond.First(x => x.IsApproved).Offerer, 
+                        owner, 
+                        secondAmount, 
+                        secondDealCreateDate.AddDays(3)),
+                },
+            };
+
+            return result;
+        }
+
+        private static List<Deal> GenerateDealsWithOneOpen(List<User> offerers, User owner)
+        {
+            var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
+            var secondDealCreateDate = firstDealCreateDate.AddYears(1);
+            var firstRate = _random.Next(1, 50);
+            var secondRate = _random.Next(1, 50);
+            decimal firstAmount = _random.Next(100, 5000);
+            decimal secondAmount = _random.Next(100, 5000);
+            var offersForFirst = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate);
+
+            var result = new List<Deal>
+            {
+                new Deal
+                {
+                    Amount = firstAmount,
+                    CreateDate = firstDealCreateDate,
+                    DealPeriod = 60,
+                    PaymentCount = 2,
+                    InterestRate = firstRate,
+                    DealStatus = DealStatus.Closed,
+                    PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
+                    Offers = offersForFirst,
+                    CloseDate = firstDealCreateDate.AddDays(60),
+                    Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForFirst.First(x => x.IsApproved).Offerer, 
+                        owner, 
+                        firstAmount,
+                        firstDealCreateDate.AddDays(3)),
                 },
                 new Deal
                 {
@@ -400,14 +518,14 @@ namespace TrueMoney.Data
                     PaymentCount = 2,
                     DealStatus = DealStatus.Open,
                     Offers = GenerateOffers(offerers, secondDealCreateDate, secondRate),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
                 },
             };
 
             return result;
         }
 
-        private static List<Deal> GenerateDealsWithOneWaitForApprove(List<User> offerers)
+        private static List<Deal> GenerateDealsWithOneWaitForApprove(List<User> offerers, User owner)
         {
             var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
             var secondDealCreateDate = firstDealCreateDate.AddYears(1);
@@ -415,6 +533,8 @@ namespace TrueMoney.Data
             var secondRate = _random.Next(1, 50);
             decimal firstAmount = _random.Next(100, 5000);
             decimal secondAmount = _random.Next(100, 5000);
+            var offersForFirst = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate);
+
             var result = new List<Deal>
             {
                 new Deal
@@ -426,9 +546,14 @@ namespace TrueMoney.Data
                     InterestRate = firstRate,
                     DealStatus = DealStatus.Closed,
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
-                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForFirst.First(x => x.IsApproved).Offerer, 
+                        owner, 
+                        firstAmount,
+                        firstDealCreateDate.AddDays(3)),
                 },
                 new Deal
                 {
@@ -439,14 +564,14 @@ namespace TrueMoney.Data
                     PaymentCount = 2,
                     DealStatus = DealStatus.WaitForApprove,
                     Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
                 },
             };
 
             return result;
         }
 
-        private static List<Deal> GenerateDealsWithOneWaitForLoan(List<User> offerers)
+        private static List<Deal> GenerateDealsWithOneWaitForLoan(List<User> offerers, User owner)
         {
             var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
             var secondDealCreateDate = firstDealCreateDate.AddYears(1);
@@ -454,6 +579,8 @@ namespace TrueMoney.Data
             var secondRate = _random.Next(1, 50);
             decimal firstAmount = _random.Next(100, 5000);
             decimal secondAmount = _random.Next(100, 5000);
+            var offersForFirst = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate);
+
             var result = new List<Deal>
             {
                 new Deal
@@ -465,9 +592,14 @@ namespace TrueMoney.Data
                     InterestRate = firstRate,
                     DealStatus = DealStatus.Closed,
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
-                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForFirst.First(x => x.IsApproved).Offerer, 
+                        owner,
+                        firstAmount,
+                        firstDealCreateDate.AddDays(3)),
                 },
                 new Deal
                 {
@@ -478,12 +610,23 @@ namespace TrueMoney.Data
                     PaymentCount = 2,
                     DealStatus = DealStatus.WaitForLoan,
                     Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
-                    Description = "Предзаполненная цель",
+                    Description = _aims[_random.Next(_aims.Count - 1)],
                 },
             };
 
             return result;
-        } 
+        }
         #endregion
+
+        private static CreditTransaction GenerateCreditTransaction(User sender, User recipient, decimal amount, DateTime dateOfPayment)
+        {
+            return new CreditTransaction
+            {
+                Recipient = recipient,
+                Sender = sender,
+                Amount = amount,
+                DateOfPayment = dateOfPayment,
+            };
+        }
     }
 }

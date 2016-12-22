@@ -24,7 +24,7 @@
             accounts.Add(new BankAccount
             {
                 Id = 0,
-                BankAccountNumber = BankConstants.TrueMoneyAccountNumber,
+                CardNumber = BankConstants.TrueMoneyAccountNumber,
                 Amount = 1000M,
                 VisaNumber = "-",
                 VisaName = "-",
@@ -38,7 +38,7 @@
                     new BankAccount
                     {
                         Id = i,
-                        BankAccountNumber = $"408.17.810.0.9991.{crutch.ToString("D6")}",
+                        CardNumber = $"408.17.810.0.9991.{crutch.ToString("D6")}",
                         Amount = i * 1000 + 5000,
                         VisaNumber = crutch.ToString("D16"),
                         VisaName = $"Test User{crutch}",

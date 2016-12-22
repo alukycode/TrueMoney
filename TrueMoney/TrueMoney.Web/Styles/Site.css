@@ -1,4 +1,5 @@
-﻿body {
+﻿
+body {
     padding-top: 50px;
     padding-bottom: 20px;
 }
@@ -26,6 +27,13 @@ textarea {
 
 /* custom global styles*/
 
+.navbar-brand {
+    padding: 12px;
+}
+.navbar-brand i {
+    margin-right: 4px;
+}
+
 .nav > li > a {
     padding-right: 12px;
     padding-left: 12px;
@@ -35,14 +43,23 @@ textarea {
     border-right: 1px solid #EEE;
 }
 
-.status-Open           { color: blue; }
+.status-Open           { color: #2468ff; }
 .status-WaitForApprove { color: green; }
 .status-WaitForLoan    { color: yellowgreen; }
 .status-InProgress     { color: darkorange; }
 .status-Closed         { color: red; }
 
+.status-background-Open           { background-color: #2468ff; }
+.status-background-WaitForApprove { background-color: green; }
+.status-background-WaitForLoan    { background-color: yellowgreen; }
+.status-background-InProgress     { background-color: red; }
+.status-background-Closed         { background-color: gray; }
+
+
 .rating-Good { color: green; }
 .rating-Bad  { color: red; }
+.important-information { color: red; }
+.additional-information { color: green; }
 
 .rating-background-Good { background-color: #eeffee; }
 .rating-background-Bad  { background-color: #ffeeee; }

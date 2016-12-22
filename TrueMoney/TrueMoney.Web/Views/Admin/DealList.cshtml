@@ -1,29 +1,29 @@
 ﻿@using System.Globalization
+@using TrueMoney.Common.Enums
+@using TrueMoney.Common.Extensions
 @model TrueMoney.Models.Admin.DealListViewModel
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Все заявки";
 }
 
-<h2>Все заявки</h2>
-<hr />
+@section styles
+{
+    <style>
+        table .glyphicon { cursor: pointer; text-decoration: none !important; font-size: 24px; margin-right: 5px;}
+        .glyphicon-remove { color: red !important; }
+    </style>
+}
 
-<table class="table">
+<h2>@ViewBag.Title</h2>
+<hr/>
+
+<table class="table table-bordered table-striped">
     <tr>
         <th>№</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().DealStatus)</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().CreateDate)</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().Amount)</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().InterestRate)</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().OwnerFullName)</th>
-        <th>@Html.DisplayNameFor(model => model.Deals.First().Description)</th>
-        <th>Дата выдачи займа</th>
-        <th>Дата погашения</th>
-        <th>Дата следующего платежа</th>
-        <th>Cумма следующего платежа</th>
-        <th>Остаточная сумма</th>
-        <th>Заимодавец</th>
-        <th>Заемщик</th>
-        <th></th>
+        <th>Исходные данные о займе</th>
+        <th>Статус займа и платежный план</th>
+        <th>Пользователи</th>
+        <th>Действия</th>
     </tr>
     @foreach (var deal in Model.Deals.OrderBy(x => x.DealStatus))
     {//если будет время вынести в модель
@@ -38,36 +38,46 @@
         var mainOffer = Model.Offers.FirstOrDefault(x => x.DealId == deal.Id);
         <tr>
             <td>@deal.Id</td>
-            <td>@deal.DealStatus</td>
-            <td>@deal.CreateDate.ToString("D")</td>
-            <td>@deal.Amount р.</td>
-            <td>@deal.InterestRate %</td>
-            <td>@deal.OwnerFullName</td>
-            <td>@deal.Description</td>
-            <td>@Html.Raw(paymentPlan != null ? paymentPlan.CreateTime.ToString("D") : "")</td>
-            <td>@Html.Raw(paymentPlan != null ? payments.Last().DueDate.ToString("D") : "")</td>
-            <td>@Html.Raw(paymentPlan != null && payments.Any(x => !x.IsPaid) 
-                    ? payments.First(x => !x.IsPaid).DueDate.ToString("D") : "")</td>
             <td>
-                @Html.Raw(paymentPlan != null && payments.Any(x => !x.IsPaid) 
-                    ? (payments.First(x => !x.IsPaid).Amount + payments.First(x => !x.IsPaid).Amount).ToString() : "")
+                Создан @deal.CreateDate.Format()
+                <br/>Нужно <b>@deal.Amount.Format()</b> р. под <b>@deal.InterestRate.Format()</b> % на <b>@deal.DealPeriod</b> дней
+                <br/> <i>@deal.Description</i>
             </td>
-            <td>@extraMoney</td>
             <td>
-                @if (mainOffer != null)
+                <div class="status-@deal.DealStatus" title="@deal.DealStatus">
+                    @deal.DealStatus.GetDescription()
+                </div>
+                @if (paymentPlan != null)
                 {
-                    @Html.ActionLink(mainOffer.OffererFullName, "Details", "User",
-                        routeValues: new { id = mainOffer.Id }, htmlAttributes: null)
+                    <div>
+                        Период займа: <b title="Дата перевода денег заёмщику">@paymentPlan.CreateTime.Format()</b> - <b title="Крайний срок выплаты займа">@payments.Last().DueDate.Format()</b>
+                    </div>
+                    if (payments.Any(x => !x.IsPaid))
+                    {
+                        <div>
+                            Следующий платёж: <b>@payments.First(x => !x.IsPaid).Amount.Format()</b> р. к дате <b>@payments.First(x => !x.IsPaid).DueDate.Format()</b>
+                        </div>
+                    }
+                    if (extraMoney > 0.001m)
+                    {
+                        <div>
+                            Заёмщик частично погасил следующий платёж на @extraMoney.Format() р.
+                        </div>
+                    }
                 }
             </td>
             <td>
-                @Html.ActionLink(deal.OwnerFullName, "Details", "User",
-                       routeValues: new { id = deal.OwnerId },
-                       htmlAttributes: null)
+                <div>Заёмщик: <b>@deal.OwnerFullName</b></div>
+                @if (mainOffer != null)
+                {
+                    <div> Кредитор: <b>@mainOffer.OffererFullName</b></div>
+                }
             </td>
             <td>
-                @Html.ActionLink("Детали", "Details", "Deal",
-                    routeValues: new { id = deal.OwnerId }, htmlAttributes: null)
+                @if (deal.DealStatus != DealStatus.InProgress)
+                {
+                    <a href="@Url.Action("DeleteDeal", "Admin", new {dealId = deal.Id, userId = deal.OwnerId})" class="glyphicon glyphicon-remove" title="Удалить"></a>
+                }
             </td>
         </tr>
     }
