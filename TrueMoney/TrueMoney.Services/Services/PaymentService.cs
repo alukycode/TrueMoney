@@ -196,15 +196,17 @@ namespace TrueMoney.Services.Services
             }
         }
 
-        public async Task<List<TransactionAdminModel>> AdminGetBankTransactions()
+        public async Task<List<TransactionAdminModel>> AdminGetTransactions()
         {
-            var transactions = await _context.BankTransactions.OrderBy(x => x.DateOfPayment).ToListAsync();
+            var transactions = await _context.BankTransactions.ToListAsync();
+
+            var creditTransactions = await _context.CreditTransactions.ToListAsync();
 
             var result = new List<TransactionAdminModel>();
 
             foreach (var transaction in transactions)
             {
-                var userFrom = transaction.PaymentPlan.Deal.Owner; // todo: тут есть нюансы
+                var userFrom = transaction.PaymentPlan.Deal.Owner;
                 var userTo = transaction.PaymentPlan.Deal.Offers.Single(x => x.IsApproved).Offerer;
                 var model = new TransactionAdminModel
                 {
@@ -216,7 +218,25 @@ namespace TrueMoney.Services.Services
                 result.Add(model);
             }
 
-            return result;
+            foreach (var transaction in creditTransactions)
+            {
+                var userFrom = transaction.Sender;
+                var userTo = transaction.Recipient;
+                var model = new TransactionAdminModel
+                {
+                    Transaction = new BankTransactionModel
+                        {
+                            Amount = transaction.Amount,
+                            DateOfPayment = transaction.DateOfPayment
+                        },
+                    From = Mapper.Map<UserModel>(userFrom),
+                    To = Mapper.Map<UserModel>(userTo),
+                };
+
+                result.Add(model);
+            }
+
+            return result.OrderByDescending(x => x.Transaction.DateOfPayment).ToList();
         }
 
         public List<Payment> CalculatePayments(Deal deal)

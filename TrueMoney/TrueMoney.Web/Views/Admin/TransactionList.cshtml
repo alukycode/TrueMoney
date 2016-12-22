@@ -1,4 +1,5 @@
-﻿@using TrueMoney.Common.Extensions
+﻿@using TrueMoney.Common
+@using TrueMoney.Common.Extensions
 @model List<TrueMoney.Models.Admin.TransactionAdminModel>
 
 @{
@@ -10,18 +11,20 @@
         <tr>
             <th>Дата</th>
             <th>Сумма</th>
-            <th>PaymentPlanId</th>
-            <th>From</th>
-            <th>To</th>
+            <th>From (email)</th>
+            <th>From (ID)</th>
+            <th>To (email)</th>
+            <th>To (ID)</th>
         </tr>
         @foreach (var transactionModel in Model)
         {
             <tr>
-                <td>@transactionModel.Transaction.DateOfPayment.Format()</td>
-                <td>@transactionModel.Transaction.Amount.Format()</td>
-                <td>@transactionModel.Transaction.PaymentPlanId</td>
-                <td>@transactionModel.From.Email (@transactionModel.From.Id)</td>
-                <td>@transactionModel.To.Email (@transactionModel.To.Id)</td>
+                <td>@transactionModel.Transaction.DateOfPayment.ToString(StringFormats.DateWithTime)</td>
+                <td>@transactionModel.Transaction.Amount.Format() р.</td>
+                <td>@transactionModel.From.Email</td>
+                <td>@transactionModel.From.Id</td>
+                <td>@transactionModel.To.Email </td>
+                <td>@transactionModel.To.Id</td>
             </tr>
         }
     </table>

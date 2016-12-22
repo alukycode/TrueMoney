@@ -14,6 +14,6 @@ namespace TrueMoney.Services.Interfaces
 
         Task<PaymentResult> Payout(VisaPaymentViewModel visaPaymentViewModel);
 
-        Task<List<TransactionAdminModel>> AdminGetBankTransactions();
+        Task<List<TransactionAdminModel>> AdminGetTransactions();
     }
 }
