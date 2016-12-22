@@ -166,8 +166,8 @@ namespace TrueMoney.Data
                 },
                 new User
                 {
-                    Email    = "test@example.com",
-                    UserName = "test@example.com",
+                    Email    = "test@money.dev",
+                    UserName = "test@money.dev",
                     PasswordHash = defaultPasswordHash,
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Test",
@@ -179,8 +179,8 @@ namespace TrueMoney.Data
                 },
                 new User
                 {
-                    Email    = "qwe@asd.zxc",
-                    UserName = "qwe@asd.zxc",
+                    Email    = "inactive@money.dev",
+                    UserName = "inactive@money.dev",
                     PasswordHash = defaultPasswordHash,
                     SecurityStamp = Guid.NewGuid().ToString(),
                     FirstName = "Неактивный",

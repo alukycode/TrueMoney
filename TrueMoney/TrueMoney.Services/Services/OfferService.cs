@@ -32,13 +32,14 @@ namespace TrueMoney.Services.Services
 
         public async Task ApproveOffer(int offerId, int currentUserId)
         {
-            var offers = await _context.Offers.Include(x => x.Deal).Include(x => x.Deal.Owner).ToListAsync();
-            var offer = offers.First(x => x.Id == offerId);
-            if (offer == null || offers.Any(x => x.IsApproved))
+            var offer = await _context.Offers.SingleAsync(x => x.Id == offerId);
+
+            if (offer.Deal.OwnerId != currentUserId)
             {
                 throw new AccessViolationException("User try to approve the 2nd offer for one deal.");
             }
-            if (offer.Deal.OwnerId != currentUserId)
+
+            if (offer.Deal.Offers.Any(x => x.IsApproved))
             {
                 throw new AccessViolationException("User try to approve offer for foreign deal.");
             }

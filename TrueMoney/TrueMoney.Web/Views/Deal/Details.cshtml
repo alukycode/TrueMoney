@@ -102,7 +102,7 @@
         <p>Вы предложили свои деньги под @Model.CurrentUserOffer.InterestRate.Format() %</p>
 
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-12">
                 @if (Model.IsCurrentUserApprovedLender && Model.Deal.DealStatus == DealStatus.WaitForApprove)
                 {
                     <button id="lend-money-btn" class="btn btn-primary" onclick="finishDeal()">Дать взаймы</button>

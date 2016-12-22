@@ -60,7 +60,7 @@ namespace TrueMoney.Web.Controllers
 
         public async Task<ActionResult> TransactionList()
         {
-            var model = await _paymentService.GetBankTransactions();
+            var model = await _paymentService.AdminGetBankTransactions();
             return View(model);
         }
     }

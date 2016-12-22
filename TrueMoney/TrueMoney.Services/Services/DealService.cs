@@ -98,7 +98,8 @@ namespace TrueMoney.Services.Services
             var res = new CreateDealForm
             {
                 IsCurrentUserActive = currentUser.IsActive,
-                HaveOpenDeal = haveOpenDeal
+                HaveOpenDeal = haveOpenDeal,
+                OpenDealId = haveOpenDeal ? currentUser.Deals.Single(x => x.DealStatus != DealStatus.Closed).Id : 0
             };
 
             return res;

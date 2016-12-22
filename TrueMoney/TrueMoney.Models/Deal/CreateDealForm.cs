@@ -32,5 +32,7 @@ namespace TrueMoney.Models.Deal
         public bool IsCurrentUserActive { get; set; }
 
         public bool HaveOpenDeal { get; set; }
+
+        public int OpenDealId { get; set; }
     }
 }

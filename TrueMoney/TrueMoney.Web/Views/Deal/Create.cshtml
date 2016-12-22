@@ -75,6 +75,7 @@ else if (!Model.IsCurrentUserActive)
 else if (Model.HaveOpenDeal)
 {
     <p>У вас уже создана одна заявка. Удалите её, если хотите создать новую.</p>
+    <a href="@Url.Action("Details", "Deal", new {id = Model.OpenDealId})" class="btn btn-primary">Перейти к заявке</a>
 }
 
 <hr />

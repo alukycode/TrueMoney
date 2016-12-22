@@ -195,16 +195,27 @@ namespace TrueMoney.Services.Services
             }
         }
 
-        public async Task<BankTransactionListViewModel> GetBankTransactions()
+        public async Task<List<TransactionAdminModel>> AdminGetBankTransactions()
         {
-            return new BankTransactionListViewModel
-                       {
-                           Transactions =
-                               Mapper.Map<IList<BankTransactionModel>>(
-                                   await
-                                   _context.BankTransactions.OrderBy(x => x.DateOfPayment)
-                                       .ToListAsync())
-                       };
+            var transactions = await _context.BankTransactions.OrderBy(x => x.DateOfPayment).ToListAsync();
+
+            var result = new List<TransactionAdminModel>();
+
+            foreach (var transaction in transactions)
+            {
+                var userFrom = transaction.PaymentPlan.Deal.Owner; // todo: тут есть нюансы
+                var userTo = transaction.PaymentPlan.Deal.Offers.Single(x => x.IsApproved).Offerer;
+                var model = new TransactionAdminModel
+                {
+                    Transaction = Mapper.Map<BankTransactionModel>(transaction),
+                    From = Mapper.Map<UserModel>(userFrom),
+                    To = Mapper.Map<UserModel>(userTo),
+                };
+
+                result.Add(model);
+            }
+
+            return result;
         }
 
         private PaymentPlan GeneratePlan(Deal deal)

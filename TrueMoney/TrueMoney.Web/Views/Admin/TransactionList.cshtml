@@ -1,23 +1,27 @@
-﻿@model TrueMoney.Models.Admin.BankTransactionListViewModel
+﻿@using TrueMoney.Common.Extensions
+@model List<TrueMoney.Models.Admin.TransactionAdminModel>
 
 @{
     ViewBag.Title = "Транзакции";
 }
 
 <h2>Транзакции</h2>
-@if (Model != null && Model.Transactions != null && Model.Transactions.Any())
-{
     <table class="table table-bordered table-striped">
         <tr>
             <th>Дата</th>
             <th>Сумма</th>
+            <th>PaymentPlanId</th>
+            <th>From</th>
+            <th>To</th>
         </tr>
-        @foreach (var transaction in Model.Transactions.Reverse())
+        @foreach (var transactionModel in Model)
         {
             <tr>
-                <td>@transaction.DateOfPayment</td>
-                <td>@transaction.Amount</td>
+                <td>@transactionModel.Transaction.DateOfPayment.Format()</td>
+                <td>@transactionModel.Transaction.Amount.Format()</td>
+                <td>@transactionModel.Transaction.PaymentPlanId</td>
+                <td>@transactionModel.From.Email (@transactionModel.From.Id)</td>
+                <td>@transactionModel.To.Email (@transactionModel.To.Id)</td>
             </tr>
         }
     </table>
-}

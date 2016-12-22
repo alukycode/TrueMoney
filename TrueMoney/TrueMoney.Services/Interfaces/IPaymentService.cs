@@ -1,4 +1,6 @@
-﻿namespace TrueMoney.Services.Interfaces
+﻿using System.Collections.Generic;
+
+namespace TrueMoney.Services.Interfaces
 {
     using System.Threading.Tasks;
 
@@ -12,6 +14,6 @@
 
         Task<PaymentResult> Payout(VisaPaymentViewModel visaPaymentViewModel);
 
-        Task<BankTransactionListViewModel> GetBankTransactions();
+        Task<List<TransactionAdminModel>> AdminGetBankTransactions();
     }
 }
