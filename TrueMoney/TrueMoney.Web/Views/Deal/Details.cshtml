@@ -235,6 +235,7 @@
     var paidLiabilityForDeal = Model.Payments.Sum(x => x.Liability);
     var paidAllForDeal = paidForDeal + paidLiabilityForDeal;
     var paidForService = paidAllForDeal * NumericConstants.Tax;
+    var payAll = paidForService + paidAllForDeal;
     var allPaidInTime = Model.Payments.All(x => x.PaidDate <= x.DueDate);
     if (Model.IsCurrentUserOwner)
     {
@@ -252,7 +253,8 @@
             </p>
         }
         <p>Переплата от исходной необходимой суммы составила @((paidForDeal + paidLiabilityForDeal - Model.Deal.Amount).Format()) р.</p>
-        @*<p>В тоже время за услуги сервиса было уплачено @paidForService.Format() р., что равно @(NumericConstants.Tax * 100)% от всей суммы.</p>*@
+        <p>В тоже время за услуги сервиса было уплачено @paidForService.Format() р., что равно @(NumericConstants.Tax * 100)% от всей суммы.</p>
+        <p>Итоговая сумма с комиссией составила <b>@payAll.Format() р.</b></p>
     }
     else if (Model.IsCurrentUserApprovedLender)
     {
