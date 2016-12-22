@@ -391,7 +391,11 @@ namespace TrueMoney.Data
                     Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
                     Description = _aims[_random.Next(_aims.Count - 1)],
-                    CreditTransaction = GenerateCreditTransaction(offersForFirst.First(x => x.IsApproved).Offerer, owner, firstAmount),
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForFirst.First(x => x.IsApproved).Offerer,
+                        owner,
+                        firstAmount,
+                        firstDealCreateDate.AddDays(3)),
                 },
                 new Deal
                 {
@@ -407,7 +411,11 @@ namespace TrueMoney.Data
                     DealStatus = DealStatus.InProgress,
                     Offers = offersForSecond,
                     Description = _aims[_random.Next(_aims.Count - 1)],
-                    CreditTransaction = GenerateCreditTransaction(offersForSecond.First(x => x.IsApproved).Offerer, owner, secondAmount),
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForSecond.First(x => x.IsApproved).Offerer, 
+                        owner, 
+                        secondAmount,
+                        secondDealCreateDate.AddDays(3)),
                 },
             };
 
@@ -440,7 +448,11 @@ namespace TrueMoney.Data
                     Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
                     Description = _aims[_random.Next(_aims.Count - 1)],
-                    CreditTransaction = GenerateCreditTransaction(offersForFirst.First(x => x.IsApproved).Offerer, owner, firstAmount),
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForFirst.First(x => x.IsApproved).Offerer, 
+                        owner, 
+                        firstAmount, 
+                        firstDealCreateDate.AddDays(3)),
                 },
                 new Deal
                 {
@@ -456,7 +468,11 @@ namespace TrueMoney.Data
                     DealStatus = DealStatus.InProgress,
                     Offers = offersForSecond,
                     Description = _aims[_random.Next(_aims.Count - 1)],
-                    CreditTransaction = GenerateCreditTransaction(offersForSecond.First(x => x.IsApproved).Offerer, owner, secondAmount),
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForSecond.First(x => x.IsApproved).Offerer, 
+                        owner, 
+                        secondAmount, 
+                        secondDealCreateDate.AddDays(3)),
                 },
             };
 
@@ -487,7 +503,11 @@ namespace TrueMoney.Data
                     Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
                     Description = _aims[_random.Next(_aims.Count - 1)],
-                    CreditTransaction = GenerateCreditTransaction(offersForFirst.First(x => x.IsApproved).Offerer, owner, firstAmount),
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForFirst.First(x => x.IsApproved).Offerer, 
+                        owner, 
+                        firstAmount,
+                        firstDealCreateDate.AddDays(3)),
                 },
                 new Deal
                 {
@@ -529,7 +549,11 @@ namespace TrueMoney.Data
                     Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
                     Description = _aims[_random.Next(_aims.Count - 1)],
-                    CreditTransaction = GenerateCreditTransaction(offersForFirst.First(x => x.IsApproved).Offerer, owner, firstAmount),
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForFirst.First(x => x.IsApproved).Offerer, 
+                        owner, 
+                        firstAmount,
+                        firstDealCreateDate.AddDays(3)),
                 },
                 new Deal
                 {
@@ -571,7 +595,11 @@ namespace TrueMoney.Data
                     Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
                     Description = _aims[_random.Next(_aims.Count - 1)],
-                    CreditTransaction = GenerateCreditTransaction(offersForFirst.First(x => x.IsApproved).Offerer, owner, firstAmount),
+                    CreditTransaction = GenerateCreditTransaction(
+                        offersForFirst.First(x => x.IsApproved).Offerer, 
+                        owner,
+                        firstAmount,
+                        firstDealCreateDate.AddDays(3)),
                 },
                 new Deal
                 {
@@ -590,13 +618,14 @@ namespace TrueMoney.Data
         }
         #endregion
 
-        private static CreditTransaction GenerateCreditTransaction(User sender, User recipient, decimal amount)
+        private static CreditTransaction GenerateCreditTransaction(User sender, User recipient, decimal amount, DateTime dateOfPayment)
         {
             return new CreditTransaction
             {
                 Recipient = recipient,
                 Sender = sender,
                 Amount = amount,
+                DateOfPayment = dateOfPayment,
             };
         }
     }

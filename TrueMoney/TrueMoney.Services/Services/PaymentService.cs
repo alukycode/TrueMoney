@@ -75,6 +75,7 @@ namespace TrueMoney.Services.Services
                 case BankResponse.Success:
                     deal.DealStatus = DealStatus.InProgress;
                     deal.PaymentPlan = GeneratePlan(deal);
+                    deal.CreditTransaction = GenerateCreditTransaction(sender, recipient, visaPaymentViewModel.PaymentCount);
                     await _context.SaveChangesAsync();
                     return PaymentResult.Success;
 
@@ -218,17 +219,6 @@ namespace TrueMoney.Services.Services
             return result;
         }
 
-        private PaymentPlan GeneratePlan(Deal deal)
-        {
-            var paymentPlan = new PaymentPlan
-            {
-                CreateTime = DateTime.Now,
-                Payments = CalculatePayments(deal),
-            };
-
-            return paymentPlan;
-        }
-
         public List<Payment> CalculatePayments(Deal deal)
         {
             var amount = deal.Amount * (1 + deal.InterestRate / 100);
@@ -280,6 +270,28 @@ namespace TrueMoney.Services.Services
             {
                 deal.Owner.Rating += Rating.SuccessPayments;
             }
+        }
+
+        private PaymentPlan GeneratePlan(Deal deal)
+        {
+            var paymentPlan = new PaymentPlan
+            {
+                CreateTime = DateTime.Now,
+                Payments = CalculatePayments(deal),
+            };
+
+            return paymentPlan;
+        }
+
+        private static CreditTransaction GenerateCreditTransaction(User sender, User recipient, decimal amount)
+        {
+            return new CreditTransaction
+            {
+                Recipient = recipient,
+                Sender = sender,
+                Amount = amount,
+                DateOfPayment = DateTime.Now,
+            };
         }
     }
 }

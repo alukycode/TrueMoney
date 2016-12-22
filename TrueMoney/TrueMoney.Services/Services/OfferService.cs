@@ -64,6 +64,12 @@ namespace TrueMoney.Services.Services
             {
                 throw new AccessViolationException("User try to cancel offer for foreign deal.");
             }
+            if (offer.Deal.DealStatus == DealStatus.Closed 
+                || offer.Deal.DealStatus == DealStatus.InProgress
+                || offer.Deal.DealStatus == DealStatus.WaitForLoan)
+            {
+                throw new AccessViolationException("Wrong deal status.");
+            }
 
             offer.IsApproved = false;
             var deal = offer.Deal;
