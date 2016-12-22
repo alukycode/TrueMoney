@@ -21,5 +21,7 @@ namespace TrueMoney.Data.Entities
         public User Sender { get; set; }
 
         public decimal Amount { get; set; }
+
+        public DateTime DateOfPayment { get; set; }
     }
 }

@@ -101,6 +101,10 @@
     <Compile Include="Migrations\201612221056159_CreditTransaction.Designer.cs">
       <DependentUpon>201612221056159_CreditTransaction.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612221143532_EditedCreditTransaction.cs" />
+    <Compile Include="Migrations\201612221143532_EditedCreditTransaction.Designer.cs">
+      <DependentUpon>201612221143532_EditedCreditTransaction.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrueMoneyDbInitializer.cs" />
     <Compile Include="Entities\Entity.cs" />
@@ -149,6 +153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612221056159_CreditTransaction.resx">
       <DependentUpon>201612221056159_CreditTransaction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612221143532_EditedCreditTransaction.resx">
+      <DependentUpon>201612221143532_EditedCreditTransaction.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

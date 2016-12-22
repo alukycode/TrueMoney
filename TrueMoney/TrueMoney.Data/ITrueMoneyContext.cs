@@ -20,6 +20,8 @@ namespace TrueMoney.Data
 
         IDbSet<User> Users { get; set; }
 
+        IDbSet<CreditTransaction> CreditTransactions { get; set; }
+
         Task<int> SaveChangesAsync();
     }
 }
