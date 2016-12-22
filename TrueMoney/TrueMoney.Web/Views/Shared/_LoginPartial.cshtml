@@ -43,7 +43,14 @@
                             {
                                 case DealStatus.Open:
                                     <span class="badge" title="Количество предложений по открытой заявке и наилучший процент">
-                                        @info.ActiveDealOffersCount.Value | @info.ActiveDealBestOfferPercent.Value.Format() %
+                                        @info.ActiveDealOffersCount.Value | @if (info.ActiveDealBestOfferPercent != null)
+                                                                            {
+                                                                                @info.ActiveDealBestOfferPercent.Value.Format();
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <span>-</span>
+                                                                            }%
                                     </span>
                                     break;
 

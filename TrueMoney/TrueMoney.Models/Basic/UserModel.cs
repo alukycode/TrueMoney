@@ -22,7 +22,8 @@ namespace TrueMoney.Models.Basic
 
         public bool IsActive { get; set; }
 
-        [Display(Name = "Номер банковской карты")] //todo: нужна валидация
+        [Display(Name = "Номер банковской карты")] 
+        [RegularExpression("^[0-9]{16}$", ErrorMessage = "Номер карты состоит из 16 цифр.")]
         public string CardNumber { get; set; }
 
         public int Rating { get; set; }
