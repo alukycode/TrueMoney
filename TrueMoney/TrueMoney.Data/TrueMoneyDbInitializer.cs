@@ -103,14 +103,14 @@ namespace TrueMoney.Data
 
             // seed other stuff
 
-            users[0].Deals = GenerateDealsWithOneOverdueInProgress(users.Where(x => x != users[0] && x.IsActive).ToList());
-            users[1].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[1] && x.IsActive).ToList());
-            users[2].Deals = GenerateDealsWithOneWaitForApprove(users.Where(x => x != users[2] && x.IsActive).ToList());
-            users[3].Deals = GenerateDealsWithOneWaitForLoan(users.Where(x => x != users[3] && x.IsActive).ToList());
+            users[0].Deals = GenerateDealsWithOneOverdueInProgress(users.Where(x => x != users[0] && x.IsActive).ToList(), users[0]);
+            users[1].Deals = GenerateDealsWithOneOpen(users.Where(x => x != users[1] && x.IsActive).ToList(), users[1]);
+            users[2].Deals = GenerateDealsWithOneWaitForApprove(users.Where(x => x != users[2] && x.IsActive).ToList(), users[2]);
+            users[3].Deals = GenerateDealsWithOneWaitForLoan(users.Where(x => x != users[3] && x.IsActive).ToList(), users[3]);
 
             foreach (var item in users.Skip(5))
             {
-                item.Deals = GenerateDealsWithOneOpen(users.Where(x => x != item).ToList());
+                item.Deals = GenerateDealsWithOneOpen(users.Where(x => x != item).ToList(), item);
             }
 
             context.SaveChanges();
@@ -365,7 +365,7 @@ namespace TrueMoney.Data
         #endregion
 
         #region Deals generation
-        private static List<Deal> GenerateDealsWithOneInProgress(List<User> offerers)
+        private static List<Deal> GenerateDealsWithOneInProgress(List<User> offerers, User owner)
         {
             var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
             var secondDealCreateDate = DateTime.Now.AddDays(-10);
@@ -374,6 +374,8 @@ namespace TrueMoney.Data
             decimal firstAmount = _random.Next(100, 5000);
             decimal secondAmount = _random.Next(100, 5000);
             var secondDealPeriod = 30;
+            var offersForFirst = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate);
+            var offersForSecond = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate);
 
             var result = new List<Deal>
             {
@@ -386,9 +388,10 @@ namespace TrueMoney.Data
                     InterestRate = firstRate,
                     DealStatus = DealStatus.Closed,
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
-                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
                     Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(offersForFirst.First(x => x.IsApproved).Offerer, owner, firstAmount),
                 },
                 new Deal
                 {
@@ -402,15 +405,16 @@ namespace TrueMoney.Data
                         secondDealPeriod),
                     PaymentCount = 2,
                     DealStatus = DealStatus.InProgress,
-                    Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
+                    Offers = offersForSecond,
                     Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(offersForSecond.First(x => x.IsApproved).Offerer, owner, secondAmount),
                 },
             };
 
             return result;
         }
 
-        private static List<Deal> GenerateDealsWithOneOverdueInProgress(List<User> offerers)
+        private static List<Deal> GenerateDealsWithOneOverdueInProgress(List<User> offerers, User owner)
         {
             var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
             var secondDealCreateDate = DateTime.Now.AddYears(-1);
@@ -419,6 +423,8 @@ namespace TrueMoney.Data
             decimal firstAmount = _random.Next(100, 5000);
             decimal secondAmount = _random.Next(100, 5000);
             var secondDealPeriod = 30;
+            var offersForFirst = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate);
+            var offersForSecond = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate);
 
             var result = new List<Deal>
             {
@@ -431,9 +437,10 @@ namespace TrueMoney.Data
                     InterestRate = firstRate,
                     DealStatus = DealStatus.Closed,
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
-                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
                     Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(offersForFirst.First(x => x.IsApproved).Offerer, owner, firstAmount),
                 },
                 new Deal
                 {
@@ -447,15 +454,16 @@ namespace TrueMoney.Data
                         secondDealPeriod),
                     PaymentCount = 2,
                     DealStatus = DealStatus.InProgress,
-                    Offers = GenerateOffersWithOneApproved(offerers, secondDealCreateDate, secondRate),
+                    Offers = offersForSecond,
                     Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(offersForSecond.First(x => x.IsApproved).Offerer, owner, secondAmount),
                 },
             };
 
             return result;
         }
 
-        private static List<Deal> GenerateDealsWithOneOpen(List<User> offerers)
+        private static List<Deal> GenerateDealsWithOneOpen(List<User> offerers, User owner)
         {
             var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
             var secondDealCreateDate = firstDealCreateDate.AddYears(1);
@@ -463,6 +471,8 @@ namespace TrueMoney.Data
             var secondRate = _random.Next(1, 50);
             decimal firstAmount = _random.Next(100, 5000);
             decimal secondAmount = _random.Next(100, 5000);
+            var offersForFirst = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate);
+
             var result = new List<Deal>
             {
                 new Deal
@@ -474,9 +484,10 @@ namespace TrueMoney.Data
                     InterestRate = firstRate,
                     DealStatus = DealStatus.Closed,
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
-                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
                     Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(offersForFirst.First(x => x.IsApproved).Offerer, owner, firstAmount),
                 },
                 new Deal
                 {
@@ -494,7 +505,7 @@ namespace TrueMoney.Data
             return result;
         }
 
-        private static List<Deal> GenerateDealsWithOneWaitForApprove(List<User> offerers)
+        private static List<Deal> GenerateDealsWithOneWaitForApprove(List<User> offerers, User owner)
         {
             var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
             var secondDealCreateDate = firstDealCreateDate.AddYears(1);
@@ -502,6 +513,8 @@ namespace TrueMoney.Data
             var secondRate = _random.Next(1, 50);
             decimal firstAmount = _random.Next(100, 5000);
             decimal secondAmount = _random.Next(100, 5000);
+            var offersForFirst = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate);
+
             var result = new List<Deal>
             {
                 new Deal
@@ -513,9 +526,10 @@ namespace TrueMoney.Data
                     InterestRate = firstRate,
                     DealStatus = DealStatus.Closed,
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
-                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
                     Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(offersForFirst.First(x => x.IsApproved).Offerer, owner, firstAmount),
                 },
                 new Deal
                 {
@@ -533,7 +547,7 @@ namespace TrueMoney.Data
             return result;
         }
 
-        private static List<Deal> GenerateDealsWithOneWaitForLoan(List<User> offerers)
+        private static List<Deal> GenerateDealsWithOneWaitForLoan(List<User> offerers, User owner)
         {
             var firstDealCreateDate = new DateTime(2010 + _random.Next(5), _random.Next(1, 12), _random.Next(1, 20));
             var secondDealCreateDate = firstDealCreateDate.AddYears(1);
@@ -541,6 +555,8 @@ namespace TrueMoney.Data
             var secondRate = _random.Next(1, 50);
             decimal firstAmount = _random.Next(100, 5000);
             decimal secondAmount = _random.Next(100, 5000);
+            var offersForFirst = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate);
+
             var result = new List<Deal>
             {
                 new Deal
@@ -552,9 +568,10 @@ namespace TrueMoney.Data
                     InterestRate = firstRate,
                     DealStatus = DealStatus.Closed,
                     PaymentPlan = GenerateClosedPlan(firstDealCreateDate.AddDays(3), firstAmount * (1 + (decimal)firstRate / 100)),
-                    Offers = GenerateOffersWithOneApproved(offerers, firstDealCreateDate, firstRate),
+                    Offers = offersForFirst,
                     CloseDate = firstDealCreateDate.AddDays(60),
                     Description = _aims[_random.Next(_aims.Count - 1)],
+                    CreditTransaction = GenerateCreditTransaction(offersForFirst.First(x => x.IsApproved).Offerer, owner, firstAmount),
                 },
                 new Deal
                 {
@@ -570,7 +587,17 @@ namespace TrueMoney.Data
             };
 
             return result;
-        } 
+        }
         #endregion
+
+        private static CreditTransaction GenerateCreditTransaction(User sender, User recipient, decimal amount)
+        {
+            return new CreditTransaction
+            {
+                Recipient = recipient,
+                Sender = sender,
+                Amount = amount,
+            };
+        }
     }
 }

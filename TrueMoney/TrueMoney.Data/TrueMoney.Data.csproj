@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\BankTransaction.cs" />
+    <Compile Include="Entities\CreditTransaction.cs" />
     <Compile Include="Entities\Deal.cs" />
     <Compile Include="Entities\IdentityShit.cs" />
     <Compile Include="Entities\Offer.cs" />
@@ -95,6 +96,10 @@
     <Compile Include="Migrations\201612141056496_PassportPhoto.cs" />
     <Compile Include="Migrations\201612141056496_PassportPhoto.Designer.cs">
       <DependentUpon>201612141056496_PassportPhoto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612221056159_CreditTransaction.cs" />
+    <Compile Include="Migrations\201612221056159_CreditTransaction.Designer.cs">
+      <DependentUpon>201612221056159_CreditTransaction.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TrueMoneyDbInitializer.cs" />
@@ -141,6 +146,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612141056496_PassportPhoto.resx">
       <DependentUpon>201612141056496_PassportPhoto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612221056159_CreditTransaction.resx">
+      <DependentUpon>201612221056159_CreditTransaction.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

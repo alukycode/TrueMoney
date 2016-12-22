@@ -30,10 +30,16 @@ namespace TrueMoney.Data
 
         public IDbSet<BankTransaction> BankTransactions { get; set; }
 
+        public IDbSet<CreditTransaction> CreditTransactions { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Deal>()
                 .HasOptional(x => x.PaymentPlan)
+                .WithRequired(x => x.Deal)
+                .WillCascadeOnDelete();
+            modelBuilder.Entity<Deal>()
+                .HasOptional(x => x.CreditTransaction)
                 .WithRequired(x => x.Deal)
                 .WillCascadeOnDelete();
             base.OnModelCreating(modelBuilder);
