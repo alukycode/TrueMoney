@@ -25,56 +25,57 @@
 
                     @{ var info = GlobalHelper.Get(User.Identity.GetUserId<int>()); }
 
-                    <div style="position: fixed; right: 5px; bottom: 5px;">
+                    @*<div style="position: fixed; right: 5px; bottom: 5px;">
                         <div>IsActive                    - @info.IsActive                  </div>
                         <div>ActiveDealStatus            - @info.ActiveDealStatus          </div>
                         <div>ActiveDealBestOfferPercent  - @info.ActiveDealBestOfferPercent</div>
                         <div>ActiveDealOffersCount       - @info.ActiveDealOffersCount     </div>
                         <div>OffersInWaitCount           - @info.OffersInWaitCount         </div>
                         <div>OffersInProgressCount - @info.OffersInProgressCount </div>
-                    </div>
+                    </div>*@
 
                     @if (info.IsActive)
                     {
                         if (info.ActiveDealStatus != null)
                         {
                             var status = info.ActiveDealStatus.Value;
-                            switch (status) // todo: расцветочка и иконочки
+                            switch (status)
                             {
                                 case DealStatus.Open:
-                                    <span class="badge" title="Количество предложений по открытой заявке и наилучший процент">
+                                    <span class="badge status-background-@status" title="Количество предложений по открытой заявке и наилучший процент">
+                                        <i class="glyphicon glyphicon-send"></i>&nbsp;
                                         @info.ActiveDealOffersCount.Value | @if (info.ActiveDealBestOfferPercent != null)
                                                                             {
-                                                                                @info.ActiveDealBestOfferPercent.Value.Format();
+                                                                                <span>@info.ActiveDealBestOfferPercent.Value.Format() %</span>
                                                                             }
                                                                             else
                                                                             {
                                                                                 <span>-</span>
-                                                                            }%
-                                    </span>
-                                    break;
-
-                                case DealStatus.WaitForLoan:
-                                    <span class="badge" title="Активная заявка: @status.GetDescription()">
-                                        wait2
+                                                                            }
                                     </span>
                                     break;
 
                                 case DealStatus.WaitForApprove:
-                                    <span class="badge" title="Активная заявка: @status.GetDescription()">
-                                        wait1
+                                    <span class="badge status-background-@status" title="Активная заявка: @status.GetDescription()">
+                                        <i class="glyphicon glyphicon-time"></i>&nbsp; wait
+                                    </span>
+                                    break;
+
+                                case DealStatus.WaitForLoan:
+                                    <span class="badge status-background-@status" title="Активная заявка: @status.GetDescription()">
+                                        <i class="glyphicon glyphicon-time"></i>&nbsp; wait
                                     </span>
                                     break;
 
                                 case DealStatus.InProgress:
-                                    <span class="badge" title="Активная заявка: @status.GetDescription()">
-                                        progress
+                                    <span class="badge status-background-@status" title="Активная заявка: @status.GetDescription()">
+                                        <i class="glyphicon glyphicon-flag"></i>&nbsp; progress
                                     </span>
                                     break;
 
                                 case DealStatus.Closed:
-                                    <span class="badge" title="Все ваши заявки закрыты">
-                                        closed
+                                    <span class="badge status-background-@status" title="Все ваши заявки закрыты">
+                                        <i class="glyphicon glyphicon-off"></i>&nbsp; closed
                                     </span>
                                     break;
                             }
@@ -87,14 +88,14 @@
 
                         if (info.OffersInWaitCount > 0)
                         {
-                            <span class="badge" title="Количество займов, по которым от вас ожидается подтверждение и перевод денег">
+                            <span class="badge" style="background-color: red" title="Количество займов, по которым от вас ожидается подтверждение и перевод денег">
                                 @info.OffersInWaitCount
                             </span>
                         }
                         
                         if (info.OffersInProgressCount > 0)
                         {
-                            <span class="badge" title="Количество займов, которые вам выплачивают заёмщики">
+                            <span class="badge" style="background-color: green" title="Количество займов, которые вам выплачивают заёмщики">
                                 @info.OffersInProgressCount
                             </span>
                         }
