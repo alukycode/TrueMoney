@@ -1,2 +1,0 @@
-initial commit
-dimon lalka
