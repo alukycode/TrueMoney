@@ -14,7 +14,7 @@
 - bat file to configure iis
 - custom error pages
 - multi-layered architecture
-- entitify framework usage for repository layer (see readme.txt in TrueMoney.Data project)
+- entity framework usage for repository layer (see readme.txt in TrueMoney.Data project)
 - dependency injection using castle windsor for default asp.net template
 - connection strings to localdb / sql server express
 - photo upload
